@@ -1,0 +1,2813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0f11">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tally">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Tally — Prop Trading Journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --bg-alt: #16171a;
+    --card: #1a1b1f;
+    --card-border: #2a2b30;
+    --hairline: #26272c;
+    --amber: #d4a24c;
+    --amber-soft: rgba(212,162,76,0.14);
+    --amber-dim: #8f7238;
+    --green: #5aa579;
+    --green-dim: #22302a;
+    --red: #c1553d;
+    --red-dim: #33241f;
+    --text: #ece9e2;
+    --text-mid: #a7a6a2;
+    --text-dim: #6f6e73;
+    --radius: 4px;
+  }
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    background:
+      radial-gradient(1100px 500px at 15% -10%, rgba(212,162,76,0.05), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(90,165,121,0.03), transparent 55%),
+      var(--bg);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { background: none; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  ::selection { background: var(--amber-dim); color: #fff; }
+  a { color: var(--amber); }
+  button { cursor: pointer; font-family: inherit; }
+
+  /* ---- Top bar ---- */
+  .topbar {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    padding-top: 14px;
+    background: linear-gradient(180deg, var(--bg) 78%, transparent);
+    border-bottom: 1px solid var(--hairline);
+    backdrop-filter: blur(6px);
+  }
+  .topbar-inner {
+    max-width: 1180px; margin: 0 auto; padding: 0 20px 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-icon { flex-shrink: 0; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
+  .brand-mark { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; background: linear-gradient(120deg, #f3d9a4, var(--amber) 60%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .brand-sub { font-size: 11px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  select#accountSelect {
+    background: var(--card); color: var(--text); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 8px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
+    max-width: 230px;
+  }
+  .btn {
+    background: var(--card); color: var(--text); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 8px 14px; font-size: 13px; font-weight: 500;
+    transition: border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .btn:hover { border-color: var(--amber-dim); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--amber); outline-offset: 1px;
+  }
+  .btn-primary { background: linear-gradient(160deg, #e3ba71, var(--amber)); color: #1c1508; border-color: var(--amber); font-weight: 600; box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px rgba(212,162,76,0.18); }
+  .btn-primary:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-mid); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--card-border); }
+  .btn-danger { color: var(--red); }
+  .icon-round { width: 34px; height: 34px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 15px; }
+
+  /* ---- Section nav ---- */
+  .section-nav { max-width: 1180px; margin: 0 auto; padding: 4px 20px 0; display: flex; gap: 4px; }
+  .tab-btn {
+    background: none; border: none; color: var(--text-dim); padding: 9px 4px; margin-right: 22px;
+    font-size: 13.5px; font-weight: 500; position: relative; letter-spacing: 0.01em;
+  }
+  .tab-btn.active { color: var(--text); }
+  .tab-btn.active::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+    background: linear-gradient(90deg, var(--amber), transparent);
+  }
+  .tab-btn:hover { color: var(--text); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 22px 20px 80px; }
+
+  /* ---- Empty state ---- */
+  .empty-state { text-align: center; padding: 90px 20px; color: var(--text-mid); }
+  .empty-state h2 { color: var(--text); font-size: 22px; margin: 0 0 8px; font-weight: 600; }
+  .empty-state p { max-width: 400px; margin: 0 auto 22px; font-size: 14px; line-height: 1.6; }
+
+  /* ---- Compliance ribbon ---- */
+  .ribbon {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius);
+    overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+  }
+  @media (max-width: 760px) { .ribbon { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 420px) { .ribbon { grid-template-columns: repeat(1, 1fr); } }
+  .ribbon-cell { background: var(--card); padding: 16px 18px; position: relative; }
+  .ribbon-cell::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--amber-soft), transparent); opacity: 0.7; }
+  .ribbon-label { font-size: 10.5px; color: var(--text-dim); margin-bottom: 7px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .ribbon-value { font-family: 'IBM Plex Mono', monospace; font-size: 21px; font-weight: 600; letter-spacing: -0.01em; }
+  .ribbon-sub { font-size: 11px; color: var(--text-dim); margin-top: 5px; font-family: 'IBM Plex Mono', monospace; }
+  .gauge-track { height: 4px; background: var(--bg-alt); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 2px; transition: width .3s ease; }
+  .pos { color: var(--green); } .neg { color: var(--red); } .warn-text { color: var(--amber); }
+  .badge-reached { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-size: 13px; font-weight: 600; }
+
+  .alert-banner {
+    display: flex; gap: 14px; align-items: flex-start; background: var(--red-dim);
+    border: 1px solid rgba(193,85,61,0.35); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px;
+  }
+  .alert-icon { font-size: 20px; line-height: 1; margin-top: 1px; }
+  .alert-title { font-size: 13.5px; font-weight: 600; color: #f0a893; margin: 0 0 5px; }
+  .alert-body { font-size: 12.5px; color: var(--text-mid); line-height: 1.6; margin: 0 0 8px; }
+  .alert-fix { font-size: 12.5px; color: var(--text); line-height: 1.6; background: rgba(0,0,0,0.15); border-radius: var(--radius); padding: 10px 12px; }
+  .alert-fix b { color: var(--amber); font-family: 'IBM Plex Mono', monospace; }
+  .alert-banner.warn { background: rgba(212,162,76,0.12); border-color: rgba(212,162,76,0.32); }
+  .alert-banner.warn .alert-title { color: var(--amber); }
+
+  .week-summary {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 10px 18px; border-bottom: 1px solid var(--hairline);
+    font-size: 11.5px; color: var(--text-dim);
+  }
+  .week-summary b { color: var(--text); font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
+
+  .grid { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+
+  .panel { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset, 0 8px 22px rgba(0,0,0,0.22); }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--hairline); }
+  .panel-head h3 { margin: 0; font-size: 13.5px; font-weight: 600; letter-spacing: 0.01em; }
+  .panel-body { padding: 18px; }
+
+  .chart-wrap { padding: 6px 12px 14px; }
+  svg#equityChart { width: 100%; height: 170px; display: block; }
+
+  /* ---- Calendar ---- */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--hairline); }
+  .cal-nav { display: flex; align-items: center; gap: 4px; }
+  .cal-navbtn { background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-mid); border-radius: var(--radius); width: 28px; height: 28px; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
+  .cal-navbtn:hover { color: var(--text); border-color: var(--amber-dim); }
+  .cal-month-label { font-size: 13px; font-weight: 600; min-width: 130px; text-align: center; }
+  .cal-summary { font-size: 12px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; }
+  .cal-body { padding: 14px 18px 18px; }
+  .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 6px; }
+  .cal-weekdays span { text-align: center; font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cal-cell {
+    position: relative; border-radius: var(--radius); border: 1px solid var(--card-border);
+    background: var(--bg-alt); min-height: 62px; padding: 6px 7px; cursor: pointer;
+    transition: border-color .12s ease, transform .1s ease;
+  }
+  .cal-cell:hover { border-color: var(--amber-dim); transform: translateY(-1px); }
+  .cal-cell.empty { visibility: hidden; cursor: default; }
+  .cal-cell.win { background: var(--green-dim); border-color: rgba(90,165,121,0.22); }
+  .cal-cell.loss { background: var(--red-dim); border-color: rgba(193,85,61,0.22); }
+  .cal-cell.today { box-shadow: 0 0 0 1px var(--amber) inset; }
+  .cal-daynum { font-size: 10.5px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; }
+  .cal-cell.win .cal-daynum, .cal-cell.loss .cal-daynum { color: var(--text-mid); }
+  .cal-pnl { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; margin-top: 6px; white-space: nowrap; }
+  .cal-cell.win .cal-pnl { color: var(--green); }
+  .cal-cell.loss .cal-pnl { color: var(--red); }
+  .cal-count { position: absolute; bottom: 5px; right: 6px; font-size: 9.5px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; }
+  .day-trade-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--hairline); font-size: 13px; cursor: pointer; }
+  .day-trade-row:last-child { border-bottom: none; }
+  .day-trade-row:hover { color: var(--amber); }
+  .day-trade-left { display: flex; align-items: center; gap: 8px; }
+
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--hairline); }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-row .k { font-size: 12.5px; color: var(--text-mid); }
+  .stat-row .v { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; font-weight: 500; }
+
+  .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-bar select, .filter-bar input[type="text"] {
+    background: var(--bg-alt); color: var(--text); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 6px 9px; font-size: 12.5px; font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .table-scroll { overflow-x: auto; }
+  table.trades { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px; }
+  table.trades th { text-align: left; font-weight: 500; color: var(--text-dim); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 14px; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+  table.trades td { padding: 11px 14px; border-bottom: 1px solid var(--hairline); white-space: nowrap; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+  table.trades tbody tr { transition: background .12s ease; cursor: pointer; }
+  table.trades tbody tr:hover { background: var(--bg-alt); }
+  table.trades tbody tr:last-child td { border-bottom: none; }
+  .dir-pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .dir-long { background: var(--green-dim); color: var(--green); }
+  .dir-short { background: var(--red-dim); color: #e08770; }
+  .tag-pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; background: var(--bg-alt); color: var(--text-mid); border: 1px solid var(--card-border); }
+  .bt-pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10.5px; background: rgba(122,144,214,0.12); color: #93a5e0; border: 1px solid rgba(122,144,214,0.25); font-family: 'IBM Plex Mono', monospace; }
+  .tag-eval { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 9.5px; font-weight: 600; letter-spacing: 0.04em; background: rgba(212,162,76,0.16); color: var(--amber); border: 1px solid rgba(212,162,76,0.3); font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; }
+  .tag-funded { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 9.5px; font-weight: 600; letter-spacing: 0.04em; background: rgba(122,180,214,0.16); color: #7ab4d6; border: 1px solid rgba(122,180,214,0.3); font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; }
+  .cal-phase-tag { position: absolute; top: 4px; right: 5px; font-size: 7.5px; padding: 1px 4px; border-radius: 6px; font-weight: 700; letter-spacing: 0.03em; font-family: 'IBM Plex Mono', monospace; }
+  .cal-phase-tag.eval { background: rgba(212,162,76,0.22); color: var(--amber); }
+  .cal-phase-tag.funded { background: rgba(122,180,214,0.22); color: #7ab4d6; }
+  .cal-phase-tag.mixed { background: rgba(160,160,165,0.22); color: var(--text-mid); }
+  .row-actions { display: flex; gap: 6px; opacity: 0; transition: opacity .12s; }
+  table.trades tbody tr:hover .row-actions { opacity: 1; }
+  .icon-btn { background: none; border: none; color: var(--text-dim); font-size: 13px; padding: 2px 4px; }
+  .icon-btn:hover { color: var(--text); }
+
+  /* ---- Card grids (strategies / indicators) ---- */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .content-card {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+    padding: 16px 18px; cursor: pointer; transition: border-color .15s ease, transform .1s ease;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  }
+  .content-card:hover { border-color: var(--amber-dim); }
+  .content-card h4 { margin: 0 0 8px; font-size: 14.5px; font-weight: 600; }
+  .content-card p { margin: 0 0 10px; font-size: 12.5px; color: var(--text-mid); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .content-card .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .content-card .ind-link { font-size: 12px; color: var(--amber); text-decoration: none; }
+  .content-card .ind-link:hover { text-decoration: underline; }
+  .section-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+  .section-toolbar h2 { margin: 0; font-size: 17px; font-weight: 600; }
+  .section-desc { color: var(--text-dim); font-size: 12.5px; margin: -10px 0 18px; }
+
+  /* ---- Modal ---- */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(6,6,7,0.72); backdrop-filter: blur(3px);
+    display: flex; align-items: flex-start; justify-content: center; z-index: 100;
+    padding: 40px 16px; overflow-y: auto;
+  }
+  .modal {
+    background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: var(--radius);
+    width: 100%; max-width: 620px; margin: auto; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--hairline); }
+  .modal-head h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .modal-body { padding: 20px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+  label { display: block; font-size: 11.5px; color: var(--text-mid); margin-bottom: 5px; }
+  input, textarea, select {
+    width: 100%; background: var(--card); color: var(--text); border: 1px solid var(--card-border);
+    border-radius: var(--radius); padding: 9px 10px; font-size: 13.5px; font-family: 'IBM Plex Mono', monospace;
+  }
+  select { font-family: 'Space Grotesk', sans-serif; }
+  textarea { font-family: 'Space Grotesk', sans-serif; resize: vertical; min-height: 60px; }
+  .modal-foot { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-top: 1px solid var(--hairline); }
+  .seg { display: flex; border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; }
+  .seg button { flex: 1; background: var(--card); border: none; padding: 9px; font-size: 13px; color: var(--text-mid); }
+  .seg button.active.long { background: var(--green-dim); color: var(--green); }
+  .seg button.active.short { background: var(--red-dim); color: #e08770; }
+  .checkline { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-mid); }
+  .checkline input[type=checkbox] { width: auto; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--card); border: 1px solid var(--card-border); color: var(--text);
+    padding: 10px 18px; border-radius: var(--radius); font-size: 13px; z-index: 200;
+    opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+  .hint { font-size: 11.5px; color: var(--text-dim); margin-top: 4px; }
+  .section-title { font-size: 11px; color: var(--text-dim); margin: 18px 0 10px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .section-title:first-child { margin-top: 0; }
+
+  /* ---- Congrats modal ---- */
+  .congrats-backdrop {
+    position: fixed; inset: 0; background: rgba(6,6,7,0.78); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; z-index: 300; padding: 20px; overflow: hidden;
+  }
+  .congrats-card {
+    position: relative; background: linear-gradient(165deg, #1d1e22, var(--bg-alt));
+    border: 1px solid var(--amber-dim); border-radius: 8px; max-width: 420px; width: 100%;
+    padding: 38px 30px 30px; text-align: center; box-shadow: 0 0 0 1px rgba(212,162,76,0.12), 0 30px 70px rgba(0,0,0,0.55);
+    overflow: hidden;
+  }
+  .congrats-icon { font-size: 42px; margin-bottom: 14px; }
+  .congrats-title { font-size: 22px; font-weight: 700; margin: 0 0 10px; background: linear-gradient(120deg, #f3d9a4, var(--amber) 65%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .congrats-body { font-size: 13.5px; color: var(--text-mid); line-height: 1.6; margin: 0 0 22px; }
+  .congrats-stats { display: flex; gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 24px; }
+  .congrats-stats div { flex: 1; background: var(--card); padding: 12px 10px; }
+  .congrats-stats .k { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .congrats-stats .v { font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 600; }
+  .confetti-piece { position: absolute; top: -12px; width: 7px; height: 13px; border-radius: 2px; opacity: 0.95; animation: confetti-fall 2.4s ease-in forwards; z-index: 1; }
+  @keyframes confetti-fall { to { transform: translateY(420px) rotate(420deg); opacity: 0; } }
+
+  /* ---- Check-in ---- */
+  .checkin-scale { display: flex; gap: 6px; margin: 14px 0 6px; }
+  .checkin-btn {
+    flex: 1; aspect-ratio: 1; min-width: 0; border-radius: var(--radius); border: 1px solid var(--card-border);
+    background: var(--card); color: var(--text-mid); font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600;
+    transition: all .12s ease;
+  }
+  .checkin-btn:hover { border-color: var(--amber-dim); color: var(--text); }
+  .checkin-btn.selected { background: linear-gradient(160deg, #e3ba71, var(--amber)); color: #1c1508; border-color: var(--amber); }
+  .checkin-scale-labels { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--text-dim); margin-bottom: 16px; }
+  .cal-checkin-badge { position: absolute; bottom: 4px; left: 5px; font-size: 13px; line-height: 1; }
+
+  /* ---- Phone tweaks ---- */
+  @media (hover: none) { .row-actions { opacity: 1; } }
+  @media (max-width: 560px) {
+    main { padding: 16px 12px 70px; }
+    .topbar-inner { padding: 0 12px 10px; }
+    .section-nav { padding: 4px 12px 0; }
+    .cal-body { padding: 10px 8px 12px; }
+    .cal-grid, .cal-weekdays { gap: 3px; }
+    .cal-cell { min-height: 50px; padding: 4px 4px; }
+    .cal-pnl { font-size: 10px; margin-top: 4px; }
+    .cal-daynum { font-size: 9.5px; }
+    .cal-phase-tag { font-size: 6.5px; padding: 1px 3px; top: 3px; right: 3px; }
+    .cal-checkin-badge { font-size: 11px; bottom: 3px; left: 3px; }
+    .cal-count { font-size: 8.5px; bottom: 3px; right: 4px; }
+    .cal-month-label { min-width: 100px; }
+    .ribbon-value { font-size: 18px; }
+    .brand-sub { display: none; }
+    .modal-backdrop { padding: 16px 10px; }
+    .modal-body { padding: 16px; }
+  }
+
+  .fab { display: none; }
+  @media (max-width: 560px) {
+    .fab {
+      display: flex; align-items: center; justify-content: center;
+      position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40;
+      width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--amber);
+      background: linear-gradient(160deg, #e3ba71, var(--amber)); color: #1c1508;
+      font-size: 30px; font-weight: 500; line-height: 1; padding: 0 0 3px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.25) inset;
+    }
+    .fab.fab-hidden { display: none; }
+    #newTradeBtn { display: none; }
+    input, select, textarea, select#accountSelect,
+    .filter-bar select, .filter-bar input[type="text"] { font-size: 16px; }
+    .btn { padding: 10px 14px; }
+    .icon-btn { padding: 8px 10px; }
+    .cal-navbtn { width: 34px; height: 34px; }
+    .checkin-scale { flex-wrap: wrap; }
+    .checkin-btn { flex: 0 0 calc(20% - 5px); aspect-ratio: auto; height: 44px; }
+  }
+
+  /* ---- Confidence smileys, screenshots, lightbox ---- */
+  .conf-row { display: flex; gap: 8px; }
+  .conf-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 9px 4px;
+    background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+    color: var(--text-mid); transition: border-color .12s ease, background .12s ease;
+  }
+  .conf-btn .conf-emo { font-size: 22px; line-height: 1; filter: grayscale(0.7); opacity: 0.7; }
+  .conf-btn .conf-lbl { font-size: 10.5px; }
+  .conf-btn:hover { border-color: var(--amber-dim); }
+  .conf-btn.selected { border-color: var(--amber); background: var(--amber-soft); color: var(--text); }
+  .conf-btn.selected .conf-emo { filter: none; opacity: 1; }
+  .thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .thumbs:not(:empty) { margin-bottom: 8px; }
+  .thumb { position: relative; width: 76px; height: 76px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--card-border); background: var(--card); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; }
+  .thumb-x {
+    position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 50%; border: none; padding: 0;
+    background: rgba(0,0,0,0.72); color: #fff; font-size: 11px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .tmeta { font-size: 12px; margin-left: 6px; font-family: 'Space Grotesk', sans-serif; white-space: nowrap; }
+  .lightbox {
+    position: fixed; inset: 0; z-index: 400; background: rgba(0,0,0,0.93); cursor: zoom-out;
+    display: flex; align-items: center; justify-content: center;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 12px calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 4px; }
+  .lightbox-x {
+    position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: 14px; width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--card-border); background: rgba(20,21,24,0.85); color: var(--text); font-size: 15px;
+  }
+  #settingsBtn { position: relative; }
+  #settingsBtn[data-sync]::after { content:''; position:absolute; top:3px; right:3px; width:8px; height:8px; border-radius:50%; background:var(--amber-dim); border:1.5px solid var(--bg); }
+  #settingsBtn[data-sync="idle"]::after { background:var(--green); }
+  #settingsBtn[data-sync="syncing"]::after { background:var(--amber); }
+  #settingsBtn[data-sync="error"]::after, #settingsBtn[data-sync="offline"]::after { background:var(--red); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="brand-icon" width="30" height="30" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="brandIconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f6dfae"/>
+            <stop offset="55%" stop-color="#d4a24c"/>
+            <stop offset="100%" stop-color="#a9762e"/>
+          </linearGradient>
+          <linearGradient id="brandIconGradBar" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#f9e6bd"/>
+            <stop offset="100%" stop-color="#dcae5c"/>
+          </linearGradient>
+          <linearGradient id="brandIconGradSoft" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#f2d99f"/>
+            <stop offset="100%" stop-color="#c1903f"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="512" height="512" rx="112" fill="#141518"/>
+        <rect x="4" y="4" width="504" height="504" rx="108" fill="none" stroke="#2a2b30" stroke-width="4"/>
+        <rect x="196" y="168" width="22" height="214" rx="11" fill="url(#brandIconGrad)"/>
+        <rect x="228" y="168" width="22" height="214" rx="11" fill="url(#brandIconGrad)"/>
+        <rect x="260" y="168" width="22" height="214" rx="11" fill="url(#brandIconGrad)"/>
+        <rect x="292" y="168" width="22" height="214" rx="11" fill="url(#brandIconGrad)"/>
+        <line x1="188" y1="344" x2="322" y2="212" stroke="url(#brandIconGradSoft)" stroke-width="17" stroke-linecap="round" opacity="0.92"/>
+        <rect x="120" y="120" width="272" height="64" rx="32" fill="url(#brandIconGradBar)"/>
+      </svg>
+      <div class="brand-mark">Tally</div>
+      <div class="brand-sub" data-i18n="brand_sub">prop trading journal</div>
+    </div>
+    <div class="topbar-actions">
+      <select id="accountSelect"></select>
+      <button class="btn" id="manageAccountsBtn" data-i18n="btn_manage_accounts">Manage accounts</button>
+      <button class="btn btn-primary" id="newTradeBtn" data-i18n="btn_new_trade">+ Log trade</button>
+      <button class="btn icon-round btn-ghost" id="settingsBtn" title="Settings">⚙</button>
+    </div>
+  </div>
+  <div class="section-nav">
+    <button class="tab-btn active" data-section="journal" data-i18n="nav_journal">Journal</button>
+    <button class="tab-btn" data-section="strategies" data-i18n="nav_strategies">Strategies</button>
+    <button class="tab-btn" data-section="indicators" data-i18n="nav_indicators">Indicators</button>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<button class="fab" id="fabLog" aria-label="Log trade">+</button>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- storage shim ----------
+  // In the chat preview window.storage exists; in a published page it does not,
+  // so fall back to the browser's localStorage (private to this device/browser).
+  if (typeof window.storage === 'undefined') {
+    window.storage = {
+      async get(k){ const v = localStorage.getItem(k); if (v === null) throw new Error('not found'); return {key:k, value:v}; },
+      async set(k, v){ localStorage.setItem(k, v); return {key:k, value:v}; },
+      async delete(k){ localStorage.removeItem(k); return {key:k, deleted:true}; }
+    };
+  }
+
+
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
+
+  // ---------- i18n ----------
+  const T = {
+    brand_sub: {en:'prop trading journal', es:'diario de trading prop', nl:'prop trading journal'},
+    nav_journal: {en:'Journal', es:'Diario', nl:'Journaling'},
+    nav_strategies: {en:'Strategies', es:'Estrategias', nl:'Strategieën'},
+    nav_indicators: {en:'Indicators', es:'Indicadores', nl:'Indicators'},
+    btn_manage_accounts: {en:'Manage accounts', es:'Gestionar cuentas', nl:'Accounts beheren'},
+    btn_new_trade: {en:'+ Log trade', es:'+ Registrar trade', nl:'+ Trade loggen'},
+    empty_acc_title: {en:'No account yet', es:'Aún no hay cuenta', nl:'Nog geen account'},
+    empty_acc_body: {en:'Create a prop firm account first — starting balance, daily loss limit, max drawdown and profit target — then start logging trades.', es:'Primero crea una cuenta de prop firm — balance inicial, límite de pérdida diaria, drawdown máximo y objetivo de beneficio — y luego empieza a registrar trades.', nl:'Maak eerst een prop firm account aan — met startkapitaal, daily loss limit, max drawdown en profit target — dan kun je trades gaan loggen.'},
+    btn_create_account: {en:'+ Create account', es:'+ Crear cuenta', nl:'+ Account aanmaken'},
+    ribbon_balance: {en:'Balance', es:'Balance', nl:'Saldo'},
+    ribbon_since_start: {en:'since start', es:'desde el inicio', nl:'sinds start'},
+    ribbon_pnl_today: {en:"P&L today", es:'P&L hoy', nl:'P&L vandaag'},
+    ribbon_of_daily_limit: {en:'of daily loss limit', es:'del límite de pérdida diaria', nl:'van daily loss limit'},
+    ribbon_drawdown: {en:'Drawdown', es:'Drawdown', nl:'Drawdown'},
+    ribbon_of_max_dd: {en:'of max drawdown', es:'del drawdown máximo', nl:'van max drawdown'},
+    ribbon_consistency: {en:'Consistency', es:'Consistencia', nl:'Consistency'},
+    ribbon_best_day: {en:'best day', es:'mejor día', nl:'beste dag'},
+    ribbon_limit: {en:'limit', es:'límite', nl:'limiet'},
+    ribbon_no_profit_yet: {en:'no profit yet', es:'aún sin beneficio', nl:'nog geen winst'},
+    consistency_alert_title: {en:'Consistency rule exceeded', es:'Regla de consistencia superada', nl:'Consistency rule overschreden'},
+    consistency_alert_body: {en:'Your best day ({date}, {amount}) makes up {pct}% of your total profit — over the {rule}% limit.', es:'Tu mejor día ({date}, {amount}) representa el {pct}% de tu beneficio total — por encima del límite del {rule}%.', nl:'Je beste dag ({date}, {amount}) is {pct}% van je totale winst — boven de {rule}% limiet.'},
+    consistency_alert_fix: {en:'Make at least <b>{amount}</b> more profit on other days (without adding to {date}) to bring it back under {rule}%.', es:'Genera al menos <b>{amount}</b> más de beneficio en otros días (sin sumar a {date}) para volver a estar por debajo del {rule}%.', nl:'Maak minstens <b>{amount}</b> extra winst op andere dagen (zonder {date} te verhogen) om weer onder de {rule}% te komen.'},
+    ribbon_target: {en:'Profit target', es:'Objetivo de beneficio', nl:'Profit target'},
+    ribbon_avg_feeling: {en:'Avg. feeling', es:'Sensación prom.', nl:'Gem. gevoel'},
+    ribbon_checkins_count: {en:'{count} check-ins logged', es:'{count} check-ins registrados', nl:'{count} check-ins gelogd'},
+    ribbon_no_checkins: {en:'No check-ins yet', es:'Aún sin check-ins', nl:'Nog geen check-ins'},
+    ribbon_target_reached: {en:'Target reached', es:'Objetivo alcanzado', nl:'Target behaald'},
+    ribbon_on: {en:'on', es:'el', nl:'op'},
+    ribbon_of_target: {en:'of', es:'de', nl:'van'},
+    chart_title: {en:'Equity curve', es:'Curva de capital', nl:'Equity curve'},
+    chart_empty: {en:'No trades logged yet — the curve appears once you start.', es:'Aún no hay trades registrados — la curva aparecerá cuando empieces.', nl:'Nog geen trades gelogd — de curve verschijnt zodra je begint.'},
+    cal_title: {en:'Calendar', es:'Calendario', nl:'Kalender'},
+    cal_today: {en:'Today', es:'Hoy', nl:'Vandaag'},
+    cal_month_total: {en:'Month total', es:'Total del mes', nl:'Totaal deze maand'},
+    day_modal_total: {en:'Day total', es:'Total del día', nl:'Totaal deze dag'},
+    day_modal_empty: {en:'No trades logged on this day yet.', es:'Aún no hay trades registrados este día.', nl:'Nog geen trades gelogd op deze dag.'},
+    btn_add_trade_day: {en:'+ Add trade for this day', es:'+ Añadir trade para este día', nl:'+ Trade toevoegen voor deze dag'},
+    all_trades_title: {en:'All trades', es:'Todos los trades', nl:'Alle trades'},
+    week_summary_trade_one: {en:'1 trade', es:'1 trade', nl:'1 trade'},
+    settings_backup_title: {en:'Backup & restore', es:'Copia de seguridad', nl:'Back-up & herstel'},
+    backup_hint: {en:'Your data is stored on this device only. Export a backup regularly, and use it to move your journal to another device.', es:'Tus datos se guardan solo en este dispositivo. Exporta una copia con regularidad y úsala para pasar tu diario a otro dispositivo.', nl:'Je gegevens staan alleen op dit apparaat. Exporteer regelmatig een back-up en gebruik die om je journal naar een ander apparaat te verplaatsen.'},
+    btn_export_backup: {en:'Export backup (JSON)', es:'Exportar copia (JSON)', nl:'Back-up exporteren (JSON)'},
+    btn_export_csv: {en:'Export trades (CSV)', es:'Exportar trades (CSV)', nl:'Trades exporteren (CSV)'},
+    btn_import_backup: {en:'Import backup', es:'Importar copia', nl:'Back-up importeren'},
+    toast_export_saved: {en:'File saved', es:'Archivo guardado', nl:'Bestand opgeslagen'},
+    toast_no_trades_export: {en:'No trades to export yet', es:'Aún no hay trades para exportar', nl:'Nog geen trades om te exporteren'},
+    export_copy_title: {en:'Copy your export', es:'Copia tu exportación', nl:'Kopieer je export'},
+    export_copy_body: {en:'Saving a file is not available here. Copy this text and paste it into a note or file. For a backup, keep it as a .json file.', es:'Aquí no se puede guardar un archivo. Copia este texto y pégalo en una nota o archivo. Para la copia de seguridad, guárdalo como .json.', nl:'Bestand opslaan kan hier niet. Kopieer deze tekst en plak hem in een notitie of bestand. Bewaar een back-up als .json-bestand.'},
+    btn_copy: {en:'Copy', es:'Copiar', nl:'Kopiëren'},
+    toast_copied: {en:'Copied', es:'Copiado', nl:'Gekopieerd'},
+    import_title: {en:'Import backup', es:'Importar copia', nl:'Back-up importeren'},
+    import_body: {en:'Choose a Tally backup file, or paste its contents below. This replaces everything currently in the app.', es:'Elige un archivo de copia de Tally o pega su contenido abajo. Esto reemplaza todo lo que hay ahora en la app.', nl:'Kies een Tally back-upbestand of plak de inhoud hieronder. Dit vervangt alles wat nu in de app staat.'},
+    lbl_paste_json: {en:'Or paste backup text', es:'O pega el texto de la copia', nl:'Of plak de back-uptekst'},
+    btn_import: {en:'Import', es:'Importar', nl:'Importeren'},
+    confirm_import: {en:'Replace all current data with this backup?', es:'¿Reemplazar todos los datos actuales con esta copia?', nl:'Alle huidige gegevens vervangen door deze back-up?'},
+    btn_yes_replace: {en:'Yes, replace', es:'Sí, reemplazar', nl:'Ja, vervangen'},
+    toast_import_ok: {en:'Backup restored', es:'Copia restaurada', nl:'Back-up hersteld'},
+    toast_import_bad: {en:'That is not a valid Tally backup', es:'Esa no es una copia válida de Tally', nl:'Dit is geen geldige Tally back-up'},
+    week_summary_label: {en:'This week', es:'Esta semana', nl:'Deze week'},
+    week_summary_trades: {en:'{count} trades', es:'{count} trades', nl:'{count} trades'},
+    week_summary_winrate: {en:'{pct}% win rate', es:'{pct}% de aciertos', nl:'{pct}% win rate'},
+    week_summary_none: {en:'No trades yet this week', es:'Aún sin trades esta semana', nl:'Nog geen trades deze week'},
+    daily_loss_warn_title: {en:'Approaching daily loss limit', es:'Cerca del límite de pérdida diaria', nl:'Bijna aan je daily loss limit'},
+    daily_loss_warn_body: {en:'You\'ve used {pct}% of today\'s daily loss limit — {lost} of {limit}. {remaining} left before you hit it.', es:'Has usado el {pct}% de tu límite de pérdida diaria — {lost} de {limit}. Te quedan {remaining} antes de alcanzarlo.', nl:'Je hebt {pct}% van je daily loss limit gebruikt — {lost} van {limit}. Nog {remaining} te gaan voordat je hem raakt.'},
+    daily_loss_breach_title: {en:'Daily loss limit reached', es:'Límite de pérdida diaria alcanzado', nl:'Daily loss limit bereikt'},
+    daily_loss_breach_body: {en:'You\'ve hit today\'s daily loss limit — {lost} of {limit}. Consider stopping for today.', es:'Has alcanzado tu límite de pérdida diaria de hoy — {lost} de {limit}. Considera parar por hoy.', nl:'Je hebt je daily loss limit voor vandaag bereikt — {lost} van {limit}. Overweeg om er vandaag mee te stoppen.'},
+    trades_title: {en:'Trades', es:'Trades', nl:'Trades'},
+    trades_empty: {en:'No trades logged yet.', es:'Aún no hay trades registrados.', nl:'Nog geen trades gelogd.'},
+    trades_empty_filtered: {en:'No trades match your filters.', es:'Ningún trade coincide con tus filtros.', nl:'Geen trades gevonden. Pas je filters aan.'},
+    filter_search_symbol: {en:'Search symbol…', es:'Buscar símbolo…', nl:'Zoek symbool…'},
+    filter_all_directions: {en:'All directions', es:'Todas las direcciones', nl:'Alle richtingen'},
+    filter_long: {en:'Long', es:'Long', nl:'Long'},
+    filter_short: {en:'Short', es:'Short', nl:'Short'},
+    filter_all_results: {en:'All results', es:'Todos los resultados', nl:'Alle resultaten'},
+    filter_win: {en:'Win', es:'Ganancia', nl:'Winst'},
+    filter_loss: {en:'Loss', es:'Pérdida', nl:'Verlies'},
+    filter_all_strategies: {en:'All strategies', es:'Todas las estrategias', nl:'Alle strategieën'},
+    th_date: {en:'Date', es:'Fecha', nl:'Datum'},
+    th_symbol: {en:'Symbol', es:'Símbolo', nl:'Symbool'},
+    th_direction: {en:'Direction', es:'Dirección', nl:'Richting'},
+    th_entry: {en:'Entry', es:'Entrada', nl:'Entry'},
+    th_exit: {en:'Exit', es:'Salida', nl:'Exit'},
+    th_size: {en:'Size', es:'Tamaño', nl:'Size'},
+    th_pnl: {en:'P&L', es:'P&L', nl:'P&L'},
+    th_r: {en:'R', es:'R', nl:'R'},
+    th_strategy: {en:'Strategy', es:'Estrategia', nl:'Strategie'},
+    stats_title: {en:'Statistics', es:'Estadísticas', nl:'Statistieken'},
+    stats_winrate: {en:'Win rate', es:'Tasa de acierto', nl:'Win rate'},
+    stats_pf: {en:'Profit factor', es:'Factor de beneficio', nl:'Profit factor'},
+    stats_expectancy: {en:'Expectancy / trade', es:'Expectativa / trade', nl:'Expectancy / trade'},
+    stats_avgr: {en:'Avg. R-multiple', es:'R-multiple prom.', nl:'Gem. R-multiple'},
+    stats_avgwin: {en:'Avg. win', es:'Ganancia prom.', nl:'Gem. winst'},
+    stats_avgloss: {en:'Avg. loss', es:'Pérdida prom.', nl:'Gem. verlies'},
+    stats_streak: {en:'Current streak', es:'Racha actual', nl:'Huidige streak'},
+    stats_win: {en:'win', es:'ganancia', nl:'winst'},
+    stats_wins: {en:'wins', es:'ganancias', nl:'winsten'},
+    stats_loss: {en:'loss', es:'pérdida', nl:'verlies'},
+    stats_losses: {en:'losses', es:'pérdidas', nl:'verliezen'},
+    stats_maxdd: {en:'Largest drawdown', es:'Mayor drawdown', nl:'Grootste drawdown'},
+    stats_count: {en:'Number of trades', es:'Número de trades', nl:'Aantal trades'},
+    account_title: {en:'Account', es:'Cuenta', nl:'Account'},
+    account_firm: {en:'Firm', es:'Firm', nl:'Firm'},
+    account_phase: {en:'Phase', es:'Fase', nl:'Fase'},
+    account_start_balance: {en:'Starting balance', es:'Balance inicial', nl:'Startkapitaal'},
+    account_current_balance: {en:'Current balance', es:'Balance actual', nl:'Huidig saldo'},
+    account_eval_profit: {en:'Evaluation profit', es:'Beneficio de evaluación', nl:'Winst uit evaluatie'},
+    account_eval_note: {en:'Kept separate — funded balance started fresh from {date}.', es:'Se mantiene aparte — el balance funded empezó de cero el {date}.', nl:'Apart gehouden — funded saldo begon fris vanaf {date}.'},
+    eval_tag: {en:'Eval', es:'Eval', nl:'Eval'},
+    funded_tag: {en:'Funded', es:'Funded', nl:'Funded'},
+    mixed_tag: {en:'E+F', es:'E+F', nl:'E+F'},
+    account_type: {en:'Type', es:'Tipo', nl:'Type'},
+    type_live: {en:'Live', es:'Real', nl:'Live'},
+    type_backtest: {en:'Backtest', es:'Backtest', nl:'Backtest'},
+    phase_evaluation: {en:'Evaluation', es:'Evaluación', nl:'Evaluatie'},
+    phase_funded: {en:'Funded', es:'Funded', nl:'Funded'},
+    modal_trade_new: {en:'New trade', es:'Nuevo trade', nl:'Nieuwe trade'},
+    modal_trade_edit: {en:'Edit trade', es:'Editar trade', nl:'Trade bewerken'},
+    lbl_date: {en:'Date', es:'Fecha', nl:'Datum'},
+    lbl_symbol: {en:'Symbol', es:'Símbolo', nl:'Symbool'},
+    lbl_direction: {en:'Direction', es:'Dirección', nl:'Richting'},
+    lbl_entry_price: {en:'Entry price', es:'Precio de entrada', nl:'Entry prijs'},
+    lbl_exit_price: {en:'Exit price', es:'Precio de salida', nl:'Exit prijs'},
+    lbl_size: {en:'Size / lots', es:'Tamaño / lotes', nl:'Size / lots'},
+    lbl_r: {en:'R-multiple (optional)', es:'R-multiple (opcional)', nl:'R-multiple (optioneel)'},
+    lbl_pnl: {en:'P&L', es:'P&L', nl:'P&L'},
+    hint_pnl: {en:'Enter manually, or leave blank to auto-calculate from entry/exit/size (long: (exit-entry)×size, short: (entry-exit)×size).', es:'Introdúcelo manualmente, o déjalo en blanco para calcularlo automáticamente a partir de entrada/salida/tamaño.', nl:'Vul handmatig in, of laat leeg om automatisch te berekenen uit entry/exit/size.'},
+    lbl_strategy: {en:'Strategy / setup', es:'Estrategia / setup', nl:'Strategie / setup'},
+    lbl_emotion: {en:'Emotion / state', es:'Emoción / estado', nl:'Emotie / staat'},
+    lbl_confidence: {en:'How confident were you in this trade? (optional)', es:'¿Qué tan seguro estabas de este trade? (opcional)', nl:'Hoe zeker was je van deze trade? (optioneel)'},
+    lbl_confidence_short: {en:'Confidence', es:'Confianza', nl:'Zekerheid'},
+    conf_low: {en:'Low', es:'Baja', nl:'Laag'},
+    conf_mid: {en:'Medium', es:'Media', nl:'Gemiddeld'},
+    conf_high: {en:'High', es:'Alta', nl:'Hoog'},
+    lbl_screenshots: {en:'Screenshots', es:'Capturas', nl:'Screenshots'},
+    btn_add_photo: {en:'+ Add screenshot', es:'+ Añadir captura', nl:'+ Screenshot toevoegen'},
+    hint_photos: {en:'Up to {max}. Tip: paste a screenshot with Cmd+V. Images are compressed and stored on this device only.', es:'Hasta {max}. Consejo: pega una captura con Cmd+V. Las imágenes se comprimen y se guardan solo en este dispositivo.', nl:'Maximaal {max}. Tip: plak een screenshot met Cmd+V. Afbeeldingen worden gecomprimeerd en alleen op dit apparaat bewaard.'},
+    toast_photo_limit: {en:'Maximum of {max} screenshots per trade', es:'Máximo {max} capturas por trade', nl:'Maximaal {max} screenshots per trade'},
+    toast_photo_fail: {en:'Could not add that image', es:'No se pudo añadir esa imagen', nl:'Die afbeelding kon niet worden toegevoegd'},
+    toast_photo_save_fail: {en:'Could not save a screenshot (storage full?)', es:'No se pudo guardar una captura (¿almacenamiento lleno?)', nl:'Een screenshot kon niet worden opgeslagen (opslag vol?)'},
+    export_ready_title: {en:'Backup ready', es:'Copia lista', nl:'Back-up klaar'},
+    export_ready_body: {en:'Includes your trades and screenshots. Tap below to save or share the file.', es:'Incluye tus trades y capturas. Toca abajo para guardar o compartir el archivo.', nl:'Bevat je trades en screenshots. Tik hieronder om het bestand op te slaan of te delen.'},
+    btn_save_share: {en:'Save / share file', es:'Guardar / compartir archivo', nl:'Bestand opslaan / delen'},
+    lbl_notes: {en:'Notes', es:'Notas', nl:'Notities'},
+    ph_notes: {en:'Reason for the trade, what went right/wrong, lessons…', es:'Motivo del trade, qué salió bien/mal, lecciones…', nl:'Reden voor de trade, wat ging goed/fout, lessen…'},
+    btn_delete: {en:'Delete', es:'Eliminar', nl:'Verwijderen'},
+    btn_cancel: {en:'Cancel', es:'Cancelar', nl:'Annuleren'},
+    btn_save: {en:'Save', es:'Guardar', nl:'Opslaan'},
+    btn_log_trade: {en:'Log trade', es:'Registrar trade', nl:'Trade loggen'},
+    toast_min_fields: {en:'Fill in at least date and symbol', es:'Completa al menos fecha y símbolo', nl:'Vul minimaal datum en symbool in'},
+    toast_pnl_needed: {en:'Enter P&L, or entry/exit/size so it can be calculated', es:'Introduce P&L, o entrada/salida/tamaño para calcularlo', nl:'Vul P&L in, of entry/exit/size zodat het berekend kan worden'},
+    toast_trade_updated: {en:'Trade updated', es:'Trade actualizado', nl:'Trade bijgewerkt'},
+    toast_trade_logged: {en:'Trade logged', es:'Trade registrado', nl:'Trade gelogd'},
+    confirm_delete_trade: {en:'Delete this trade?', es:'¿Eliminar este trade?', nl:'Deze trade verwijderen?'},
+    toast_trade_deleted: {en:'Trade deleted', es:'Trade eliminado', nl:'Trade verwijderd'},
+    modal_acc_new: {en:'New prop firm account', es:'Nueva cuenta de prop firm', nl:'Nieuw prop firm account'},
+    modal_acc_edit: {en:'Edit account', es:'Editar cuenta', nl:'Account bewerken'},
+    section_basics: {en:'Basics', es:'Datos básicos', nl:'Basis'},
+    lbl_account_name: {en:'Account name', es:'Nombre de la cuenta', nl:'Naam account'},
+    lbl_firm: {en:'Firm', es:'Firm', nl:'Firm'},
+    lbl_phase: {en:'Phase', es:'Fase', nl:'Fase'},
+    lbl_currency: {en:'Currency', es:'Divisa', nl:'Valuta'},
+    check_backtest: {en:'This is a backtest / simulation account', es:'Esta es una cuenta de backtest / simulación', nl:'Dit is een backtest / simulatie account'},
+    section_rules: {en:'Rules', es:'Reglas', nl:'Regels'},
+    lbl_starting_balance: {en:'Starting balance', es:'Balance inicial', nl:'Startkapitaal'},
+    lbl_daily_loss_dollar: {en:'Daily loss limit ($)', es:'Límite de pérdida diaria ($)', nl:'Daily loss limit ($)'},
+    lbl_max_dd_dollar: {en:'Max drawdown ($)', es:'Drawdown máximo ($)', nl:'Max drawdown ($)'},
+    lbl_consistency_pct: {en:'Consistency rule — evaluation (%)', es:'Regla de consistencia — evaluación (%)', nl:'Consistency rule — evaluatie (%)'},
+    lbl_funded_consistency_pct: {en:'Consistency rule — funded (%)', es:'Regla de consistencia — funded (%)', nl:'Consistency rule — funded (%)'},
+    hint_consistency: {en:'Max share of total profit a single day may represent (most prop firms use 20–40%). Set to 0 to disable.', es:'Porcentaje máximo del beneficio total que puede representar un solo día (la mayoría de las firms usan 20–40%). Pon 0 para desactivar.', nl:'Maximaal aandeel van je totale winst dat één dag mag vertegenwoordigen (meeste prop firms hanteren 20–40%). Zet op 0 om uit te schakelen.'},
+    hint_funded_consistency: {en:'Many firms loosen or drop this rule once funded. Set to 0 to disable it for the funded phase.', es:'Muchas firms relajan o eliminan esta regla una vez funded. Pon 0 para desactivarla en la fase funded.', nl:'Veel firms versoepelen of laten deze regel los zodra je funded bent. Zet op 0 om deze uit te schakelen voor de funded-fase.'},
+    advance_modal_title: {en:'Advance to Funded', es:'Avanzar a Funded', nl:'Doorzetten naar Funded'},
+    advance_modal_body: {en:'This resets your balance, drawdown and P&L to a fresh start from today. Your evaluation trades stay in the history, tagged "Eval". You can set a different consistency rule for the funded phase below — many firms loosen or drop it once you\'re funded.', es:'Esto reinicia tu balance, drawdown y P&L a un comienzo fresco desde hoy. Tus trades de evaluación se quedan en el historial, marcados como "Eval". Puedes fijar una regla de consistencia distinta para la fase funded abajo — muchas firms la relajan o eliminan una vez estás funded.', nl:'Dit zet je saldo, drawdown en P&L terug naar een fris begin vanaf vandaag. Je evaluatie-trades blijven in de geschiedenis staan, gemarkeerd als "Eval". Hieronder kun je een andere consistency rule instellen voor de funded-fase — veel firms versoepelen of laten deze los zodra je funded bent.'},
+    btn_advance: {en:'Advance to Funded', es:'Avanzar a Funded', nl:'Doorzetten naar Funded'},
+    lbl_profit_target_dollar: {en:'Profit target ($)', es:'Objetivo de beneficio ($)', nl:'Profit target ($)'},
+    hint_target_preset: {en:'Auto-filled for evaluation accounts: 25k → 1,250 · 50k → 3,000. Override freely.', es:'Autocompletado para cuentas de evaluación: 25k → 1.250 · 50k → 3.000. Puedes modificarlo.', nl:'Automatisch ingevuld voor evaluatie-accounts: 25k → 1.250 · 50k → 3.000. Vrij aan te passen.'},
+    btn_delete_account: {en:'Delete account', es:'Eliminar cuenta', nl:'Account verwijderen'},
+    btn_create: {en:'Create', es:'Crear', nl:'Aanmaken'},
+    toast_name_required: {en:'Give the account a name', es:'Ponle un nombre a la cuenta', nl:'Geef het account een naam'},
+    toast_acc_updated: {en:'Account updated', es:'Cuenta actualizada', nl:'Account bijgewerkt'},
+    toast_acc_created: {en:'Account created', es:'Cuenta creada', nl:'Account aangemaakt'},
+    confirm_delete_account: {en:'Delete account "{name}" and all its trades?', es:'¿Eliminar la cuenta "{name}" y todos sus trades?', nl:'Account "{name}" en alle bijbehorende trades verwijderen?'},
+    toast_acc_deleted: {en:'Account deleted', es:'Cuenta eliminada', nl:'Account verwijderd'},
+    toast_create_account_first: {en:'Create an account first', es:'Primero crea una cuenta', nl:'Maak eerst een account aan'},
+    // strategies
+    strategies_desc: {en:'Notes and playbooks for the setups you trade.', es:'Notas y guías para tus setups de trading.', nl:'Notities en playbooks voor de setups die je traded.'},
+    btn_add_strategy: {en:'+ Add strategy', es:'+ Añadir estrategia', nl:'+ Strategie toevoegen'},
+    strategies_empty: {en:'No strategies yet. Document your first setup.', es:'Aún no hay estrategias. Documenta tu primer setup.', nl:'Nog geen strategieën. Leg je eerste setup vast.'},
+    modal_strategy_new: {en:'New strategy', es:'Nueva estrategia', nl:'Nieuwe strategie'},
+    modal_strategy_edit: {en:'Edit strategy', es:'Editar estrategia', nl:'Strategie bewerken'},
+    lbl_title: {en:'Title', es:'Título', nl:'Titel'},
+    lbl_tags: {en:'Tags (comma separated)', es:'Etiquetas (separadas por comas)', nl:'Tags (komma-gescheiden)'},
+    lbl_content: {en:'Notes', es:'Notas', nl:'Notities'},
+    ph_strategy_content: {en:'Entry criteria, exit rules, risk management, examples…', es:'Criterios de entrada, reglas de salida, gestión de riesgo, ejemplos…', nl:'Entry-criteria, exit-regels, risk management, voorbeelden…'},
+    toast_title_required: {en:'Give it a title', es:'Ponle un título', nl:'Geef het een titel'},
+    confirm_delete_strategy: {en:'Delete this strategy?', es:'¿Eliminar esta estrategia?', nl:'Deze strategie verwijderen?'},
+    // indicators
+    indicators_desc: {en:'TradingView indicators worth keeping on your charts, with a note on why.', es:'Indicadores de TradingView que vale la pena tener en tus gráficos, con una nota de por qué.', nl:'TradingView indicators die het waard zijn op je charts, met een korte toelichting.'},
+    btn_add_indicator: {en:'+ Add indicator', es:'+ Añadir indicador', nl:'+ Indicator toevoegen'},
+    indicators_empty: {en:'No indicators saved yet.', es:'Aún no hay indicadores guardados.', nl:'Nog geen indicators opgeslagen.'},
+    modal_indicator_new: {en:'New indicator', es:'Nuevo indicador', nl:'Nieuwe indicator'},
+    modal_indicator_edit: {en:'Edit indicator', es:'Editar indicador', nl:'Indicator bewerken'},
+    lbl_name: {en:'Name', es:'Nombre', nl:'Naam'},
+    lbl_tv_url: {en:'TradingView link', es:'Enlace de TradingView', nl:'TradingView link'},
+    lbl_category: {en:'Category', es:'Categoría', nl:'Categorie'},
+    lbl_description: {en:'Description', es:'Descripción', nl:'Beschrijving'},
+    ph_indicator_desc: {en:'What it shows and how it makes your trading clearer…', es:'Qué muestra y cómo hace tu trading más claro…', nl:'Wat het laat zien en waarom het je trading overzichtelijker maakt…'},
+    open_on_tv: {en:'Open on TradingView ↗', es:'Abrir en TradingView ↗', nl:'Openen op TradingView ↗'},
+    toast_url_required: {en:'Add a TradingView link', es:'Añade un enlace de TradingView', nl:'Voeg een TradingView link toe'},
+    confirm_delete_indicator: {en:'Delete this indicator?', es:'¿Eliminar este indicador?', nl:'Deze indicator verwijderen?'},
+    // settings
+    lbl_email: {en:'Email', es:'Correo electrónico', nl:'E-mail'},
+    lbl_username: {en:'Username', es:'Nombre de usuario', nl:'Gebruikersnaam'},
+    lbl_password: {en:'Password', es:'Contraseña', nl:'Wachtwoord'},
+    lbl_invite: {en:'Invite code', es:'Código de invitación', nl:'Uitnodigingscode'},
+    auth_tagline: {en:'Your journal, synced across your devices.', es:'Tu diario, sincronizado en todos tus dispositivos.', nl:'Je journal, gesynchroniseerd op al je apparaten.'},
+    auth_username_hint: {en:'3–20 letters, numbers or _', es:'3–20 letras, números o _', nl:'3–20 letters, cijfers of _'},
+    auth_btn_login: {en:'Log in', es:'Iniciar sesión', nl:'Inloggen'},
+    auth_btn_register: {en:'Create account', es:'Crear cuenta', nl:'Account aanmaken'},
+    auth_working: {en:'One moment…', es:'Un momento…', nl:'Even geduld…'},
+    auth_switch_login: {en:'Already have an account? Log in', es:'¿Ya tienes cuenta? Inicia sesión', nl:'Al een account? Log in'},
+    auth_switch_register: {en:'New here? Create an account', es:'¿Nuevo? Crea una cuenta', nl:'Nieuw? Maak een account'},
+    auth_skip: {en:'Continue without account (this device only)', es:'Continuar sin cuenta (solo este dispositivo)', nl:'Verder zonder account (alleen dit apparaat)'},
+    auth_welcome: {en:'Welcome! Syncing your data…', es:'¡Bienvenido! Sincronizando tus datos…', nl:'Welkom! Je gegevens worden gesynchroniseerd…'},
+    auth_confirm_email: {en:'Account created. Check your email to confirm it, then log in.', es:'Cuenta creada. Revisa tu correo para confirmarla y luego inicia sesión.', nl:'Account aangemaakt. Bevestig je e-mail via de mail die je krijgt en log daarna in.'},
+    auth_session_expired: {en:'Session expired — please log in again.', es:'Sesión caducada: inicia sesión de nuevo.', nl:'Sessie verlopen — log opnieuw in.'},
+    auth_err_email: {en:'Enter a valid email address.', es:'Introduce un correo válido.', nl:'Vul een geldig e-mailadres in.'},
+    auth_err_username: {en:'Username must be 3–20 letters, numbers or _.', es:'El usuario debe tener 3–20 letras, números o _.', nl:'Gebruikersnaam moet 3–20 letters, cijfers of _ zijn.'},
+    auth_err_code: {en:'Enter your invite code (8–16 letters/numbers).', es:'Introduce tu código de invitación (8–16 letras/números).', nl:'Vul je uitnodigingscode in (8–16 letters/cijfers).'},
+    auth_err_invalid: {en:'Wrong email or password.', es:'Correo o contraseña incorrectos.', nl:'Verkeerd e-mailadres of wachtwoord.'},
+    auth_err_unconfirmed: {en:'Please confirm your email first (check your inbox).', es:'Confirma primero tu correo (revisa tu bandeja).', nl:'Bevestig eerst je e-mail (kijk in je inbox).'},
+    auth_err_exists: {en:'This email is already registered. Log in instead.', es:'Este correo ya está registrado. Inicia sesión.', nl:'Dit e-mailadres is al geregistreerd. Log in.'},
+    auth_err_weak: {en:'Password needs at least 8 characters.', es:'La contraseña necesita al menos 8 caracteres.', nl:'Wachtwoord moet minstens 8 tekens hebben.'},
+    auth_err_rate: {en:'Too many attempts — try again in a minute.', es:'Demasiados intentos: inténtalo en un minuto.', nl:'Te veel pogingen — probeer het over een minuut opnieuw.'},
+    auth_err_signup: {en:'Sign-up failed. Check your invite code, and that your username is not taken.', es:'No se pudo registrar. Revisa tu código de invitación y que el usuario no esté en uso.', nl:'Registreren mislukt. Controleer je uitnodigingscode en of de gebruikersnaam niet al bestaat.'},
+    auth_err_network: {en:'No connection. Try again when you are online.', es:'Sin conexión. Inténtalo cuando estés en línea.', nl:'Geen verbinding. Probeer het opnieuw als je online bent.'},
+    auth_err_generic: {en:'Something went wrong. Please try again.', es:'Algo salió mal. Inténtalo de nuevo.', nl:'Er ging iets mis. Probeer het opnieuw.'},
+    acct_title: {en:'Account', es:'Cuenta', nl:'Account'},
+    acct_signed_in: {en:'Signed in as {name}', es:'Sesión iniciada como {name}', nl:'Ingelogd als {name}'},
+    acct_local_note: {en:'Your data is only stored on this device. Log in to sync it across devices.', es:'Tus datos solo están en este dispositivo. Inicia sesión para sincronizarlos.', nl:'Je gegevens staan alleen op dit apparaat. Log in om te synchroniseren tussen apparaten.'},
+    acct_login: {en:'Log in / create account', es:'Iniciar sesión / crear cuenta', nl:'Inloggen / account aanmaken'},
+    acct_sync_now: {en:'Sync now', es:'Sincronizar ahora', nl:'Nu synchroniseren'},
+    acct_logout: {en:'Log out', es:'Cerrar sesión', nl:'Uitloggen'},
+    acct_delete: {en:'Delete account', es:'Eliminar cuenta', nl:'Account verwijderen'},
+    acct_delete_confirm: {en:'Delete your account and all data stored in the cloud (trades, screenshots, posts)? Data on this device stays. This cannot be undone.', es:'¿Eliminar tu cuenta y todos los datos en la nube (trades, capturas, publicaciones)? Los datos de este dispositivo se conservan. No se puede deshacer.', nl:'Je account en alle gegevens in de cloud verwijderen (trades, screenshots, posts)? Gegevens op dit apparaat blijven staan. Dit kan niet ongedaan worden.'},
+    acct_deleted: {en:'Account deleted.', es:'Cuenta eliminada.', nl:'Account verwijderd.'},
+    acct_other_user_confirm: {en:'This device still holds data from a different account. Logging in will replace it with this account\'s data. Continue?', es:'Este dispositivo aún tiene datos de otra cuenta. Al iniciar sesión se reemplazarán por los de esta cuenta. ¿Continuar?', nl:'Dit apparaat bevat nog gegevens van een ander account. Inloggen vervangt die door de gegevens van dit account. Doorgaan?'},
+    acct_replace: {en:'Replace', es:'Reemplazar', nl:'Vervangen'},
+    sync_pending: {en:'Waiting to sync…', es:'Esperando sincronización…', nl:'Wacht op synchronisatie…'},
+    sync_syncing: {en:'Syncing…', es:'Sincronizando…', nl:'Synchroniseren…'},
+    sync_done: {en:'Synced · {time}', es:'Sincronizado · {time}', nl:'Gesynchroniseerd · {time}'},
+    sync_offline: {en:'Offline — will sync when you are back online', es:'Sin conexión: se sincronizará al volver', nl:'Offline — synchroniseert zodra je weer online bent'},
+    sync_error: {en:'Sync problem — will retry', es:'Problema de sincronización: se reintentará', nl:'Sync-probleem — wordt opnieuw geprobeerd'},
+    settings_title: {en:'Settings', es:'Ajustes', nl:'Instellingen'},
+    lbl_language: {en:'Language', es:'Idioma', nl:'Taal'},
+    storage_note: {en:'Failed to save', es:'Error al guardar', nl:'Opslaan mislukt'},
+    checkin_title: {en:'Daily check-in', es:'Check-in diario', nl:'Dagelijkse check-in'},
+    checkin_body: {en:'Before you log today\'s trades — how well were you in it today?', es:'Antes de registrar tus trades de hoy — ¿qué tan bien estabas hoy?', nl:'Voordat je gaat journalen — hoe goed zat je er vandaag in?'},
+    checkin_scale_low: {en:'Off my game', es:'Fuera de forma', nl:'Niet lekker'},
+    checkin_scale_high: {en:'Fully locked in', es:'Totalmente enfocado', nl:'Volledig scherp'},
+    lbl_checkin_note: {en:'Note (optional)', es:'Nota (opcional)', nl:'Notitie (optioneel)'},
+    ph_checkin_note: {en:'Distracted, tired, confident, forcing trades…', es:'Distraído, cansado, confiado, forzando trades…', nl:'Afgeleid, moe, zelfverzekerd, trades forceren…'},
+    btn_continue: {en:'Continue', es:'Continuar', nl:'Doorgaan'},
+    btn_skip: {en:'Skip today', es:'Omitir hoy', nl:'Overslaan'},
+    checkin_score_label: {en:'Check-in', es:'Check-in', nl:'Check-in'},
+    congrats_title: {en:'Congratulations!', es:'¡Felicidades!', nl:'Gefeliciteerd!'},
+    congrats_body_evaluation: {en:'You just hit the profit target on {account}. Time to move on to Funded.', es:'Acabas de alcanzar el objetivo de beneficio en {account}. Es hora de pasar a Funded.', nl:'Je hebt zojuist het profit target op {account} gehaald. Tijd voor Funded.'},
+    congrats_body_funded: {en:'You just hit the profit target on {account}. Nicely done.', es:'Acabas de alcanzar el objetivo de beneficio en {account}. Bien hecho.', nl:'Je hebt zojuist het profit target op {account} gehaald. Goed gedaan.'},
+    congrats_final_balance: {en:'Final balance', es:'Balance final', nl:'Eindsaldo'},
+    congrats_total_profit: {en:'Total profit', es:'Beneficio total', nl:'Totale winst'},
+    congrats_close: {en:"Let's go", es:'Vamos', nl:'Mooi zo'},
+    btn_advance_funded: {en:'Advance to Funded →', es:'Avanzar a Funded →', nl:'Doorzetten naar Funded →'},
+    confirm_advance_funded: {en:'Move "{name}" to Funded?', es:'¿Pasar "{name}" a Funded?', nl:'"{name}" doorzetten naar Funded?'},
+    toast_advanced_funded: {en:'Account moved to Funded', es:'Cuenta movida a Funded', nl:'Account is nu Funded'},
+    btn_yes_delete: {en:'Yes, delete', es:'Sí, eliminar', nl:'Ja, verwijderen'},
+    btn_yes_confirm: {en:'Yes, confirm', es:'Sí, confirmar', nl:'Ja, bevestigen'},
+  };
+  let lang = 'en';
+  const t = (key, vars) => {
+    let s = (T[key] && (T[key][lang] || T[key].en)) || key;
+    if (vars) Object.keys(vars).forEach(k => { s = s.split('{'+k+'}').join(vars[k]); });
+    return s;
+  };
+
+  // ---------- state ----------
+  let accounts = [];
+  let trades = [];
+  let strategies = [];
+  let indicators = [];
+  let checkins = [];
+  let currentAccountId = null;
+  let currentSection = 'journal';
+  let calMonth = new Date();
+  calMonth.setDate(1);
+  let filters = { symbol: '', direction: 'all', result: 'all', strategy: 'all' };
+
+  const $ = (sel, el) => (el||document).querySelector(sel);
+  const $$ = (sel, el) => Array.from((el||document).querySelectorAll(sel));
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  const fmt = (n, d=2) => Number(n).toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
+  const fmtMoney = (n, ccy='$') => (n<0? '-':'') + ccy + fmt(Math.abs(n));
+  const dateToLocalISO = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const todayISO = () => dateToLocalISO(new Date());
+  function getWeekRange(){
+    const now = new Date();
+    const dayIdx = (now.getDay()+6)%7; // days since Monday
+    const monday = new Date(now); monday.setDate(now.getDate()-dayIdx);
+    const sunday = new Date(monday); sunday.setDate(monday.getDate()+6);
+    return { start: dateToLocalISO(monday), end: dateToLocalISO(sunday) };
+  }
+  const TARGET_PRESETS = { 25000: 1250, 50000: 3000 };
+  const MAXDD_PRESETS = { 50000: 2000 };
+
+  // ---------- storage ----------
+  async function loadAll(){
+    try { const a = await window.storage.get('tally:accounts'); accounts = a ? JSON.parse(a.value) : []; } catch(e){ accounts = []; }
+    try { const tr = await window.storage.get('tally:trades'); trades = tr ? JSON.parse(tr.value) : []; } catch(e){ trades = []; }
+    try { const s = await window.storage.get('tally:strategies'); strategies = s ? JSON.parse(s.value) : []; } catch(e){ strategies = []; }
+    try { const i = await window.storage.get('tally:indicators'); indicators = i ? JSON.parse(i.value) : []; } catch(e){ indicators = []; }
+    try { const ck = await window.storage.get('tally:checkins'); checkins = ck ? JSON.parse(ck.value) : []; } catch(e){ checkins = []; }
+    try { const c = await window.storage.get('tally:current'); currentAccountId = c ? JSON.parse(c.value) : null; } catch(e){ currentAccountId = null; }
+    try { const st = await window.storage.get('tally:settings'); const parsed = st ? JSON.parse(st.value) : null; lang = (parsed && parsed.lang) || 'en'; } catch(e){ lang = 'en'; }
+  }
+  async function saveAccounts(){ try { await window.storage.set('tally:accounts', JSON.stringify(accounts)); cloudSchedule(); } catch(e){ showToast(t('storage_note')); } }
+  async function saveTrades(){ try { await window.storage.set('tally:trades', JSON.stringify(trades)); cloudSchedule(); } catch(e){ showToast(t('storage_note')); } }
+  async function saveStrategies(){ try { await window.storage.set('tally:strategies', JSON.stringify(strategies)); cloudSchedule(); } catch(e){ showToast(t('storage_note')); } }
+  async function saveIndicators(){ try { await window.storage.set('tally:indicators', JSON.stringify(indicators)); cloudSchedule(); } catch(e){ showToast(t('storage_note')); } }
+  async function saveCheckins(){ try { await window.storage.set('tally:checkins', JSON.stringify(checkins)); cloudSchedule(); } catch(e){ showToast(t('storage_note')); } }
+  async function saveCurrent(){ try { await window.storage.set('tally:current', JSON.stringify(currentAccountId)); } catch(e){} }
+  async function saveSettings(){ try { await window.storage.set('tally:settings', JSON.stringify({lang})); } catch(e){} }
+
+  function showConfirm(message, confirmLabel){
+    return new Promise(resolve => {
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop';
+      backdrop.style.zIndex = '150';
+      backdrop.innerHTML = `
+        <div class="modal" style="max-width:380px;">
+          <div class="modal-body" style="padding-top:24px;">
+            <p style="margin:0; font-size:13.5px; color:var(--text); line-height:1.6;">${message}</p>
+          </div>
+          <div class="modal-foot">
+            <button class="btn btn-ghost" id="confirmNo">${t('btn_cancel')}</button>
+            <button class="btn btn-danger" id="confirmYes" style="border-color:var(--card-border);">${confirmLabel || t('btn_yes_delete')}</button>
+          </div>
+        </div>`;
+      document.body.appendChild(backdrop);
+      const finish = (val) => { backdrop.remove(); resolve(val); };
+      $('#confirmNo', backdrop).onclick = () => finish(false);
+      $('#confirmYes', backdrop).onclick = () => finish(true);
+      backdrop.addEventListener('click', e => { if (e.target === backdrop) finish(false); });
+    });
+  }
+
+  function showToast(msg){
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(showToast._h);
+    showToast._h = setTimeout(()=> el.classList.remove('show'), 2200);
+  }
+  function tradePhaseTag(x, acc){
+    if (!acc.phaseStartAt) return '';
+    return x.createdAt < acc.phaseStartAt
+      ? `<span class="tag-eval">${t('eval_tag')}</span>`
+      : `<span class="tag-funded">${t('funded_tag')}</span>`;
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  // ---------- derived data ----------
+  function accountTrades(accId){
+    return trades.filter(x => x.accountId === accId).sort((a,b)=> a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
+  }
+
+  function computeStats(acc){
+    const allTr = accountTrades(acc.id);
+    const hasPhaseSplit = !!acc.phaseStartAt;
+    const tr = hasPhaseSplit ? allTr.filter(x => x.createdAt >= acc.phaseStartAt) : allTr;
+    const evalTr = hasPhaseSplit ? allTr.filter(x => x.createdAt < acc.phaseStartAt) : [];
+    const evalProfit = evalTr.reduce((s,x)=>s+Number(x.pnl),0);
+    let balance = acc.startingBalance;
+    let peak = acc.startingBalance;
+    let maxDD = 0;
+    const target = Number(acc.profitTargetDollar) || 0;
+    const targetAbs = acc.startingBalance + target;
+    let targetReachedDate = null;
+    const curve = [{x: 'start', y: balance}];
+    tr.forEach(x => {
+      balance += Number(x.pnl);
+      if (balance > peak) peak = balance;
+      const dd = peak - balance;
+      if (dd > maxDD) maxDD = dd;
+      if (targetReachedDate === null && target > 0 && balance >= targetAbs) targetReachedDate = x.date;
+      curve.push({x: x.date, y: balance});
+    });
+    const wins = tr.filter(x => x.pnl > 0);
+    const losses = tr.filter(x => x.pnl < 0);
+    const grossWin = wins.reduce((s,x)=>s+x.pnl,0);
+    const grossLoss = Math.abs(losses.reduce((s,x)=>s+x.pnl,0));
+    const winRate = tr.length ? (wins.length/tr.length*100) : 0;
+    const avgWin = wins.length ? grossWin/wins.length : 0;
+    const avgLoss = losses.length ? grossLoss/losses.length : 0;
+    const profitFactor = grossLoss > 0 ? grossWin/grossLoss : (grossWin>0 ? Infinity : 0);
+    const expectancy = tr.length ? (tr.reduce((s,x)=>s+Number(x.pnl),0)/tr.length) : 0;
+    const rValues = tr.filter(x => x.r !== null && x.r !== undefined && x.r !== '').map(x=>Number(x.r));
+    const avgR = rValues.length ? rValues.reduce((a,b)=>a+b,0)/rValues.length : null;
+
+    const today = todayISO();
+    const todaysTrades = tr.filter(x => x.date === today);
+    const dailyPnl = todaysTrades.reduce((s,x)=>s+Number(x.pnl),0);
+    const dailyLossLimitAbs = Number(acc.dailyLossLimitDollar) || 0;
+    const dailyLossUsedPct = dailyLossLimitAbs > 0 ? Math.min(100, Math.max(0, (-dailyPnl/dailyLossLimitAbs)*100)) : 0;
+
+    const maxDDLimitAbs = Number(acc.maxDrawdownDollar) || 0;
+    const currentDD = peak - balance;
+    const ddUsedPct = maxDDLimitAbs > 0 ? Math.min(100, Math.max(0, (currentDD/maxDDLimitAbs)*100)) : 0;
+
+    // consistency rule: max share of total profit that a single day may represent
+    const byDay = {};
+    tr.forEach(x => { byDay[x.date] = (byDay[x.date]||0) + Number(x.pnl); });
+    let totalPositiveDaysProfit = 0, bestDayProfit = 0, bestDayDate = null;
+    Object.keys(byDay).forEach(d => {
+      const v = byDay[d];
+      if (v > 0) totalPositiveDaysProfit += v;
+      if (v > bestDayProfit){ bestDayProfit = v; bestDayDate = d; }
+    });
+    const consistencyRulePct = Number(acc.phase === 'funded' ? (acc.fundedConsistencyRulePct ?? 0) : acc.consistencyRulePct) || 0;
+    const consistencyPct = totalPositiveDaysProfit > 0 ? (bestDayProfit/totalPositiveDaysProfit*100) : 0;
+    const consistencyUsedPct = consistencyRulePct > 0 ? Math.min(100, Math.max(0, (consistencyPct/consistencyRulePct)*100)) : 0;
+    const consistencyBreached = consistencyRulePct > 0 && (consistencyPct - consistencyRulePct) > 0.05;
+
+    const profitProgress = balance - acc.startingBalance;
+    const targetPct = target > 0 ? Math.min(100, Math.max(0, (profitProgress/target)*100)) : 0;
+
+    let streak = 0, streakType = null;
+    for (let i = tr.length-1; i >= 0; i--){
+      const isWin = tr[i].pnl > 0;
+      if (streakType === null){ streakType = isWin; streak = 1; }
+      else if (isWin === streakType){ streak++; }
+      else break;
+    }
+
+    const accCheckins = checkins.filter(c => c.accountId === acc.id && typeof c.score === 'number');
+    const avgCheckinScore = accCheckins.length ? accCheckins.reduce((s,c)=>s+c.score,0)/accCheckins.length : null;
+    const checkinCount = accCheckins.length;
+
+    return {
+      tr, balance, peak, maxDD, curve, winRate, avgWin, avgLoss, profitFactor, expectancy,
+      avgR, dailyPnl, dailyLossLimitAbs, dailyLossUsedPct, maxDDLimitAbs, currentDD, ddUsedPct,
+      target, profitProgress, targetPct, targetReachedDate, streak, streakType, wins, losses,
+      consistencyRulePct, consistencyPct, consistencyUsedPct, consistencyBreached, bestDayProfit, bestDayDate, totalPositiveDaysProfit,
+      hasPhaseSplit, evalProfit, evalTradeCount: evalTr.length,
+      avgCheckinScore, checkinCount
+    };
+  }
+
+  // ---------- top-level render ----------
+  function render(){
+    document.documentElement.lang = lang;
+    $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.section === currentSection));
+    $('#fabLog').classList.toggle('fab-hidden', currentSection !== 'journal');
+    $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    if (currentSection === 'journal') renderJournal();
+    else if (currentSection === 'strategies') renderStrategies();
+    else renderIndicators();
+  }
+
+  // ================= JOURNAL =================
+  function renderAccountSelect(){
+    const sel = $('#accountSelect');
+    if (!sel) return;
+    sel.innerHTML = accounts.map(a => `<option value="${a.id}" ${a.id===currentAccountId?'selected':''}>${escapeHtml(a.name)} — ${a.isBacktest? t('type_backtest') : phaseLabel(a.phase)}</option>`).join('');
+    sel.onchange = async () => { currentAccountId = sel.value; await saveCurrent(); render(); };
+  }
+  function phaseLabel(p){ return t('phase_'+p) || p || '—'; }
+
+  function renderJournal(){
+    renderAccountSelect();
+    const main = $('#main');
+    if (!accounts.length){
+      main.innerHTML = `
+        <div class="empty-state">
+          <h2>${t('empty_acc_title')}</h2>
+          <p>${t('empty_acc_body')}</p>
+          <button class="btn btn-primary" id="emptyAddAccount">${t('btn_create_account')}</button>
+        </div>`;
+      $('#emptyAddAccount').onclick = () => openAccountModal();
+      return;
+    }
+    const acc = accounts.find(a => a.id === currentAccountId) || accounts[0];
+    if (!acc) return;
+    currentAccountId = acc.id;
+    const s = computeStats(acc);
+
+    main.innerHTML = `
+      ${renderDailyLossWarning(acc, s)}
+      ${renderConsistencyAlert(acc, s)}
+      ${renderRibbon(acc, s)}
+      <div class="grid">
+        <div>
+          <div class="panel">
+            ${renderCalendarHead(acc)}
+            ${renderWeekSummary(acc, s)}
+            <div class="cal-body" id="calBody">${renderCalendarGrid(acc)}</div>
+          </div>
+          <div class="panel" style="margin-top:20px;">
+            <div class="panel-head"><h3>${t('chart_title')}</h3><span class="mono" style="font-size:12px;color:var(--text-dim)">${escapeHtml(acc.name)}${acc.isBacktest? ' · <span class=\"bt-pill\">'+t('type_backtest')+'</span>':''}</span></div>
+            <div class="chart-wrap">${renderChart(s.curve, acc.startingBalance)}</div>
+          </div>
+          <div class="panel" style="margin-top:20px;">
+            <div class="panel-head"><h3>${t('all_trades_title')} (${s.tr.length})</h3></div>
+            <div class="panel-body" style="padding-bottom:10px;">
+              <div class="filter-bar">
+                <input type="text" id="fSymbol" placeholder="${t('filter_search_symbol')}" value="${escapeHtml(filters.symbol)}">
+                <select id="fDirection">
+                  <option value="all">${t('filter_all_directions')}</option>
+                  <option value="long" ${filters.direction==='long'?'selected':''}>${t('filter_long')}</option>
+                  <option value="short" ${filters.direction==='short'?'selected':''}>${t('filter_short')}</option>
+                </select>
+                <select id="fResult">
+                  <option value="all">${t('filter_all_results')}</option>
+                  <option value="win" ${filters.result==='win'?'selected':''}>${t('filter_win')}</option>
+                  <option value="loss" ${filters.result==='loss'?'selected':''}>${t('filter_loss')}</option>
+                </select>
+                <select id="fStrategy">${strategyFilterOptions(acc)}</select>
+              </div>
+            </div>
+            <div class="table-scroll">${renderTable(acc, s)}</div>
+          </div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-head"><h3>${t('stats_title')}</h3></div>
+            <div class="panel-body">
+              <div class="stat-row"><span class="k">${t('stats_winrate')}</span><span class="v">${fmt(s.winRate,1)}%</span></div>
+              <div class="stat-row"><span class="k">${t('stats_pf')}</span><span class="v">${s.profitFactor===Infinity?'∞':fmt(s.profitFactor,2)}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_expectancy')}</span><span class="v ${s.expectancy>=0?'pos':'neg'}">${fmtMoney(s.expectancy, acc.currency)}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_avgr')}</span><span class="v">${s.avgR===null?'—':fmt(s.avgR,2)+'R'}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_avgwin')}</span><span class="v pos">${fmtMoney(s.avgWin, acc.currency)}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_avgloss')}</span><span class="v neg">-${fmtMoney(s.avgLoss, acc.currency).replace('-','')}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_streak')}</span><span class="v ${s.streak? (s.streakType?'pos':'neg') : ''}">${s.streak? s.streak+' '+(s.streakType? (s.streak>1?t('stats_wins'):t('stats_win')) : (s.streak>1?t('stats_losses'):t('stats_loss'))) : '—'}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_maxdd')}</span><span class="v neg">${fmtMoney(s.maxDD, acc.currency)}</span></div>
+              <div class="stat-row"><span class="k">${t('stats_count')}</span><span class="v">${s.tr.length}</span></div>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:20px;">
+            <div class="panel-head"><h3>${t('account_title')}</h3><button class="icon-btn" id="editAccBtn" title="Edit">✎</button></div>
+            <div class="panel-body">
+              <div class="stat-row"><span class="k">${t('account_firm')}</span><span class="v">${escapeHtml(acc.firmName||'—')}</span></div>
+              <div class="stat-row"><span class="k">${t('account_type')}</span><span class="v">${acc.isBacktest? t('type_backtest') : t('type_live')}</span></div>
+              <div class="stat-row"><span class="k">${t('account_phase')}</span><span class="v">${phaseLabel(acc.phase)}</span></div>
+              <div class="stat-row"><span class="k">${t('account_start_balance')}</span><span class="v">${fmtMoney(acc.startingBalance, acc.currency)}</span></div>
+              <div class="stat-row"><span class="k">${t('account_current_balance')}</span><span class="v">${fmtMoney(s.balance, acc.currency)}</span></div>
+              ${s.hasPhaseSplit ? `<div class="stat-row"><span class="k">${t('account_eval_profit')}</span><span class="v ${s.evalProfit>=0?'pos':'neg'}">${s.evalProfit>=0?'+':''}${fmtMoney(s.evalProfit, acc.currency)}</span></div>` : ''}
+            </div>
+            ${s.hasPhaseSplit ? `<div class="panel-body" style="padding-top:0;"><div class="hint">${t('account_eval_note', {date: acc.phaseStartDate})}</div></div>` : ''}
+            ${acc.phase === 'evaluation' ? `<div class="panel-body" style="padding-top:0;"><button class="btn" id="advanceFundedBtn" style="width:100%;">${t('btn_advance_funded')}</button></div>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('#editAccBtn').onclick = () => openAccountModal(acc.id);
+    const advBtn = $('#advanceFundedBtn');
+    if (advBtn) advBtn.onclick = () => openAdvanceFundedModal(acc.id);
+    $('#fSymbol').oninput = (e) => { filters.symbol = e.target.value; renderTableOnly(acc, computeStats(acc)); };
+    $('#fDirection').onchange = (e) => { filters.direction = e.target.value; renderTableOnly(acc, computeStats(acc)); };
+    $('#fResult').onchange = (e) => { filters.result = e.target.value; renderTableOnly(acc, computeStats(acc)); };
+    $('#fStrategy').onchange = (e) => { filters.strategy = e.target.value; renderTableOnly(acc, computeStats(acc)); };
+    wireTradeRows();
+    wireCalendar(acc);
+  }
+
+  function wireCalendar(acc){
+    const prev = $('#calPrev'); const next = $('#calNext'); const todayBtn = $('#calTodayBtn');
+    if (prev) prev.onclick = () => { calMonth.setMonth(calMonth.getMonth()-1); refreshCalendar(acc); };
+    if (next) next.onclick = () => { calMonth.setMonth(calMonth.getMonth()+1); refreshCalendar(acc); };
+    if (todayBtn) todayBtn.onclick = () => { calMonth = new Date(); calMonth.setDate(1); refreshCalendar(acc); };
+    wireCalendarCells(acc);
+  }
+  function refreshCalendar(acc){
+    const headEl = $('.panel .cal-head');
+    if (headEl) headEl.outerHTML = renderCalendarHead(acc);
+    $('#calBody').innerHTML = renderCalendarGrid(acc);
+    wireCalendar(acc);
+  }
+  function wireCalendarCells(acc){
+    $$('.cal-cell[data-date]').forEach(cell => {
+      cell.addEventListener('click', () => openDayModal(cell.dataset.date, acc));
+    });
+  }
+
+  function localeFor(){ return lang==='es' ? 'es-ES' : lang==='nl' ? 'nl-NL' : 'en-US'; }
+
+  function renderCalendarHead(acc){
+    const monthLabel = calMonth.toLocaleDateString(localeFor(), {month:'long', year:'numeric'});
+    const tr = accountTrades(acc.id);
+    const ym = `${calMonth.getFullYear()}-${String(calMonth.getMonth()+1).padStart(2,'0')}`;
+    const monthTotal = tr.filter(x => x.date.startsWith(ym)).reduce((s,x)=>s+Number(x.pnl),0);
+    return `<div class="cal-head">
+      <div class="cal-nav">
+        <button class="cal-navbtn" id="calPrev">‹</button>
+        <span class="cal-month-label">${monthLabel.charAt(0).toUpperCase()+monthLabel.slice(1)}</span>
+        <button class="cal-navbtn" id="calNext">›</button>
+        <button class="btn btn-ghost" id="calTodayBtn" style="padding:5px 10px; font-size:11.5px;">${t('cal_today')}</button>
+      </div>
+      <div class="cal-summary ${monthTotal>=0?'pos':'neg'}">${t('cal_month_total')}: ${monthTotal>=0?'+':''}${fmtMoney(monthTotal, acc.currency)}</div>
+    </div>`;
+  }
+
+  function renderCalendarGrid(acc){
+    const year = calMonth.getFullYear(), month = calMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const startOffset = (firstDay.getDay() + 6) % 7; // Monday-first
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const tr = accountTrades(acc.id);
+    const byDay = {};
+    tr.forEach(x => { (byDay[x.date] = byDay[x.date] || []).push(x); });
+    const weekdayFmt = new Intl.DateTimeFormat(localeFor(), {weekday:'short'});
+    const refMonday = new Date(2024,0,1); // a Monday
+    let weekdayHtml = '';
+    for (let i=0;i<7;i++){ const d = new Date(refMonday); d.setDate(refMonday.getDate()+i); weekdayHtml += `<span>${weekdayFmt.format(d)}</span>`; }
+
+    const todayStr = todayISO();
+    let cells = '';
+    for (let i=0;i<startOffset;i++) cells += `<div class="cal-cell empty"></div>`;
+    for (let day=1; day<=daysInMonth; day++){
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const dayTrades = byDay[dateStr] || [];
+      const total = dayTrades.reduce((s,x)=>s+Number(x.pnl),0);
+      let cls = 'cal-cell';
+      if (dateStr === todayStr) cls += ' today';
+      if (dayTrades.length){ cls += total >= 0 ? ' win' : ' loss'; }
+      let phaseBadge = '';
+      if (acc.phaseStartAt && dayTrades.length){
+        const hasEval = dayTrades.some(x => x.createdAt < acc.phaseStartAt);
+        const hasFunded = dayTrades.some(x => x.createdAt >= acc.phaseStartAt);
+        if (hasEval && hasFunded) phaseBadge = `<span class="cal-phase-tag mixed">${t('mixed_tag')}</span>`;
+        else if (hasEval) phaseBadge = `<span class="cal-phase-tag eval">${t('eval_tag')}</span>`;
+        else phaseBadge = `<span class="cal-phase-tag funded">${t('funded_tag')}</span>`;
+      }
+      const ck = getCheckin(acc.id, dateStr);
+      const checkinBadge = (ck && typeof ck.score === 'number') ? `<span class="cal-checkin-badge" style="background:transparent;">${checkinEmoji(ck.score)}</span>` : '';
+      cells += `<div class="${cls}" data-date="${dateStr}">
+        ${phaseBadge}
+        <div class="cal-daynum">${day}</div>
+        ${dayTrades.length? `<div class="cal-pnl">${calMoney(total, acc.currency)}</div>` : ''}
+        ${dayTrades.length>1? `<div class="cal-count">${dayTrades.length}×</div>` : ''}
+        ${checkinBadge}
+      </div>`;
+    }
+    return `<div class="cal-weekdays">${weekdayHtml}</div><div class="cal-grid">${cells}</div>`;
+  }
+
+  function openDayModal(dateStr, acc){
+    const dayTrades = accountTrades(acc.id).filter(x=>x.date===dateStr);
+    const total = dayTrades.reduce((s,x)=>s+Number(x.pnl),0);
+    const ck = getCheckin(acc.id, dateStr);
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    const rows = dayTrades.map(x => `
+      <div class="day-trade-row" data-id="${x.id}">
+        <div class="day-trade-left">
+          <span class="dir-pill dir-${x.direction}">${x.direction==='long'?t('filter_long'):t('filter_short')}</span>
+          <span class="mono">${escapeHtml(x.symbol)}</span>${tradeMeta(x)}
+          ${tradePhaseTag(x, acc)}
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="mono ${x.pnl>=0?'pos':'neg'}">${x.pnl>=0?'+':''}${fmtMoney(x.pnl, acc.currency)}</span>
+          <div class="row-actions" style="opacity:1;">
+            <button class="icon-btn day-edit-trade" data-id="${x.id}" title="${t('btn_save')}">✎</button>
+            <button class="icon-btn day-del-trade" data-id="${x.id}" title="${t('btn_delete')}">✕</button>
+          </div>
+        </div>
+      </div>`).join('');
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head">
+          <h3>${dateStr}</h3>
+          <button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button>
+        </div>
+        <div class="modal-body">
+          ${(ck && typeof ck.score === 'number') ? `<div class="stat-row"><span class="k">${t('checkin_score_label')}</span><span class="v" style="font-size:18px;">${checkinEmoji(ck.score)}</span></div>${ck.note? `<div class="hint" style="margin-bottom:10px;">${escapeHtml(ck.note)}</div>` : ''}` : ''}
+          ${dayTrades.length? `<div class="stat-row"><span class="k">${t('day_modal_total')}</span><span class="v ${total>=0?'pos':'neg'}">${total>=0?'+':''}${fmtMoney(total, acc.currency)}</span></div>` : `<p style="color:var(--text-dim); font-size:13px; margin:0 0 14px;">${t('day_modal_empty')}</p>`}
+          <div style="margin-top:10px;">${rows}</div>
+        </div>
+        <div class="modal-foot">
+          <span></span>
+          <button class="btn btn-primary" id="addDayTradeBtn">${t('btn_add_trade_day')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    $$('.day-trade-row', backdrop).forEach(row => {
+      row.addEventListener('click', (e) => { if (e.target.closest('.row-actions')) return; close(); openTradeModal(row.dataset.id); });
+    });
+    $$('.day-edit-trade', backdrop).forEach(btn => {
+      btn.addEventListener('click', (e) => { e.stopPropagation(); close(); openTradeModal(btn.dataset.id); });
+    });
+    $$('.day-del-trade', backdrop).forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!(await showConfirm(t('confirm_delete_trade')))) return;
+        await performDeleteTrade(btn.dataset.id);
+        close();
+        render();
+        showToast(t('toast_trade_deleted'));
+      });
+    });
+    $('#addDayTradeBtn', backdrop).onclick = () => { close(); maybeCheckinThenLog(acc.id, dateStr, () => openTradeModal(null, dateStr)); };
+  }
+
+  function wireTradeRows(){
+    $$('.trade-row').forEach(row => {
+      row.addEventListener('click', (e) => { if (e.target.closest('.row-actions')) return; openTradeModal(row.dataset.id); });
+    });
+    $$('.del-trade').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); deleteTrade(btn.dataset.id); }); });
+  }
+
+  function renderTableOnly(acc, s){
+    $('.table-scroll').innerHTML = renderTable(acc, s);
+    wireTradeRows();
+  }
+
+  function strategyFilterOptions(acc){
+    const used = Array.from(new Set(accountTrades(acc.id).map(x=>x.strategy).filter(Boolean)));
+    let html = `<option value="all">${t('filter_all_strategies')}</option>`;
+    used.forEach(s => { html += `<option value="${escapeHtml(s)}" ${filters.strategy===s?'selected':''}>${escapeHtml(s)}</option>`; });
+    return html;
+  }
+
+  function renderWeekSummary(acc, s){
+    const { start, end } = getWeekRange();
+    const weekTrades = s.tr.filter(x => x.date >= start && x.date <= end);
+    if (!weekTrades.length){
+      return `<div class="week-summary"><span>${t('week_summary_label')}</span><span>· ${t('week_summary_none')}</span></div>`;
+    }
+    const total = weekTrades.reduce((sum,x)=>sum+Number(x.pnl),0);
+    const wins = weekTrades.filter(x=>x.pnl>0).length;
+    const winRate = wins/weekTrades.length*100;
+    return `<div class="week-summary">
+      <span>${t('week_summary_label')}</span>
+      <b class="${total>=0?'pos':'neg'}">${total>=0?'+':''}${fmtMoney(total, acc.currency)}</b>
+      <span>${weekTrades.length === 1 ? t('week_summary_trade_one') : t('week_summary_trades', {count: weekTrades.length})}</span>
+      <span>${t('week_summary_winrate', {pct: fmt(winRate,0)})}</span>
+    </div>`;
+  }
+
+  function renderDailyLossWarning(acc, s){
+    if (s.dailyLossLimitAbs <= 0 || s.dailyLossUsedPct < 80) return '';
+    const lostSoFar = fmtMoney(Math.max(0, -s.dailyPnl), acc.currency);
+    const limit = fmtMoney(s.dailyLossLimitAbs, acc.currency);
+    if (s.dailyLossUsedPct >= 100){
+      return `<div class="alert-banner">
+        <div class="alert-icon">🛑</div>
+        <div style="flex:1;">
+          <p class="alert-title">${t('daily_loss_breach_title')}</p>
+          <p class="alert-body" style="margin-bottom:0;">${t('daily_loss_breach_body', {lost: lostSoFar, limit})}</p>
+        </div>
+      </div>`;
+    }
+    const remaining = fmtMoney(Math.max(0, s.dailyLossLimitAbs + s.dailyPnl), acc.currency);
+    return `<div class="alert-banner warn">
+      <div class="alert-icon">⚠️</div>
+      <div style="flex:1;">
+        <p class="alert-title">${t('daily_loss_warn_title')}</p>
+        <p class="alert-body" style="margin-bottom:0;">${t('daily_loss_warn_body', {pct: fmt(s.dailyLossUsedPct,0), lost: lostSoFar, limit, remaining})}</p>
+      </div>
+    </div>`;
+  }
+
+  function renderConsistencyAlert(acc, s){
+    if (!s.consistencyBreached) return '';
+    const neededRaw = (s.bestDayProfit*100/s.consistencyRulePct) - s.totalPositiveDaysProfit;
+    const needed = Math.max(0, neededRaw);
+    return `<div class="alert-banner">
+      <div class="alert-icon">⚠️</div>
+      <div style="flex:1;">
+        <p class="alert-title">${t('consistency_alert_title')}</p>
+        <p class="alert-body">${t('consistency_alert_body', {date: s.bestDayDate, amount: fmtMoney(s.bestDayProfit, acc.currency), pct: fmt(s.consistencyPct,0), rule: fmt(s.consistencyRulePct,0)})}</p>
+        <div class="alert-fix">${t('consistency_alert_fix', {amount: fmtMoney(needed, acc.currency), date: s.bestDayDate, rule: fmt(s.consistencyRulePct,0)})}</div>
+      </div>
+    </div>`;
+  }
+
+  function renderConsistencyCell(acc, s){
+    if (!s.consistencyRulePct){
+      return `<div class="ribbon-cell">
+        <div class="ribbon-label">${t('ribbon_consistency')}</div>
+        <div class="ribbon-value" style="color:var(--text-dim); font-size:15px;">—</div>
+      </div>`;
+    }
+    const cColor = s.consistencyBreached ? 'var(--red)' : s.consistencyUsedPct >= 70 ? 'var(--amber)' : 'var(--green)';
+    const sub = s.bestDayDate
+      ? `${fmt(s.consistencyPct,0)}% ${t('ribbon_of_target')} ${fmt(s.consistencyRulePct,0)}% ${t('ribbon_limit')} · ${fmtMoney(s.bestDayProfit, acc.currency)} ${t('ribbon_best_day')}`
+      : t('ribbon_no_profit_yet');
+    return `<div class="ribbon-cell">
+      <div class="ribbon-label">${t('ribbon_consistency')}</div>
+      <div class="ribbon-value ${s.consistencyBreached?'neg':''}">${fmt(s.consistencyPct,0)}%</div>
+      <div class="gauge-track"><div class="gauge-fill" style="width:${s.consistencyUsedPct}%; background:${cColor}"></div></div>
+      <div class="ribbon-sub">${sub}</div>
+    </div>`;
+  }
+
+  function renderAvgFeelingCell(acc, s){
+    if (acc.isBacktest || s.checkinCount === 0){
+      return `<div class="ribbon-cell">
+        <div class="ribbon-label">${t('ribbon_avg_feeling')}</div>
+        <div class="ribbon-value" style="color:var(--text-dim); font-size:15px;">—</div>
+        <div class="ribbon-sub">${t('ribbon_no_checkins')}</div>
+      </div>`;
+    }
+    const color = checkinColor(s.avgCheckinScore);
+    return `<div class="ribbon-cell">
+      <div class="ribbon-label">${t('ribbon_avg_feeling')}</div>
+      <div class="ribbon-value" style="font-size:26px; line-height:1;">${checkinEmoji(s.avgCheckinScore)}</div>
+      <div class="ribbon-sub">${t('ribbon_checkins_count', {count: s.checkinCount})}</div>
+    </div>`;
+  }
+
+  function renderRibbon(acc, s){
+    const dlColor = s.dailyLossUsedPct >= 90 ? 'var(--red)' : s.dailyLossUsedPct >= 60 ? 'var(--amber)' : 'var(--green)';
+    const ddColor = s.ddUsedPct >= 90 ? 'var(--red)' : s.ddUsedPct >= 60 ? 'var(--amber)' : 'var(--green)';
+    const targetCell = s.targetReachedDate
+      ? `<div class="ribbon-value badge-reached">✓ ${t('ribbon_target_reached')}</div><div class="ribbon-sub">${t('ribbon_on')} ${s.targetReachedDate}</div>`
+      : `<div class="ribbon-value">${fmt(s.targetPct,0)}%</div>
+         <div class="gauge-track"><div class="gauge-fill" style="width:${s.targetPct}%; background:var(--amber)"></div></div>
+         <div class="ribbon-sub">${fmtMoney(s.profitProgress, acc.currency)} ${t('ribbon_of_target')} ${fmtMoney(s.target, acc.currency)}</div>`;
+    return `
+    <div class="ribbon">
+      <div class="ribbon-cell">
+        <div class="ribbon-label">${t('ribbon_balance')}</div>
+        <div class="ribbon-value">${fmtMoney(s.balance, acc.currency)}</div>
+        <div class="ribbon-sub ${s.balance-acc.startingBalance>=0?'pos':'neg'}">${s.balance-acc.startingBalance>=0?'+':''}${fmtMoney(s.balance-acc.startingBalance, acc.currency)} ${t('ribbon_since_start')}</div>
+      </div>
+      <div class="ribbon-cell">
+        <div class="ribbon-label">${t('ribbon_pnl_today')}</div>
+        <div class="ribbon-value ${s.dailyPnl>=0?'pos':'neg'}">${s.dailyPnl>=0?'+':''}${fmtMoney(s.dailyPnl, acc.currency)}</div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:${s.dailyLossUsedPct}%; background:${dlColor}"></div></div>
+        <div class="ribbon-sub">${fmt(s.dailyLossUsedPct,0)}% ${t('ribbon_of_daily_limit')} (${fmtMoney(s.dailyLossLimitAbs, acc.currency)})</div>
+      </div>
+      <div class="ribbon-cell">
+        <div class="ribbon-label">${t('ribbon_drawdown')}</div>
+        <div class="ribbon-value">${fmtMoney(s.currentDD, acc.currency)}</div>
+        <div class="gauge-track"><div class="gauge-fill" style="width:${s.ddUsedPct}%; background:${ddColor}"></div></div>
+        <div class="ribbon-sub">${fmt(s.ddUsedPct,0)}% ${t('ribbon_of_max_dd')} (${fmtMoney(s.maxDDLimitAbs, acc.currency)})</div>
+      </div>
+      ${renderConsistencyCell(acc, s)}
+      <div class="ribbon-cell">
+        <div class="ribbon-label">${t('ribbon_target')}</div>
+        ${targetCell}
+      </div>
+      ${renderAvgFeelingCell(acc, s)}
+    </div>`;
+  }
+
+  function renderChart(curve, startBalance){
+    if (curve.length < 2) return `<div style="padding:40px 0;text-align:center;color:var(--text-dim);font-size:13px;">${t('chart_empty')}</div>`;
+    const w = 1000, h = 170, padL = 46, padR = 10, padT = 14, padB = 20;
+    const ys = curve.map(p=>p.y);
+    const min = Math.min(...ys, startBalance), max = Math.max(...ys, startBalance);
+    const range = (max-min) || 1;
+    const stepX = (w - padL - padR) / (curve.length - 1);
+    const xAt = i => padL + i*stepX;
+    const yAt = v => padT + (h-padT-padB) * (1 - (v-min)/range);
+    const pts = curve.map((p,i)=>`${xAt(i)},${yAt(p.y)}`).join(' ');
+    const last = curve[curve.length-1].y;
+    const lineColor = last >= startBalance ? '#5aa579' : '#c1553d';
+    const zeroY = yAt(startBalance);
+    const areaPts = `${padL},${zeroY} ${pts} ${xAt(curve.length-1)},${zeroY}`;
+    let grid = '';
+    for (let i=0;i<=3;i++){
+      const gy = padT + (h-padT-padB)*i/3;
+      grid += `<line x1="${padL}" y1="${gy}" x2="${w-padR}" y2="${gy}" stroke="#26272c" stroke-width="1"/>`;
+    }
+    return `<svg id="equityChart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${grid}
+      <line x1="${padL}" y1="${zeroY}" x2="${w-padR}" y2="${zeroY}" stroke="#54524a" stroke-width="1" stroke-dasharray="3,3"/>
+      <polygon points="${areaPts}" fill="url(#areaGrad)"/>
+      <polyline points="${pts}" fill="none" stroke="${lineColor}" stroke-width="2"/>
+      <text x="${padL}" y="12" fill="#6f6e73" font-size="10" font-family="IBM Plex Mono">${fmt(max,0)}</text>
+      <text x="${padL}" y="${h-8}" fill="#6f6e73" font-size="10" font-family="IBM Plex Mono">${fmt(min,0)}</text>
+    </svg>`;
+  }
+
+  function filteredTrades(acc){
+    let tr = accountTrades(acc.id).slice().reverse();
+    if (filters.symbol) tr = tr.filter(x => x.symbol.toLowerCase().includes(filters.symbol.toLowerCase()));
+    if (filters.direction !== 'all') tr = tr.filter(x => x.direction === filters.direction);
+    if (filters.result === 'win') tr = tr.filter(x => x.pnl > 0);
+    if (filters.result === 'loss') tr = tr.filter(x => x.pnl < 0);
+    if (filters.strategy !== 'all') tr = tr.filter(x => x.strategy === filters.strategy);
+    return tr;
+  }
+
+  function renderTable(acc, s){
+    const tr = filteredTrades(acc);
+    if (!tr.length){
+      return `<div style="padding:40px 20px;text-align:center;color:var(--text-dim);font-size:13px;">${accountTrades(acc.id).length? t('trades_empty_filtered') : t('trades_empty')}</div>`;
+    }
+    const rows = tr.map(x => `
+      <tr class="trade-row" data-id="${x.id}">
+        <td>${x.date}${tradePhaseTag(x, acc)? ' '+tradePhaseTag(x, acc) : ''}</td>
+        <td style="font-family:'Space Grotesk',sans-serif;font-weight:500;">${escapeHtml(x.symbol)}${tradeMeta(x)}</td>
+        <td><span class="dir-pill dir-${x.direction}">${x.direction === 'long' ? t('filter_long') : t('filter_short')}</span></td>
+        <td>${x.entry ?? '—'}</td>
+        <td>${x.exit ?? '—'}</td>
+        <td>${x.size ?? '—'}</td>
+        <td class="${x.pnl>=0?'pos':'neg'}">${x.pnl>=0?'+':''}${fmtMoney(x.pnl, acc.currency)}</td>
+        <td>${x.r!==null && x.r!=='' && x.r!==undefined ? fmt(Number(x.r),1)+'R' : '—'}</td>
+        <td>${x.strategy ? `<span class="tag-pill">${escapeHtml(x.strategy)}</span>` : '—'}</td>
+        <td><div class="row-actions"><button class="icon-btn del-trade" data-id="${x.id}" title="${t('btn_delete')}">✕</button></div></td>
+      </tr>`).join('');
+    return `<table class="trades">
+      <thead><tr>
+        <th>${t('th_date')}</th><th>${t('th_symbol')}</th><th>${t('th_direction')}</th><th>${t('th_entry')}</th><th>${t('th_exit')}</th><th>${t('th_size')}</th><th>${t('th_pnl')}</th><th>${t('th_r')}</th><th>${t('th_strategy')}</th><th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function allChecksGreen(s){
+    return !!s.targetReachedDate && !s.consistencyBreached && s.ddUsedPct < 100 && s.dailyLossUsedPct < 100;
+  }
+
+  async function deleteTrade(id){
+    if (!(await showConfirm(t('confirm_delete_trade')))) return;
+    await performDeleteTrade(id);
+    render();
+    showToast(t('toast_trade_deleted'));
+  }
+
+  function openAdvanceFundedModal(accId){
+    const acc = accounts.find(a=>a.id===accId);
+    if (!acc || acc.phase === 'funded') return;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal" style="max-width:460px;">
+        <div class="modal-head"><h3>${t('advance_modal_title')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <p style="margin:0 0 16px; font-size:13px; color:var(--text-mid); line-height:1.6;">${t('advance_modal_body')}</p>
+          <label>${t('lbl_funded_consistency_pct')}</label>
+          <input type="number" step="any" id="fa_consistency" value="${acc.fundedConsistencyRulePct ?? 0}">
+          <div class="hint">${t('hint_funded_consistency')}</div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button>
+          <button class="btn btn-primary" id="confirmAdvanceBtn">${t('btn_advance')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    $('#confirmAdvanceBtn', backdrop).onclick = async () => {
+      const fundedConsistencyRulePct = Number($('#fa_consistency', backdrop).value) || 0;
+      accounts = accounts.map(a => a.id===accId ? {...a, phase:'funded', phaseStartDate: todayISO(), phaseStartAt: Date.now(), fundedConsistencyRulePct} : a);
+      await saveAccounts();
+      close();
+      render();
+      showToast(t('toast_advanced_funded'));
+    };
+  }
+
+  function getCheckin(accId, date){
+    return checkins.find(c => c.accountId === accId && c.date === date);
+  }
+
+  function checkinColor(score){
+    const s = Math.round(score);
+    if (s <= 3) return 'var(--red)';
+    if (s <= 6) return 'var(--amber)';
+    return 'var(--green)';
+  }
+  function checkinEmoji(scoreRaw){
+    const score = Math.round(scoreRaw);
+    if (score <= 3) return '😞';
+    if (score <= 6) return '😐';
+    return '😄';
+  }
+
+  function openCheckinModal(accId, date, onDone){
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    let selected = null;
+    let scaleHtml = '';
+    for (let i=1;i<=10;i++) scaleHtml += `<button type="button" class="checkin-btn" data-score="${i}">${i}</button>`;
+    backdrop.innerHTML = `
+      <div class="modal" style="max-width:460px;">
+        <div class="modal-head"><h3>${t('checkin_title')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <p style="margin:0 0 4px; font-size:13px; color:var(--text-mid); line-height:1.6;">${t('checkin_body')}</p>
+          <div class="checkin-scale">${scaleHtml}</div>
+          <div class="checkin-scale-labels"><span>1 · ${t('checkin_scale_low')}</span><span>10 · ${t('checkin_scale_high')}</span></div>
+          <label>${t('lbl_checkin_note')}</label>
+          <textarea id="ck_note" placeholder="${t('ph_checkin_note')}"></textarea>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost" id="skipBtn">${t('btn_skip')}</button>
+          <button class="btn btn-primary" id="continueBtn" disabled>${t('btn_continue')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = () => { close(); onDone(); };
+    $('#skipBtn', backdrop).onclick = async () => {
+      checkins = checkins.filter(c => !(c.accountId===accId && c.date===date));
+      checkins.push({ id: uid(), accountId: accId, date, score: null, note: '', skipped: true, createdAt: Date.now() });
+      await saveCheckins();
+      close();
+      onDone();
+    };
+    backdrop.addEventListener('click', e => { if (e.target === backdrop){ close(); onDone(); } });
+    const continueBtn = $('#continueBtn', backdrop);
+    $$('.checkin-btn', backdrop).forEach(b => {
+      b.onclick = () => {
+        selected = Number(b.dataset.score);
+        $$('.checkin-btn', backdrop).forEach(x=>x.classList.remove('selected'));
+        b.classList.add('selected');
+        continueBtn.disabled = false;
+      };
+    });
+    continueBtn.onclick = async () => {
+      if (selected === null) return;
+      const note = $('#ck_note', backdrop).value.trim();
+      checkins = checkins.filter(c => !(c.accountId===accId && c.date===date));
+      checkins.push({ id: uid(), accountId: accId, date, score: selected, note, createdAt: Date.now() });
+      await saveCheckins();
+      close();
+      onDone();
+    };
+  }
+
+  function openTradeModal(id, presetDate){
+    const x = id ? trades.find(v=>v.id===id) : null;
+    const acc = accounts.find(a=>a.id===currentAccountId);
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head">
+          <h3>${x ? t('modal_trade_edit') : t('modal_trade_new')}</h3>
+          <button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div><label>${t('lbl_date')}</label><input type="date" id="f_date" value="${x? x.date : (presetDate || todayISO())}"></div>
+            <div><label>${t('lbl_symbol')}</label><input type="text" id="f_symbol" placeholder="EURUSD, NAS100…" value="${x? escapeHtml(x.symbol): ''}"></div>
+            <div class="full">
+              <label>${t('lbl_direction')}</label>
+              <div class="seg">
+                <button type="button" class="dirbtn ${(!x || x.direction==='long')?'active long':''}" data-dir="long">${t('filter_long')}</button>
+                <button type="button" class="dirbtn ${(x && x.direction==='short')?'active short':''}" data-dir="short">${t('filter_short')}</button>
+              </div>
+            </div>
+            <div><label>${t('lbl_entry_price')}</label><input type="number" step="any" id="f_entry" value="${x? x.entry ?? '' : ''}"></div>
+            <div><label>${t('lbl_exit_price')}</label><input type="number" step="any" id="f_exit" value="${x? x.exit ?? '' : ''}"></div>
+            <div><label>${t('lbl_size')}</label><input type="number" step="any" id="f_size" value="${x? x.size ?? '' : ''}"></div>
+            <div><label>${t('lbl_r')}</label><input type="number" step="any" id="f_r" value="${x? x.r ?? '' : ''}"></div>
+            <div class="full">
+              <label>${t('lbl_pnl')} (${acc.currency})</label>
+              <input type="number" step="any" id="f_pnl" value="${x? x.pnl ?? '' : ''}">
+              <div class="hint">${t('hint_pnl')}</div>
+            </div>
+            <div><label>${t('lbl_strategy')}</label><input type="text" id="f_strategy" value="${x? escapeHtml(x.strategy||'') : ''}"></div>
+            <div><label>${t('lbl_emotion')}</label><input type="text" id="f_emotion" value="${x? escapeHtml(x.emotion||'') : ''}"></div>
+            <div class="full">
+              <label>${t('lbl_confidence')}</label>
+              <div class="conf-row">
+                <button type="button" class="conf-btn" data-conf="1"><span class="conf-emo">😞</span><span class="conf-lbl">${t('conf_low')}</span></button>
+                <button type="button" class="conf-btn" data-conf="2"><span class="conf-emo">😐</span><span class="conf-lbl">${t('conf_mid')}</span></button>
+                <button type="button" class="conf-btn" data-conf="3"><span class="conf-emo">😄</span><span class="conf-lbl">${t('conf_high')}</span></button>
+              </div>
+            </div>
+            <div class="full">
+              <label>${t('lbl_screenshots')}</label>
+              <div class="thumbs" id="thumbs"></div>
+              <button type="button" class="btn" id="addPhotoBtn">${t('btn_add_photo')}</button>
+              <input type="file" id="photoInput" accept="image/*" multiple hidden>
+              <div class="hint">${t('hint_photos', {max: MAX_IMAGES})}</div>
+            </div>
+            <div class="full"><label>${t('lbl_notes')}</label><textarea id="f_notes" placeholder="${t('ph_notes')}">${x? escapeHtml(x.notes||'') : ''}</textarea></div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <div>${x ? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}</div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button>
+            <button class="btn btn-primary" id="saveTradeBtn">${x? t('btn_save') : t('btn_log_trade')}</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+
+    let selectedDir = x ? x.direction : 'long';
+    $$('.dirbtn', backdrop).forEach(b => {
+      b.onclick = () => {
+        selectedDir = b.dataset.dir;
+        $$('.dirbtn', backdrop).forEach(v=>v.classList.remove('active','long','short'));
+        b.classList.add('active', selectedDir);
+      };
+    });
+
+    // ----- confidence (optional smiley) -----
+    let confidence = (x && [1,2,3].includes(x.confidence)) ? x.confidence : null;
+    const syncConf = () => $$('.conf-btn', backdrop).forEach(b => b.classList.toggle('selected', Number(b.dataset.conf) === confidence));
+    $$('.conf-btn', backdrop).forEach(b => {
+      b.onclick = () => { const v = Number(b.dataset.conf); confidence = (confidence === v) ? null : v; syncConf(); };
+    });
+    syncConf();
+
+    // ----- screenshots -----
+    let imgIds = (x && Array.isArray(x.images)) ? x.images.slice() : [];
+    const pendingNew = {};      // id -> dataUrl (added in this modal, not stored yet)
+    const removedStored = [];   // stored ids the user removed in this modal
+    const thumbSrc = {};        // id -> dataUrl for display
+    const thumbsEl = $('#thumbs', backdrop);
+    const addBtn = $('#addPhotoBtn', backdrop);
+    const fileInput = $('#photoInput', backdrop);
+
+    function renderThumbs(){
+      thumbsEl.innerHTML = '';
+      imgIds.forEach(iid => {
+        const wrap = document.createElement('div'); wrap.className = 'thumb';
+        const im = document.createElement('img'); im.alt = '';
+        if (thumbSrc[iid]) im.src = thumbSrc[iid];
+        im.onclick = () => { if (thumbSrc[iid]) openLightbox(thumbSrc[iid]); };
+        const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'thumb-x'; rm.textContent = '✕';
+        rm.setAttribute('aria-label', t('btn_delete'));
+        rm.onclick = () => {
+          imgIds = imgIds.filter(v => v !== iid);
+          if (pendingNew[iid]) delete pendingNew[iid]; else removedStored.push(iid);
+          renderThumbs();
+        };
+        wrap.appendChild(im); wrap.appendChild(rm); thumbsEl.appendChild(wrap);
+      });
+      addBtn.style.display = imgIds.length >= MAX_IMAGES ? 'none' : '';
+    }
+    async function addFiles(files){
+      for (const f of files){
+        if (imgIds.length >= MAX_IMAGES){ showToast(t('toast_photo_limit', {max: MAX_IMAGES})); break; }
+        try {
+          const dataUrl = await compressImage(f);
+          const iid = 'i' + uid();
+          pendingNew[iid] = dataUrl; thumbSrc[iid] = dataUrl; imgIds.push(iid);
+        } catch(e){ showToast(t('toast_photo_fail')); }
+      }
+      renderThumbs();
+    }
+    renderThumbs();
+    imgIds.forEach(async iid => {
+      const src = await imgGet(iid);
+      if (src){ thumbSrc[iid] = src; if (backdrop.isConnected) renderThumbs(); }
+    });
+    addBtn.onclick = () => fileInput.click();
+    fileInput.onchange = () => { const files = Array.from(fileInput.files || []); fileInput.value = ''; addFiles(files); };
+    const onPaste = (e) => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      const files = [];
+      for (const it of items){
+        if (it.kind === 'file' && it.type && it.type.indexOf('image/') === 0){ const f = it.getAsFile(); if (f) files.push(f); }
+      }
+      if (files.length){ e.preventDefault(); addFiles(files); }
+    };
+    document.addEventListener('paste', onPaste);
+
+    const close = () => { document.removeEventListener('paste', onPaste); backdrop.remove(); };
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    if (x) $('#deleteBtn', backdrop).onclick = () => { close(); deleteTrade(x.id); };
+
+    $('#saveTradeBtn', backdrop).onclick = async () => {
+      const date = $('#f_date', backdrop).value;
+      const symbol = $('#f_symbol', backdrop).value.trim();
+      const entry = $('#f_entry', backdrop).value;
+      const exit = $('#f_exit', backdrop).value;
+      const size = $('#f_size', backdrop).value;
+      let pnl = $('#f_pnl', backdrop).value;
+      const r = $('#f_r', backdrop).value;
+      const strategy = $('#f_strategy', backdrop).value.trim();
+      const emotion = $('#f_emotion', backdrop).value.trim();
+      const notes = $('#f_notes', backdrop).value.trim();
+
+      if (!date || !symbol){ showToast(t('toast_min_fields')); return; }
+      if (pnl === '' && entry !== '' && exit !== '' && size !== ''){
+        const e = Number(entry), ex = Number(exit), sz = Number(size);
+        pnl = selectedDir === 'long' ? (ex-e)*sz : (e-ex)*sz;
+      }
+      if (pnl === '' || isNaN(Number(pnl))){ showToast(t('toast_pnl_needed')); return; }
+
+      $('#saveTradeBtn', backdrop).disabled = true;
+      const finalIds = [];
+      for (const iid of imgIds){
+        if (pendingNew[iid]){
+          try { await imgPut(iid, pendingNew[iid]); finalIds.push(iid); }
+          catch(e){ showToast(t('toast_photo_save_fail')); }
+        } else { finalIds.push(iid); }
+      }
+      for (const rid of removedStored){ await imgDel(rid); }
+
+      const record = {
+        ...(x || {}),
+        id: x ? x.id : uid(), accountId: currentAccountId,
+        date, symbol, direction: selectedDir,
+        entry: entry===''? null : Number(entry),
+        exit: exit===''? null : Number(exit),
+        size: size===''? null : Number(size),
+        pnl: Number(pnl), r: r===''? null : Number(r),
+        strategy, emotion, notes,
+        confidence, images: finalIds,
+        createdAt: x ? x.createdAt : Date.now()
+      };
+      const acc = accounts.find(a=>a.id===currentAccountId);
+      const prevAllGreen = allChecksGreen(computeStats(acc));
+      trades = x ? trades.map(v => v.id===x.id ? record : v) : [...trades, record];
+      await saveTrades();
+      const newStats = computeStats(acc);
+      close(); render();
+      showToast(x? t('toast_trade_updated') : t('toast_trade_logged'));
+      if (!prevAllGreen && allChecksGreen(newStats)){
+        showCongratsModal(acc, newStats);
+      }
+    };
+  }
+
+  function openAccountModal(id){
+    const a = id ? accounts.find(x=>x.id===id) : null;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head">
+          <h3>${a? t('modal_acc_edit') : t('modal_acc_new')}</h3>
+          <button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="section-title">${t('section_basics')}</div>
+          <div class="form-grid">
+            <div><label>${t('lbl_account_name')}</label><input type="text" id="a_name" placeholder="Lucid Trading 50K" value="${a? escapeHtml(a.name):''}"></div>
+            <div><label>${t('lbl_firm')}</label><input type="text" id="a_firm" placeholder="Lucid Trading, FTMO…" value="${a? escapeHtml(a.firmName||''):''}"></div>
+            <div>
+              <label>${t('lbl_phase')}</label>
+              <select id="a_phase">
+                <option value="evaluation" ${a&&a.phase==='evaluation'?'selected':''}>${t('phase_evaluation')}</option>
+                <option value="funded" ${a&&a.phase==='funded'?'selected':''}>${t('phase_funded')}</option>
+              </select>
+            </div>
+            <div>
+              <label>${t('lbl_currency')}</label>
+              <select id="a_currency">
+                <option value="$" ${!a||a.currency==='$'?'selected':''}>USD ($)</option>
+                <option value="€" ${a&&a.currency==='€'?'selected':''}>EUR (€)</option>
+                <option value="£" ${a&&a.currency==='£'?'selected':''}>GBP (£)</option>
+              </select>
+            </div>
+            <div class="full">
+              <label class="checkline"><input type="checkbox" id="a_backtest" ${a&&a.isBacktest?'checked':''}> ${t('check_backtest')}</label>
+            </div>
+          </div>
+          <div class="section-title">${t('section_rules')}</div>
+          <div class="form-grid">
+            <div><label>${t('lbl_starting_balance')}</label><input type="number" step="any" id="a_start" value="${a? a.startingBalance : 50000}"></div>
+            <div><label>${t('lbl_daily_loss_dollar')}</label><input type="number" step="any" id="a_dailyloss" value="${a? a.dailyLossLimitDollar : 2500}"></div>
+            <div><label>${t('lbl_max_dd_dollar')}</label><input type="number" step="any" id="a_maxdd" value="${a? a.maxDrawdownDollar : 2000}"></div>
+            <div>
+              <label>${t('lbl_profit_target_dollar')}</label>
+              <input type="number" step="any" id="a_target" value="${a? a.profitTargetDollar : (TARGET_PRESETS[50000]||'')}">
+            </div>
+            <div class="full"><div class="hint">${t('hint_target_preset')}</div></div>
+            <div><label>${t('lbl_consistency_pct')}</label><input type="number" step="any" id="a_consistency" value="${a? a.consistencyRulePct : 30}"></div>
+            <div><label>${t('lbl_funded_consistency_pct')}</label><input type="number" step="any" id="a_funded_consistency" value="${a? (a.fundedConsistencyRulePct ?? 0) : 0}"></div>
+            <div class="full"><div class="hint">${t('hint_consistency')}</div></div>
+            <div class="full"><div class="hint">${t('hint_funded_consistency')}</div></div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <div>${a? `<button class="btn btn-danger" id="deleteAccBtn">${t('btn_delete_account')}</button>` : '<span></span>'}</div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button>
+            <button class="btn btn-primary" id="saveAccBtn">${a?t('btn_save'):t('btn_create')}</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+
+    function maybeAutofillTarget(){
+      if (a) return; // don't override on edit
+      const bal = Number($('#a_start', backdrop).value);
+      const phase = $('#a_phase', backdrop).value;
+      if (phase === 'evaluation' && TARGET_PRESETS[bal] !== undefined){
+        $('#a_target', backdrop).value = TARGET_PRESETS[bal];
+      }
+      if (MAXDD_PRESETS[bal] !== undefined){
+        $('#a_maxdd', backdrop).value = MAXDD_PRESETS[bal];
+      }
+    }
+    $('#a_start', backdrop).addEventListener('input', maybeAutofillTarget);
+    $('#a_phase', backdrop).addEventListener('change', maybeAutofillTarget);
+
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    if (a) $('#deleteAccBtn', backdrop).onclick = async () => {
+      if (!(await showConfirm(t('confirm_delete_account', {name:a.name})))) return;
+      accounts = accounts.filter(x=>x.id!==a.id);
+      await deleteTradeImages(trades.filter(x=>x.accountId===a.id));
+      trades = trades.filter(x=>x.accountId!==a.id);
+      checkins = checkins.filter(x=>x.accountId!==a.id);
+      if (currentAccountId === a.id) currentAccountId = accounts[0]? accounts[0].id : null;
+      await saveAccounts(); await saveTrades(); await saveCurrent(); await saveCheckins();
+      close(); render();
+      showToast(t('toast_acc_deleted'));
+    };
+
+    $('#saveAccBtn', backdrop).onclick = async () => {
+      const name = $('#a_name', backdrop).value.trim();
+      if (!name){ showToast(t('toast_name_required')); return; }
+      const record = {
+        ...(a || {}),
+        id: a? a.id : uid(), name,
+        firmName: $('#a_firm', backdrop).value.trim(),
+        phase: $('#a_phase', backdrop).value,
+        currency: $('#a_currency', backdrop).value,
+        isBacktest: $('#a_backtest', backdrop).checked,
+        startingBalance: Number($('#a_start', backdrop).value) || 0,
+        dailyLossLimitDollar: Number($('#a_dailyloss', backdrop).value) || 0,
+        maxDrawdownDollar: Number($('#a_maxdd', backdrop).value) || 0,
+        profitTargetDollar: Number($('#a_target', backdrop).value) || 0,
+        consistencyRulePct: Number($('#a_consistency', backdrop).value) || 0,
+        fundedConsistencyRulePct: Number($('#a_funded_consistency', backdrop).value) || 0,
+      };
+      if (a){ accounts = accounts.map(x=>x.id===a.id? record : x); }
+      else { accounts.push(record); currentAccountId = record.id; }
+      await saveAccounts(); await saveCurrent();
+      close(); render();
+      showToast(a? t('toast_acc_updated') : t('toast_acc_created'));
+    };
+  }
+
+  // ================= STRATEGIES =================
+  function renderStrategies(){
+    const main = $('#main');
+    main.innerHTML = `
+      <div class="section-toolbar">
+        <h2>${t('nav_strategies')}</h2>
+        <button class="btn btn-primary" id="addStrategyBtn">${t('btn_add_strategy')}</button>
+      </div>
+      <div class="section-desc">${t('strategies_desc')}</div>
+      ${strategies.length ? `<div class="card-grid">${strategies.map(strategyCard).join('')}</div>` : `<div class="empty-state"><p>${t('strategies_empty')}</p></div>`}
+    `;
+    $('#addStrategyBtn').onclick = () => openStrategyModal();
+    $$('.content-card[data-strategy]').forEach(c => c.addEventListener('click', () => openStrategyModal(c.dataset.strategy)));
+  }
+  function strategyCard(s){
+    const tags = (s.tags||[]).map(tag=>`<span class="tag-pill">${escapeHtml(tag)}</span>`).join('');
+    return `<div class="content-card" data-strategy="${s.id}">
+      <h4>${escapeHtml(s.title)}</h4>
+      <p>${escapeHtml(s.content||'')}</p>
+      <div class="tags">${tags}</div>
+    </div>`;
+  }
+  function openStrategyModal(id){
+    const s = id ? strategies.find(x=>x.id===id) : null;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head"><h3>${s? t('modal_strategy_edit') : t('modal_strategy_new')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="full"><label>${t('lbl_title')}</label><input type="text" id="s_title" value="${s? escapeHtml(s.title):''}"></div>
+            <div class="full"><label>${t('lbl_tags')}</label><input type="text" id="s_tags" placeholder="breakout, London session" value="${s? escapeHtml((s.tags||[]).join(', ')):''}"></div>
+            <div class="full"><label>${t('lbl_content')}</label><textarea id="s_content" style="min-height:140px;" placeholder="${t('ph_strategy_content')}">${s? escapeHtml(s.content||''):''}</textarea></div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <div>${s? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}</div>
+          <div style="display:flex; gap:8px;"><button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button><button class="btn btn-primary" id="saveBtn">${t('btn_save')}</button></div>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    if (s) $('#deleteBtn', backdrop).onclick = async () => {
+      if (!(await showConfirm(t('confirm_delete_strategy')))) return;
+      strategies = strategies.filter(x=>x.id!==s.id);
+      await saveStrategies(); close(); render();
+    };
+    $('#saveBtn', backdrop).onclick = async () => {
+      const title = $('#s_title', backdrop).value.trim();
+      if (!title){ showToast(t('toast_title_required')); return; }
+      const tags = $('#s_tags', backdrop).value.split(',').map(x=>x.trim()).filter(Boolean);
+      const content = $('#s_content', backdrop).value.trim();
+      const record = { id: s? s.id : uid(), title, tags, content, createdAt: s? s.createdAt : Date.now() };
+      strategies = s ? strategies.map(x=>x.id===s.id?record:x) : [...strategies, record];
+      await saveStrategies(); close(); render();
+    };
+  }
+
+  // ================= INDICATORS =================
+  function renderIndicators(){
+    const main = $('#main');
+    main.innerHTML = `
+      <div class="section-toolbar">
+        <h2>${t('nav_indicators')}</h2>
+        <button class="btn btn-primary" id="addIndicatorBtn">${t('btn_add_indicator')}</button>
+      </div>
+      <div class="section-desc">${t('indicators_desc')}</div>
+      ${indicators.length ? `<div class="card-grid">${indicators.map(indicatorCard).join('')}</div>` : `<div class="empty-state"><p>${t('indicators_empty')}</p></div>`}
+    `;
+    $('#addIndicatorBtn').onclick = () => openIndicatorModal();
+    $$('.content-card[data-indicator]').forEach(c => {
+      c.addEventListener('click', (e) => { if (e.target.closest('.ind-link')) return; openIndicatorModal(c.dataset.indicator); });
+    });
+  }
+  function indicatorCard(i){
+    return `<div class="content-card" data-indicator="${i.id}">
+      <h4>${escapeHtml(i.name)}${i.category? ` <span class="tag-pill" style="margin-left:4px;">${escapeHtml(i.category)}</span>`:''}</h4>
+      <p>${escapeHtml(i.description||'')}</p>
+      <a class="ind-link" href="${escapeHtml(i.url)}" target="_blank" rel="noopener">${t('open_on_tv')}</a>
+    </div>`;
+  }
+  function openIndicatorModal(id){
+    const i = id ? indicators.find(x=>x.id===id) : null;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head"><h3>${i? t('modal_indicator_edit') : t('modal_indicator_new')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div><label>${t('lbl_name')}</label><input type="text" id="i_name" value="${i? escapeHtml(i.name):''}"></div>
+            <div><label>${t('lbl_category')}</label><input type="text" id="i_category" placeholder="Volume, Trend, Momentum…" value="${i? escapeHtml(i.category||''):''}"></div>
+            <div class="full"><label>${t('lbl_tv_url')}</label><input type="text" id="i_url" placeholder="https://www.tradingview.com/script/…" value="${i? escapeHtml(i.url):''}"></div>
+            <div class="full"><label>${t('lbl_description')}</label><textarea id="i_desc" placeholder="${t('ph_indicator_desc')}">${i? escapeHtml(i.description||''):''}</textarea></div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <div>${i? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}</div>
+          <div style="display:flex; gap:8px;"><button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button><button class="btn btn-primary" id="saveBtn">${t('btn_save')}</button></div>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    if (i) $('#deleteBtn', backdrop).onclick = async () => {
+      if (!(await showConfirm(t('confirm_delete_indicator')))) return;
+      indicators = indicators.filter(x=>x.id!==i.id);
+      await saveIndicators(); close(); render();
+    };
+    $('#saveBtn', backdrop).onclick = async () => {
+      const name = $('#i_name', backdrop).value.trim();
+      const url = $('#i_url', backdrop).value.trim();
+      if (!name){ showToast(t('toast_title_required')); return; }
+      if (!url){ showToast(t('toast_url_required')); return; }
+      const record = { id: i? i.id : uid(), name, url, category: $('#i_category', backdrop).value.trim(), description: $('#i_desc', backdrop).value.trim(), createdAt: i? i.createdAt : Date.now() };
+      indicators = i ? indicators.map(x=>x.id===i.id?record:x) : [...indicators, record];
+      await saveIndicators(); close(); render();
+    };
+  }
+
+  // ================= CONGRATS =================
+  function showCongratsModal(acc, s){
+    const backdrop = document.createElement('div');
+    backdrop.className = 'congrats-backdrop';
+    const colors = ['#d4a24c','#5aa579','#e08770','#93a5e0','#f3d9a4'];
+    let confetti = '';
+    for (let i=0;i<28;i++){
+      const left = Math.random()*100;
+      const delay = (Math.random()*0.5).toFixed(2);
+      const dur = (1.8 + Math.random()*1.2).toFixed(2);
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      confetti += `<span class="confetti-piece" style="left:${left}%; background:${color}; animation-delay:${delay}s; animation-duration:${dur}s;"></span>`;
+    }
+    backdrop.innerHTML = `
+      <div class="congrats-card">
+        ${confetti}
+        <div class="congrats-icon">🏆</div>
+        <h3 class="congrats-title">${t('congrats_title')}</h3>
+        <p class="congrats-body">${t('congrats_body_'+acc.phase, {account: escapeHtml(acc.name)})}</p>
+        <div class="congrats-stats">
+          <div><div class="k">${t('congrats_final_balance')}</div><div class="v">${fmtMoney(s.balance, acc.currency)}</div></div>
+          <div><div class="k">${t('congrats_total_profit')}</div><div class="v pos">+${fmtMoney(s.profitProgress, acc.currency)}</div></div>
+        </div>
+        <button class="btn btn-primary" id="congratsClose" style="width:100%; padding:11px;">${t('congrats_close')}</button>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#congratsClose', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+  }
+
+  // ================= IMAGES (screenshots) =================
+  const MAX_IMAGES = 6;
+  let _idb = null;
+  function idbOpen(){
+    if (_idb) return _idb;
+    const pr = new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open('tally-images', 1);
+        req.onupgradeneeded = () => { req.result.createObjectStore('img'); };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error || new Error('idb error'));
+        req.onblocked = () => reject(new Error('idb blocked'));
+      } catch(e){ reject(e); }
+    });
+    _idb = pr;
+    pr.catch(() => { if (_idb === pr) _idb = null; });
+    return pr;
+  }
+  async function idbRun(mode, fn){
+    const db = await idbOpen();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction('img', mode);
+      let req;
+      try { req = fn(tx.objectStore('img')); } catch(e){ reject(e); return; }
+      tx.oncomplete = () => resolve(req ? req.result : undefined);
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error || new Error('aborted'));
+    });
+  }
+  // IndexedDB first (large quota); falls back to window.storage if it is unavailable.
+  async function imgPutLocal(id, dataUrl){
+    try { await idbRun('readwrite', st => st.put(dataUrl, id)); return; } catch(e){}
+    await window.storage.set('tally:img:' + id, dataUrl);
+  }
+  async function imgGetLocal(id){
+    try { const v = await idbRun('readonly', st => st.get(id)); if (v) return v; } catch(e){}
+    try { const r = await window.storage.get('tally:img:' + id); return r ? r.value : null; } catch(e){ return null; }
+  }
+  async function imgDelLocal(id){
+    try { await idbRun('readwrite', st => st.delete(id)); } catch(e){}
+    try { if (window.storage.delete) await window.storage.delete('tally:img:' + id); } catch(e){}
+  }
+  // these also talk to the cloud when the user is logged in
+  async function imgPut(id, dataUrl){ await imgPutLocal(id, dataUrl); cloudSchedule(); }
+  async function imgGet(id){ const v = await imgGetLocal(id); return v || cloudFetchImage(id); }
+  async function imgDel(id){ await imgDelLocal(id); cloudDeleteImage(id); }
+  function collectImageIds(list){
+    const ids = [];
+    list.forEach(x => (Array.isArray(x.images) ? x.images : []).forEach(i => ids.push(i)));
+    return ids;
+  }
+  async function deleteTradeImages(list){
+    for (const id of collectImageIds(list)) await imgDel(id);
+  }
+  async function performDeleteTrade(id){
+    const tr = trades.find(v => v.id === id);
+    if (tr) await deleteTradeImages([tr]);
+    trades = trades.filter(v => v.id !== id);
+    await saveTrades();
+  }
+
+  // Resize + recompress a screenshot so it stays small (about 100-300 KB)
+  function compressImage(file, maxDim, quality){
+    maxDim = maxDim || 1600; quality = quality || 0.72;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(reader.error || new Error('read'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('decode'));
+        img.onload = () => {
+          try {
+            let w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+            if (!w || !h) throw new Error('size');
+            const scale = Math.min(1, maxDim / Math.max(w, h));
+            w = Math.max(1, Math.round(w * scale)); h = Math.max(1, Math.round(h * scale));
+            const c = document.createElement('canvas');
+            c.width = w; c.height = h;
+            const ctx = c.getContext('2d');
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(c.toDataURL('image/jpeg', quality));
+          } catch(e){ reject(e); }
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function openLightbox(src){
+    const el = document.createElement('div');
+    el.className = 'lightbox';
+    const im = document.createElement('img'); im.src = src; im.alt = '';
+    const btn = document.createElement('button'); btn.className = 'lightbox-x'; btn.type = 'button'; btn.textContent = '✕';
+    el.appendChild(im); el.appendChild(btn);
+    el.addEventListener('click', () => el.remove());
+    document.body.appendChild(el);
+  }
+
+  function confEmoji(c){ return ({1:'😞', 2:'😐', 3:'😄'})[c] || ''; }
+  function tradeMeta(x){
+    let m = '';
+    if (confEmoji(x.confidence)) m += `<span class="tmeta" title="${t('lbl_confidence_short')}">${confEmoji(x.confidence)}</span>`;
+    if (Array.isArray(x.images) && x.images.length) m += `<span class="tmeta" title="${t('lbl_screenshots')}">📷${x.images.length > 1 ? x.images.length : ''}</span>`;
+    return m;
+  }
+
+  // "+$850" / "-$200"; compact ("$1.2k") on narrow phone screens
+  function calMoney(total, ccy){
+    const sign = total > 0 ? '+' : total < 0 ? '-' : '';
+    const abs = Math.abs(total);
+    let body;
+    if (abs >= 1000 && window.innerWidth < 560){
+      const k = abs / 1000;
+      body = (k >= 10 ? Math.round(k) : Math.round(k * 10) / 10) + 'k';
+    } else {
+      body = fmt(abs, 0);
+    }
+    return sign + ccy + body;
+  }
+
+  async function restoreTradesWithImages(obj){
+    await deleteTradeImages(trades); // screenshots of the data being replaced
+    const imgMap = (obj.images && typeof obj.images === 'object') ? obj.images : {};
+    const out = [];
+    for (const x of obj.trades){
+      const ids = Array.isArray(x.images) ? x.images.filter(id => typeof id === 'string' && typeof imgMap[id] === 'string' && imgMap[id].indexOf('data:image/') === 0) : [];
+      const kept = [];
+      for (const id of ids){
+        try { await imgPut(id, imgMap[id]); kept.push(id); } catch(e){}
+      }
+      out.push({ ...x, images: kept });
+    }
+    return out;
+  }
+
+  // ================= BACKUP / EXPORT =================
+  function stamp(){ return todayISO(); }
+
+  async function buildBackup(){
+    const images = {};
+    for (const id of collectImageIds(trades)){
+      const v = await imgGet(id);
+      if (v) images[id] = v;
+    }
+    return JSON.stringify({
+      app: 'tally', version: 2, exportedAt: new Date().toISOString(),
+      accounts, trades, strategies, indicators, checkins, images, currentAccountId, lang
+    }, null, 2);
+  }
+
+  function csvCell(v, isText){
+    let str = (v === null || v === undefined) ? '' : String(v);
+    if (isText && /^[=+\-@]/.test(str)) str = "'" + str;
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+
+  function buildTradesCsv(){
+    const head = ['Account','Type','Phase','Date','Symbol','Direction','Entry','Exit','Size','PnL','R','Strategy','Emotion','Notes','Confidence','Screenshots'];
+    const lines = [head.map(h => csvCell(h)).join(',')];
+    const sorted = trades.slice().sort((a,b) => a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
+    sorted.forEach(x => {
+      const acc = accounts.find(a => a.id === x.accountId);
+      if (!acc) return;
+      const phase = acc.phaseStartAt ? (x.createdAt < acc.phaseStartAt ? 'Evaluation' : 'Funded') : (acc.phase === 'funded' ? 'Funded' : 'Evaluation');
+      lines.push([
+        csvCell(acc.name, true), csvCell(acc.isBacktest ? 'Backtest' : 'Live'), csvCell(phase),
+        csvCell(x.date), csvCell(x.symbol, true), csvCell(x.direction),
+        csvCell(x.entry), csvCell(x.exit), csvCell(x.size), csvCell(x.pnl), csvCell(x.r),
+        csvCell(x.strategy, true), csvCell(x.emotion, true), csvCell(x.notes, true),
+        csvCell(({1:'Low', 2:'Medium', 3:'High'})[x.confidence] || ''), csvCell(Array.isArray(x.images) ? x.images.length : 0)
+      ].join(','));
+    });
+    return '\uFEFF' + lines.join('\r\n');
+  }
+
+  // Try the platform save dialog (published page); fall back to a copy-paste window.
+  async function offerFile(filename, data){
+    let dl = null;
+    try { if (window.claude && typeof window.claude.use === 'function') dl = await window.claude.use('downloads'); } catch(e){ dl = null; }
+    if (dl){
+      try { await dl.save({ filename, data }); showToast(t('toast_export_saved')); return; }
+      catch(e){ if (e && e.code === 'declined') return; }
+    }
+    // Phones (incl. the installed iOS app): open the share sheet so it can be saved to Files
+    try {
+      if (typeof File === 'function' && navigator.canShare && navigator.share){
+        const file = new File([data], filename, { type: filename.endsWith('.csv') ? 'text/csv' : 'application/json' });
+        if (navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], title: filename }); return; }
+      }
+    } catch(e){ if (e && e.name === 'AbortError') return; }
+    openCopyModal(filename, data);
+  }
+
+  // Build first, then ask for a fresh tap to save/share (phones only allow sharing right after a tap)
+  async function exportBackup(){
+    const data = await buildBackup();
+    openExportReadyModal('tally-backup-' + stamp() + '.json', data);
+  }
+  function openExportReadyModal(filename, data){
+    const mb = (new Blob([data]).size / 1048576).toFixed(1);
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal" style="max-width:420px;">
+        <div class="modal-head"><h3>${t('export_ready_title')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <p style="margin:0 0 10px; font-size:13px; color:var(--text-mid); line-height:1.6;">${t('export_ready_body')}</p>
+          <div class="hint">${escapeHtml(filename)} · ${mb} MB</div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button>
+          <button class="btn btn-primary" id="saveShareBtn">${t('btn_save_share')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    $('#saveShareBtn', backdrop).onclick = () => { close(); offerFile(filename, data); };
+  }
+  function exportCsv(){
+    if (!trades.length){ showToast(t('toast_no_trades_export')); return; }
+    offerFile('tally-trades-' + stamp() + '.csv', buildTradesCsv());
+  }
+
+  function openCopyModal(filename, text){
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head"><h3>${t('export_copy_title')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <p style="margin:0 0 12px; font-size:12.5px; color:var(--text-mid); line-height:1.6;">${t('export_copy_body')}</p>
+          <div class="hint" style="margin:0 0 6px;">${escapeHtml(filename)}</div>
+          <textarea id="copyArea" readonly style="min-height:160px; font-family:'IBM Plex Mono',monospace; font-size:11px;"></textarea>
+        </div>
+        <div class="modal-foot">
+          <span></span>
+          <button class="btn btn-primary" id="copyBtn">${t('btn_copy')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const area = $('#copyArea', backdrop);
+    area.value = text;
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    $('#copyBtn', backdrop).onclick = async () => {
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch(e){}
+      if (!ok){ try { area.focus(); area.select(); ok = document.execCommand('copy'); } catch(e){} }
+      if (ok) showToast(t('toast_copied')); else { area.focus(); area.select(); }
+    };
+  }
+
+  function openImportModal(){
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal">
+        <div class="modal-head"><h3>${t('import_title')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <p style="margin:0 0 14px; font-size:12.5px; color:var(--text-mid); line-height:1.6;">${t('import_body')}</p>
+          <input type="file" id="importFile" accept=".json,application/json,text/plain">
+          <label style="margin-top:14px;">${t('lbl_paste_json')}</label>
+          <textarea id="importText" style="min-height:110px; font-family:'IBM Plex Mono',monospace; font-size:11px;"></textarea>
+        </div>
+        <div class="modal-foot">
+          <button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button>
+          <button class="btn btn-primary" id="importGoBtn">${t('btn_import')}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    $('#importFile', backdrop).addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => { $('#importText', backdrop).value = String(reader.result || ''); };
+      reader.readAsText(f);
+    });
+    $('#importGoBtn', backdrop).onclick = async () => {
+      let obj = null;
+      try { obj = JSON.parse($('#importText', backdrop).value.trim()); } catch(e){ obj = null; }
+      if (!obj || obj.app !== 'tally' || !Array.isArray(obj.accounts) || !Array.isArray(obj.trades)){
+        showToast(t('toast_import_bad')); return;
+      }
+      if (!(await showConfirm(t('confirm_import'), t('btn_yes_replace')))) return;
+      accounts = obj.accounts;
+      trades = await restoreTradesWithImages(obj);
+      strategies = Array.isArray(obj.strategies) ? obj.strategies : [];
+      indicators = Array.isArray(obj.indicators) ? obj.indicators : [];
+      checkins = Array.isArray(obj.checkins) ? obj.checkins : [];
+      currentAccountId = accounts.some(a => a.id === obj.currentAccountId) ? obj.currentAccountId : (accounts[0] ? accounts[0].id : null);
+      if (['en','es','nl'].includes(obj.lang)) lang = obj.lang;
+      await saveAccounts(); await saveTrades(); await saveStrategies(); await saveIndicators(); await saveCheckins(); await saveCurrent(); await saveSettings();
+      close(); render();
+      showToast(t('toast_import_ok'));
+    };
+  }
+
+  // ================= SETTINGS =================
+  function openSettingsModal(){
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = `
+      <div class="modal" style="max-width:400px;">
+        <div class="modal-head"><h3>${t('settings_title')}</h3><button class="icon-btn" id="closeModal" style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <label>${t('lbl_language')}</label>
+          <select id="s_lang">
+            <option value="en" ${lang==='en'?'selected':''}>English</option>
+            <option value="es" ${lang==='es'?'selected':''}>Español</option>
+            <option value="nl" ${lang==='nl'?'selected':''}>Nederlands</option>
+          </select>
+          ${acctSectionHtml()}
+          <div class="section-title" style="margin-top:24px;">${t('settings_backup_title')}</div>
+          <div class="hint" style="margin:0 0 10px; line-height:1.5;">${t('backup_hint')}</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <button class="btn" id="exportJsonBtn">${t('btn_export_backup')}</button>
+            <button class="btn" id="exportCsvBtn">${t('btn_export_csv')}</button>
+            <button class="btn" id="importBtn">${t('btn_import_backup')}</button>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <span></span>
+          <div style="display:flex; gap:8px;"><button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button><button class="btn btn-primary" id="saveBtn">${t('btn_save')}</button></div>
+        </div>
+      </div>`;
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    $('#closeModal', backdrop).onclick = close;
+    $('#cancelBtn', backdrop).onclick = close;
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    wireAcctSection(backdrop, close);
+    $('#exportJsonBtn', backdrop).onclick = () => { close(); exportBackup(); };
+    $('#exportCsvBtn', backdrop).onclick = () => { close(); exportCsv(); };
+    $('#importBtn', backdrop).onclick = () => { close(); openImportModal(); };
+    $('#saveBtn', backdrop).onclick = async () => {
+      lang = $('#s_lang', backdrop).value;
+      await saveSettings();
+      close(); render();
+    };
+  }
+
+  // ================= CLOUD (Supabase accounts + sync) =================
+  const CLOUD = { url: 'https://nkumfolufoeuwhzcrsoz.supabase.co', key: 'sb_publishable_dsHuqF4gns1Wm0ZV_Z2GmA_mB8lxqcp' };
+  const KIND_ARR = {
+    account:   { get: () => accounts,   set: v => { accounts = v; } },
+    trade:     { get: () => trades,     set: v => { trades = v; } },
+    strategy:  { get: () => strategies, set: v => { strategies = v; } },
+    indicator: { get: () => indicators, set: v => { indicators = v; } },
+    checkin:   { get: () => checkins,   set: v => { checkins = v; } }
+  };
+  const KIND_KEY = { account:'tally:accounts', trade:'tally:trades', strategy:'tally:strategies', indicator:'tally:indicators', checkin:'tally:checkins' };
+  let cloudSession = null, cloudProfile = null, cloudStatus = 'off', cloudLast = 0;
+  let cloudBusy = false, cloudAgain = false, cloudTimer = null, cloudErrCount = 0, cloudRefreshing = null;
+  let cloudMeta = { uid: null, cursor: null, snap: {}, imgs: {} };
+  const imgMiss = {};
+
+  // stable stringify + small hash, so a record is "changed" only when its content changed
+  const canon = v => JSON.stringify(v, (k, val) => (val && typeof val === 'object' && !Array.isArray(val))
+    ? Object.keys(val).sort().reduce((o, kk) => { o[kk] = val[kk]; return o; }, {}) : val);
+  function hashStr(s){
+    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (let i = 0; i < s.length; i++){ const c = s.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+  }
+  const recSig = x => hashStr(canon(x));
+
+  async function stGet(k){ try { const r = await window.storage.get(k); return r ? JSON.parse(r.value) : null; } catch(e){ return null; } }
+  async function stSet(k, v){ try { await window.storage.set(k, JSON.stringify(v)); } catch(e){} }
+  async function stDel(k){ try { if (window.storage.delete) await window.storage.delete(k); } catch(e){} }
+
+  async function cloudLoadState(){
+    const s = await stGet('tally:session');
+    cloudSession = (s && s.access_token && s.refresh_token && s.user_id) ? s : null;
+    const m = await stGet('tally:cloudmeta');
+    if (m && typeof m === 'object') cloudMeta = { uid: m.uid || null, cursor: m.cursor || null, snap: m.snap || {}, imgs: m.imgs || {} };
+    cloudStatus = cloudSession ? 'pending' : 'off';
+  }
+  const cloudSaveMeta = () => stSet('tally:cloudmeta', cloudMeta);
+  async function cloudSaveSession(){ if (cloudSession) await stSet('tally:session', cloudSession); else await stDel('tally:session'); }
+
+  // ---------- status ----------
+  function cloudStatusText(){
+    if (!cloudSession) return '';
+    if (cloudStatus === 'syncing') return t('sync_syncing');
+    if (cloudStatus === 'offline') return t('sync_offline');
+    if (cloudStatus === 'error') return t('sync_error');
+    if (cloudStatus === 'idle' && cloudLast){ const d = new Date(cloudLast); return t('sync_done', { time: String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0') }); }
+    return t('sync_pending');
+  }
+  function updateSyncUi(){
+    const b = $('#settingsBtn');
+    if (b){ if (cloudSession) b.dataset.sync = cloudStatus; else delete b.dataset.sync; }
+    const el = $('#acctStatus'); if (el) el.textContent = cloudStatusText();
+  }
+  function setCloudStatus(s){ cloudStatus = s; updateSyncUi(); }
+
+  // ---------- HTTP ----------
+  function httpErr(r){ const e = new Error('HTTP ' + r.status); e.status = r.status; return e; }
+  async function cloudRefresh(){
+    if (!cloudSession) return false;
+    if (cloudRefreshing) return cloudRefreshing;
+    cloudRefreshing = (async () => {
+      const r = await cloudReq('POST', '/auth/v1/token?grant_type=refresh_token', { body: { refresh_token: cloudSession.refresh_token }, noAuth: true });
+      if (r.ok){
+        const s = sessionFromAuth(r.data);
+        if (s){ s.user_id = s.user_id || cloudSession.user_id; s.email = s.email || cloudSession.email; cloudSession = s; await cloudSaveSession(); return true; }
+      }
+      if (r.status === 400 || r.status === 401 || r.status === 403){ await cloudExpire(); return false; }
+      throw httpErr(r);
+    })();
+    try { return await cloudRefreshing; } finally { cloudRefreshing = null; }
+  }
+  async function cloudExpire(){
+    cloudSession = null; cloudProfile = null; await cloudSaveSession(); setCloudStatus('off');
+    showToast(t('auth_session_expired')); openAuthGate('login');
+  }
+  async function cloudReq(method, path, o){
+    o = o || {};
+    if (!o.noAuth && cloudSession && cloudSession.expires_at - Date.now()/1000 < 60) { await cloudRefresh(); }
+    if (!o.noAuth && !cloudSession) { const e = new Error('no session'); e.status = 401; throw e; }
+    const h = Object.assign({ apikey: CLOUD.key }, o.headers || {});
+    if (!o.noAuth && cloudSession) h.Authorization = 'Bearer ' + cloudSession.access_token;
+    let body = o.body;
+    if (body !== undefined && !o.raw){ body = JSON.stringify(body); h['Content-Type'] = 'application/json'; }
+    let res;
+    try { res = await fetch(CLOUD.url + path, { method, headers: h, body }); }
+    catch(e){ const er = new Error('network'); er.offline = true; throw er; }
+    if (res.status === 401 && !o.noAuth && !o._retried){
+      if (await cloudRefresh()) return cloudReq(method, path, Object.assign({}, o, { _retried: true }));
+    }
+    const out = { ok: res.ok, status: res.status, data: null, res };
+    if (o.blob){ if (res.ok) out.blob = await res.blob(); return out; }
+    const ct = (res.headers.get('content-type') || '');
+    if (ct.indexOf('json') >= 0){ try { out.data = await res.json(); } catch(e){} }
+    return out;
+  }
+
+  // ---------- auth ----------
+  function sessionFromAuth(d){
+    if (!d || !d.access_token) return null;
+    return { access_token: d.access_token, refresh_token: d.refresh_token,
+      expires_at: d.expires_at || (Math.floor(Date.now()/1000) + (d.expires_in || 3600)),
+      user_id: d.user && d.user.id, email: d.user && d.user.email };
+  }
+  async function cloudSignIn(email, pw){
+    const r = await cloudReq('POST', '/auth/v1/token?grant_type=password', { body: { email, password: pw }, noAuth: true });
+    return r.ok ? { session: sessionFromAuth(r.data) } : { error: r };
+  }
+  async function cloudSignUp(email, pw, username, code){
+    const r = await cloudReq('POST', '/auth/v1/signup', { body: { email, password: pw, data: { username, invite_code: code } }, noAuth: true });
+    return r.ok ? { session: sessionFromAuth(r.data) } : { error: r };
+  }
+  function authErrText(r, mode){
+    const d = r.data || {};
+    const m = String(d.msg || d.error_description || d.message || '').toLowerCase();
+    const code = d.error_code || d.code || '';
+    if (/invalid login/.test(m) || code === 'invalid_credentials') return t('auth_err_invalid');
+    if (/not confirmed/.test(m) || code === 'email_not_confirmed') return t('auth_err_unconfirmed');
+    if (/already registered/.test(m) || code === 'user_already_exists') return t('auth_err_exists');
+    if (code === 'weak_password' || (/password/.test(m) && /(least|weak|short|characters)/.test(m))) return t('auth_err_weak');
+    if (r.status === 429 || /rate limit/.test(m)) return t('auth_err_rate');
+    if (mode === 'register' && (r.status >= 500 || /database error/.test(m))) return t('auth_err_signup');
+    return t('auth_err_generic') + (m ? ' (' + m + ')' : '');
+  }
+  async function cloudWipeLocal(){
+    for (const id of collectImageIds(trades)) await imgDelLocal(id);
+    accounts = []; trades = []; strategies = []; indicators = []; checkins = []; currentAccountId = null;
+    for (const k of Object.keys(KIND_KEY)) await stSet(KIND_KEY[k], []);
+    await saveCurrent();
+  }
+  async function cloudLoadProfile(){
+    try {
+      const r = await cloudReq('GET', '/rest/v1/profiles?select=username,display_name,is_admin&id=eq.' + encodeURIComponent(cloudSession.user_id));
+      if (r.ok && Array.isArray(r.data) && r.data[0]) cloudProfile = r.data[0];
+    } catch(e){}
+  }
+  // returns true when the session was accepted
+  async function cloudAdopt(s){
+    if (!s || !s.user_id) return false;
+    if (cloudMeta.uid && cloudMeta.uid !== s.user_id){
+      const ok = await showConfirm(t('acct_other_user_confirm'), t('acct_replace'));
+      if (!ok){
+        cloudSession = s;
+        try { await cloudReq('POST', '/auth/v1/logout', { body: {} }); } catch(e){}
+        cloudSession = null; return false;
+      }
+      await cloudWipeLocal();
+      cloudMeta = { uid: null, cursor: null, snap: {}, imgs: {} };
+    }
+    cloudSession = s; cloudProfile = null; await cloudSaveSession();
+    if (cloudMeta.uid !== s.user_id){ cloudMeta = { uid: s.user_id, cursor: null, snap: {}, imgs: {} }; await cloudSaveMeta(); }
+    await stDel('tally:cloudmode');
+    setCloudStatus('pending');
+    cloudLoadProfile().then(() => updateSyncUi());
+    return true;
+  }
+  async function cloudLogout(){
+    try { await cloudReq('POST', '/auth/v1/logout', { body: {} }); } catch(e){}
+    cloudSession = null; cloudProfile = null; await cloudSaveSession(); setCloudStatus('off');
+    clearTimeout(cloudTimer);
+    openAuthGate('login');
+  }
+  async function cloudDeleteAccount(){
+    const uidv = cloudSession.user_id;
+    for (const bucket of ['trade-images', 'post-images']){
+      for (let round = 0; round < 20; round++){
+        const l = await cloudReq('POST', '/storage/v1/object/list/' + bucket, { body: { prefix: uidv, limit: 1000, offset: 0 } });
+        if (!l.ok) throw httpErr(l);
+        const names = (Array.isArray(l.data) ? l.data : []).filter(x => x && x.name).map(x => uidv + '/' + x.name);
+        if (!names.length) break;
+        const d = await cloudReq('DELETE', '/storage/v1/object/' + bucket, { body: { prefixes: names } });
+        if (!d.ok) throw httpErr(d);
+      }
+    }
+    const r = await cloudReq('POST', '/rest/v1/rpc/delete_my_account', { body: {} });
+    if (!r.ok) throw httpErr(r);
+    cloudSession = null; cloudProfile = null; await cloudSaveSession();
+    cloudMeta = { uid: null, cursor: null, snap: {}, imgs: {} }; await cloudSaveMeta();
+    clearTimeout(cloudTimer); setCloudStatus('off');
+  }
+
+  // ---------- images ----------
+  function dataUrlToBlob(d){
+    const m = /^data:([^;,]+)(;base64)?,([\s\S]*)$/.exec(d || '');
+    if (!m) return null;
+    const bin = m[2] ? atob(m[3]) : decodeURIComponent(m[3]);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: m[1] });
+  }
+  function blobToDataUrl(b){
+    return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => rej(fr.error); fr.readAsDataURL(b); });
+  }
+  async function cloudFetchImage(id){
+    if (!cloudSession || (imgMiss[id] && Date.now() - imgMiss[id] < 60000)) return null;
+    try {
+      const r = await cloudReq('GET', '/storage/v1/object/authenticated/trade-images/' + cloudSession.user_id + '/' + encodeURIComponent(id), { blob: true });
+      if (!r.ok || !r.blob){ imgMiss[id] = Date.now(); return null; }
+      const d = await blobToDataUrl(r.blob);
+      await imgPutLocal(id, d);
+      cloudMeta.imgs[id] = 1;
+      return d;
+    } catch(e){ imgMiss[id] = Date.now(); return null; }
+  }
+  async function cloudDeleteImage(id){
+    if (!cloudSession) return;
+    delete cloudMeta.imgs[id];
+    try { await cloudReq('DELETE', '/storage/v1/object/trade-images/' + cloudSession.user_id + '/' + encodeURIComponent(id)); } catch(e){}
+  }
+  async function cloudPushImages(){
+    for (const id of collectImageIds(trades)){
+      if (cloudMeta.imgs[id]) continue;
+      const d = await imgGetLocal(id);
+      if (!d) continue;                       // not downloaded on this device yet
+      const b = dataUrlToBlob(d);
+      if (!b || b.size > 2 * 1024 * 1024){ cloudMeta.imgs[id] = 2; continue; }   // cannot be stored, do not retry
+      const r = await cloudReq('POST', '/storage/v1/object/trade-images/' + cloudSession.user_id + '/' + encodeURIComponent(id),
+        { raw: true, body: b, headers: { 'Content-Type': b.type, 'x-upsert': 'true' } });
+      if (r.ok) cloudMeta.imgs[id] = 1;
+      else if (r.status >= 500 || r.status === 401) throw httpErr(r);
+      else cloudMeta.imgs[id] = 2;
+    }
+  }
+
+  // ---------- sync ----------
+  async function cloudPush(){
+    const userId = cloudSession.user_id, snap = cloudMeta.snap;
+    const pending = []; let total = 0;
+    Object.keys(KIND_ARR).forEach(kind => {
+      const list = KIND_ARR[kind].get(), seen = {};
+      list.forEach(x => {
+        if (!x || !x.id) return;
+        total++;
+        const key = kind + ':' + x.id; seen[key] = 1;
+        const sig = recSig(x);
+        if (snap[key] !== sig) pending.push({ key, sig, row: { user_id: userId, kind, id: String(x.id), data: x, deleted: false } });
+      });
+      Object.keys(snap).forEach(key => {
+        if (key.indexOf(kind + ':') === 0 && !seen[key]) pending.push({ key, sig: null, row: { user_id: userId, kind, id: key.slice(kind.length + 1), data: {}, deleted: true } });
+      });
+    });
+    // safety net: if everything vanished locally at once (storage wiped?), do not propagate mass deletes
+    const dels = pending.filter(p => p.row.deleted).length;
+    const rows = (dels > 10 && total === 0) ? pending.filter(p => !p.row.deleted) : pending;
+    const ok = p => { if (p.sig === null) delete snap[p.key]; else snap[p.key] = p.sig; };
+    for (let i = 0; i < rows.length; i += 100){
+      const chunk = rows.slice(i, i + 100);
+      const r = await cloudReq('POST', '/rest/v1/records?on_conflict=user_id,kind,id', { body: chunk.map(p => p.row), headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+      if (r.ok){ chunk.forEach(ok); continue; }
+      if ([400, 409, 413, 422].indexOf(r.status) >= 0 && chunk.length > 1){
+        for (const p of chunk){
+          const r1 = await cloudReq('POST', '/rest/v1/records?on_conflict=user_id,kind,id', { body: [p.row], headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } });
+          if (r1.ok) ok(p);
+          else if ([400, 409, 413, 422].indexOf(r1.status) >= 0){ snap[p.key] = p.sig || ''; cloudErrCount++; }   // bad record: skip it, do not block the rest
+          else throw httpErr(r1);
+        }
+      } else if ([400, 409, 413, 422].indexOf(r.status) >= 0){ chunk.forEach(p => { snap[p.key] = p.sig || ''; }); cloudErrCount++; }
+      else throw httpErr(r);
+    }
+    await cloudSaveMeta();
+    await cloudPushImages();
+    await cloudSaveMeta();
+  }
+  async function cloudPull(){
+    const snap = cloudMeta.snap;
+    const since = cloudMeta.cursor ? new Date(Date.parse(cloudMeta.cursor) - 5000).toISOString() : null;
+    let maxTs = cloudMeta.cursor, off = 0, changed = false;
+    const touched = {}, removedImgs = [];
+    for (;;){
+      let path = '/rest/v1/records?select=kind,id,data,deleted,updated_at&order=updated_at.asc,id.asc';
+      if (since) path += '&updated_at=gt.' + encodeURIComponent(since);
+      const r = await cloudReq('GET', path, { headers: { Range: off + '-' + (off + 999), 'Range-Unit': 'items' } });
+      if (r.status === 416) break;
+      if (!r.ok) throw httpErr(r);
+      const rows = Array.isArray(r.data) ? r.data : [];
+      rows.forEach(rec => {
+        const a = KIND_ARR[rec.kind]; if (!a) return;
+        if (!maxTs || Date.parse(rec.updated_at) > Date.parse(maxTs)) maxTs = rec.updated_at;
+        const key = rec.kind + ':' + rec.id;
+        const list = a.get(), idx = list.findIndex(x => x && String(x.id) === String(rec.id));
+        if (idx >= 0 && snap[key] !== recSig(list[idx])) return;     // local edit not pushed yet: local wins
+        if (idx < 0 && snap[key] && !rec.deleted) return;             // deleted locally, not pushed yet
+        if (rec.deleted){
+          if (idx >= 0){ if (rec.kind === 'trade') removedImgs.push(...collectImageIds([list[idx]])); list.splice(idx, 1); touched[rec.kind] = 1; changed = true; }
+          delete snap[key]; return;
+        }
+        const data = rec.data;
+        if (!data || typeof data !== 'object' || Array.isArray(data)) return;
+        const sig = recSig(data);
+        if (idx >= 0){ if (snap[key] === sig && recSig(list[idx]) === sig) return; list[idx] = data; }
+        else list.push(data);
+        snap[key] = sig; touched[rec.kind] = 1; changed = true;
+      });
+      if (rows.length < 1000) break;
+      off += 1000;
+    }
+    cloudMeta.cursor = maxTs;
+    for (const k of Object.keys(touched)) await stSet(KIND_KEY[k], KIND_ARR[k].get());
+    for (const id of removedImgs) await imgDelLocal(id);
+    await cloudSaveMeta();
+    if (changed){
+      if (currentAccountId && !accounts.find(a => a.id === currentAccountId)) currentAccountId = null;
+      if (!currentAccountId && accounts.length) currentAccountId = accounts[0].id;
+      await saveCurrent();
+      render();
+    }
+  }
+  async function cloudSync(){
+    if (!cloudSession) return;
+    if (cloudBusy){ cloudAgain = true; return; }
+    cloudBusy = true; clearTimeout(cloudTimer); cloudErrCount = 0;
+    setCloudStatus('syncing');
+    try {
+      await cloudPush();
+      await cloudPull();
+      cloudLast = Date.now();
+      setCloudStatus(cloudErrCount ? 'error' : 'idle');
+    } catch(e){
+      setCloudStatus(e && e.offline ? 'offline' : (cloudSession ? 'error' : 'off'));
+    } finally {
+      cloudBusy = false;
+      if (cloudAgain){ cloudAgain = false; cloudSchedule(); }
+    }
+  }
+  function cloudSchedule(){
+    if (!cloudSession) return;
+    if (cloudStatus !== 'syncing') setCloudStatus('pending');
+    clearTimeout(cloudTimer);
+    cloudTimer = setTimeout(cloudSync, 1200);
+  }
+  function cloudStart(){
+    window.addEventListener('online', () => cloudSync());
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && cloudSession && Date.now() - cloudLast > 20000) cloudSync(); });
+    setInterval(() => { if (!document.hidden && cloudSession) cloudSync(); }, 90000);
+  }
+
+  // ---------- login / register screen ----------
+  function openAuthGate(startMode){
+    if ($('#authGate')) return;
+    let mode = startMode || 'login', busy = false, email = '';
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop'; backdrop.id = 'authGate'; backdrop.style.zIndex = '140';
+    document.body.appendChild(backdrop);
+    const close = () => backdrop.remove();
+    const draw = (notice) => {
+      const reg = mode === 'register';
+      backdrop.innerHTML = `
+        <div class="modal" style="max-width:380px;">
+          <div class="modal-body" style="padding-top:26px;">
+            <div style="text-align:center; margin-bottom:18px;">
+              <div id="authLogo" style="display:flex; justify-content:center;"></div>
+              <div class="brand-mark" style="font-size:26px; margin-top:8px;">Tally</div>
+              <div class="hint" style="margin-top:4px;">${t('auth_tagline')}</div>
+            </div>
+            <label>${t('lbl_email')}</label>
+            <input type="email" id="au_email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" value="${escapeHtml(email)}">
+            ${reg ? `<label>${t('lbl_username')}</label>
+            <input type="text" id="au_user" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="20">
+            <div class="hint" style="margin:4px 0 0;">${t('auth_username_hint')}</div>` : ''}
+            <label>${t('lbl_password')}</label>
+            <input type="password" id="au_pw" autocomplete="${reg ? 'new-password' : 'current-password'}">
+            ${reg ? `<label>${t('lbl_invite')}</label>
+            <input type="text" id="au_code" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="16" style="text-transform:uppercase;">` : ''}
+            <div id="au_msg" style="font-size:12.5px; min-height:18px; margin-top:10px; line-height:1.5; color:${notice ? 'var(--green)' : 'var(--red)'};">${notice ? escapeHtml(notice) : ''}</div>
+            <button class="btn btn-primary" id="au_go" style="width:100%; margin-top:6px;">${reg ? t('auth_btn_register') : t('auth_btn_login')}</button>
+            <div style="text-align:center; margin-top:14px;"><button class="btn btn-ghost" id="au_switch">${reg ? t('auth_switch_login') : t('auth_switch_register')}</button></div>
+            <div style="text-align:center; margin-top:2px;"><button class="btn btn-ghost" id="au_skip" style="font-size:12px; color:var(--text-dim);">${t('auth_skip')}</button></div>
+          </div>
+        </div>`;
+      const ic = document.querySelector('.topbar .brand-icon');
+      if (ic){ const c = ic.cloneNode(true); c.setAttribute('width', '52'); c.setAttribute('height', '52'); $('#authLogo', backdrop).appendChild(c); }
+      const msg = (txt) => { $('#au_msg', backdrop).style.color = 'var(--red)'; $('#au_msg', backdrop).textContent = txt; };
+      const go = async () => {
+        if (busy) return;
+        email = $('#au_email', backdrop).value.trim();
+        const pw = $('#au_pw', backdrop).value;
+        const username = reg ? $('#au_user', backdrop).value.trim() : '';
+        const code = reg ? $('#au_code', backdrop).value.replace(/\s+/g, '').toUpperCase() : '';
+        if (!/^\S+@\S+\.\S+$/.test(email)) return msg(t('auth_err_email'));
+        if (reg && !/^[A-Za-z0-9_]{3,20}$/.test(username)) return msg(t('auth_err_username'));
+        if (pw.length < 8) return msg(t('auth_err_weak'));
+        if (reg && !/^[A-Z0-9]{8,16}$/.test(code)) return msg(t('auth_err_code'));
+        busy = true; const btn = $('#au_go', backdrop); btn.disabled = true; btn.textContent = t('auth_working');
+        try {
+          const r = reg ? await cloudSignUp(email, pw, username, code) : await cloudSignIn(email, pw);
+          if (r.error){ msg(authErrText(r.error, mode)); }
+          else if (r.session){
+            if (await cloudAdopt(r.session)){ close(); showToast(t('auth_welcome')); render(); cloudSync(); return; }
+            msg(t('auth_err_generic'));
+          } else { mode = 'login'; busy = false; draw(t('auth_confirm_email')); return; }
+        } catch(e){ msg(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
+        busy = false; btn.disabled = false; btn.textContent = reg ? t('auth_btn_register') : t('auth_btn_login');
+      };
+      $('#au_go', backdrop).onclick = go;
+      $$('input', backdrop).forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }));
+      $('#au_switch', backdrop).onclick = () => { email = $('#au_email', backdrop).value.trim(); mode = reg ? 'login' : 'register'; draw(); };
+      $('#au_skip', backdrop).onclick = async () => { await stSet('tally:cloudmode', 'local'); close(); };
+    };
+    draw();
+  }
+
+  // ---------- account section inside Settings ----------
+  function acctSectionHtml(){
+    if (cloudSession){
+      const name = cloudProfile && cloudProfile.username ? '@' + cloudProfile.username : (cloudSession.email || '');
+      return `<div class="section-title" style="margin-top:24px;">${t('acct_title')}</div>
+        <div style="font-size:13px; line-height:1.6; margin-bottom:10px;">${t('acct_signed_in', { name: escapeHtml(name) })}<br><span class="hint" id="acctStatus">${escapeHtml(cloudStatusText())}</span></div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn" id="acctSyncBtn">${t('acct_sync_now')}</button>
+          <button class="btn" id="acctLogoutBtn">${t('acct_logout')}</button>
+          <button class="btn btn-danger" id="acctDeleteBtn">${t('acct_delete')}</button>
+        </div>`;
+    }
+    return `<div class="section-title" style="margin-top:24px;">${t('acct_title')}</div>
+      <div class="hint" style="margin:0 0 10px; line-height:1.5;">${t('acct_local_note')}</div>
+      <button class="btn" id="acctLoginBtn" style="width:100%;">${t('acct_login')}</button>`;
+  }
+  function wireAcctSection(backdrop, close){
+    const on = (id, fn) => { const e = $(id, backdrop); if (e) e.onclick = fn; };
+    on('#acctLoginBtn', () => { close(); openAuthGate('login'); });
+    on('#acctSyncBtn', () => { cloudSync(); });
+    on('#acctLogoutBtn', async () => { close(); await cloudLogout(); });
+    on('#acctDeleteBtn', async () => {
+      if (!await showConfirm(t('acct_delete_confirm'), t('acct_delete'))) return;
+      try { await cloudDeleteAccount(); close(); showToast(t('acct_deleted')); openAuthGate('login'); }
+      catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
+    });
+  }
+
+  // ---------- init ----------
+  function maybeCheckinThenLog(accId, date, openFn){
+    const acc = accounts.find(a=>a.id===accId);
+    if (acc && !acc.isBacktest && !getCheckin(accId, date)){
+      openCheckinModal(accId, date, openFn);
+    } else {
+      openFn();
+    }
+  }
+
+  $('#newTradeBtn').onclick = () => {
+    if (!accounts.length){ showToast(t('toast_create_account_first')); openAccountModal(); return; }
+    maybeCheckinThenLog(currentAccountId, todayISO(), () => openTradeModal());
+  };
+  $('#manageAccountsBtn').onclick = () => {
+    if (!accounts.length){ openAccountModal(); return; }
+    openAccountModal(currentAccountId);
+  };
+  $('#settingsBtn').onclick = () => openSettingsModal();
+  $('#fabLog').onclick = () => $('#newTradeBtn').onclick();
+  $$('.tab-btn').forEach(b => b.addEventListener('click', () => { currentSection = b.dataset.section; render(); }));
+
+  if (window.__TALLY_TEST__) Object.assign(window.__TALLY_TEST__, {
+    st: () => ({ accounts, trades, strategies, indicators, checkins }),
+    setTrades: v => { trades = v; }, setStrategies: v => { strategies = v; },
+    saveTrades, saveStrategies, saveAccounts, cloudSync, imgPut, imgGet, imgDel, imgGetLocal,
+    session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
+  });
+  (async function init(){
+    await loadAll();
+    if (accounts.length && !currentAccountId) currentAccountId = accounts[0].id;
+    await cloudLoadState();
+    render();
+    updateSyncUi();
+    cloudStart();
+    if (cloudSession){ cloudLoadProfile().then(() => updateSyncUi()); cloudSync(); }
+    else if ((await stGet('tally:cloudmode')) !== 'local') openAuthGate('login');
+  })();
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+</script>
+</body>
+</html>

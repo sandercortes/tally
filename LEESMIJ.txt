@@ -1,0 +1,24 @@
+TALLY - INSTALLEREN EN UPDATEN
+
+EERSTE KEER
+1. Pak deze zip uit. Je krijgt een map met o.a. index.html.
+2. Ga naar https://app.netlify.com/drop en sleep de MAP erin.
+3. iPhone: open het adres in Safari > deel-icoon > "Zet op beginscherm".
+   Mac: open het adres in Safari > Archief > "Voeg toe aan Dock".
+
+UPDATEN (nieuwe versie van de app)
+1. Pak de nieuwe zip uit.
+2. Ga naar app.netlify.com en log in. Open je Tally-site.
+3. Klik op "Deploys". Onderaan staat een vak "Drag and drop your project folder here".
+4. Sleep de uitgepakte map daar in. Klaar. Je gegevens blijven staan, die zitten op je apparaat.
+5. Sluit de app helemaal af en open hem opnieuw (op iPhone: veeg hem weg) om de update te zien.
+
+LET OP
+- Je gegevens (en screenshots) staan alleen op het apparaat zelf. Maak af en toe een back-up:
+  Instellingen > Back-up exporteren. Die bevat ook je screenshots.
+
+--- Update: accounts & sync ---
+Deze versie heeft inloggen (met uitnodigingscode) en cloud-sync via Supabase.
+Je bestaande gegevens op dit apparaat worden bij je eerste login automatisch geupload.
+Gegevens uit de oude versie (andere link)? Maak daar eerst een back-up (Settings -> Export backup)
+en importeer die hier na het inloggen (Settings -> Import backup).
