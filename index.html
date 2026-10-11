@@ -397,31 +397,106 @@
   #settingsBtn[data-sync="idle"]::after { background:var(--green); }
   #settingsBtn[data-sync="syncing"]::after { background:var(--amber); }
   #settingsBtn[data-sync="error"]::after, #settingsBtn[data-sync="offline"]::after { background:var(--red); }
-  .feed-chips { display:flex; gap:8px; margin:0 0 14px; flex-wrap:wrap; }
-  .chip { background:var(--card); border:1px solid var(--card-border); color:var(--text-mid); border-radius:999px; padding:6px 14px; font-size:12.5px; cursor:pointer; font-family:inherit; }
-  .chip.active { color:var(--amber); border-color:var(--amber-dim); background:var(--amber-soft); }
-  .post { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:16px 18px; margin:0 0 12px; max-width:720px; }
-  .post h4 { margin:8px 0 6px; font-size:15.5px; }
-  .post-head { display:flex; align-items:center; gap:10px; font-size:12.5px; }
-  .post-author { color:var(--text); font-weight:600; }
-  .post-time { color:var(--text-dim); font-size:11.5px; }
-  .post-kind { font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; padding:2px 8px; border-radius:999px; border:1px solid var(--card-border); color:var(--text-mid); }
-  .post-kind.k-strategy { color:var(--amber); border-color:var(--amber-dim); }
-  .post-kind.k-indicator { color:var(--green); border-color:var(--green-dim); }
-  .post-menu { margin-left:auto; font-size:18px; }
-  .post-body { white-space:pre-wrap; font-size:13.5px; line-height:1.6; color:var(--text-mid); margin:0 0 8px; word-break:break-word; }
-  .post .tags { margin:6px 0; }
-  .post-actions { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
-  .act { background:transparent; border:1px solid var(--card-border); color:var(--text-mid); border-radius:999px; padding:5px 12px; font-size:12.5px; cursor:pointer; font-family:inherit; }
-  .act.on { color:var(--amber); border-color:var(--amber-dim); }
-  .act:disabled { opacity:.55; cursor:default; }
-  .post-comments { border-top:1px solid var(--hairline); margin-top:12px; padding-top:10px; }
-  .cm { padding:8px 0; border-bottom:1px solid var(--hairline); font-size:13px; }
-  .cm-body { white-space:pre-wrap; color:var(--text-mid); margin-top:2px; word-break:break-word; }
-  .cm-tools { display:flex; gap:12px; margin-top:4px; }
-  .link-btn { background:none; border:0; color:var(--text-dim); font-size:11.5px; cursor:pointer; padding:0; font-family:inherit; text-decoration:underline; }
-  .cm-new { display:flex; gap:8px; margin-top:10px; align-items:flex-end; }
-  .cm-new textarea { flex:1; min-height:44px; }
+  /* ---- Community feed ---- */
+  .feed-wrap { max-width: 560px; margin: 0 auto; }
+  .feed-bar { position: sticky; top: var(--tb, 0px); z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0 0; margin: -6px 0 18px; background: linear-gradient(180deg, var(--bg) 86%, transparent); }
+  .feed-tabs { display: flex; gap: 2px; }
+  .feed-tab { background: none; border: 0; color: var(--text-dim); font: inherit; font-size: 14px; font-weight: 500; padding: 9px 12px 11px; cursor: pointer; position: relative; transition: color .15s; }
+  .feed-tab:hover { color: var(--text-mid); }
+  .feed-tab.active { color: var(--text); }
+  .feed-tab.active::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 0; height: 2px; border-radius: 2px; background: var(--amber); }
+  .feed-bar-actions { display: flex; align-items: center; gap: 8px; padding-bottom: 4px; }
+  .feed-bar-actions .btn { padding: 6px 14px; }
+  .post { border-bottom: 1px solid var(--hairline); padding: 0 0 20px; margin: 0 0 26px; animation: postIn .28s ease both; }
+  @keyframes postIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .post-head { display: flex; align-items: center; gap: 10px; padding: 0 2px 10px; }
+  .avatar { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: hsl(var(--h, 40) 70% 82%); background: hsl(var(--h, 40) 28% 24%); }
+  .post-who { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+  .post-author { color: var(--text); font-weight: 600; font-size: 13.5px; }
+  .post-time { color: var(--text-dim); font-size: 11.5px; }
+  .post-menu { margin-left: auto; color: var(--text-mid); }
+  .media { position: relative; background: #09090b; border-radius: 6px; overflow: hidden; user-select: none; -webkit-user-select: none; }
+  .media-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .media-track::-webkit-scrollbar { display: none; }
+  .media-track img { flex: 0 0 100%; width: 100%; min-width: 0; max-height: min(78vh, 680px); object-fit: contain; scroll-snap-align: start; display: block; background: #09090b; cursor: zoom-in; }
+  .media-count { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,.6); color: #fff; font-size: 11px; padding: 3px 8px; border-radius: 999px; }
+  .media-dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; pointer-events: none; }
+  .media-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.4); transition: background .15s, transform .15s; }
+  .media-dots i.on { background: #fff; transform: scale(1.15); }
+  .media-missing { padding: 60px 0; text-align: center; color: var(--text-dim); font-size: 12.5px; }
+  .heart-pop { position: absolute; left: 50%; top: 50%; width: 88px; height: 88px; margin: -44px 0 0 -44px; color: #fff; opacity: 0; pointer-events: none; filter: drop-shadow(0 4px 14px rgba(0,0,0,.45)); }
+  .heart-pop svg { width: 100%; height: 100%; }
+  .heart-pop.go { animation: heartPop .75s ease; }
+  @keyframes heartPop { 0% { opacity: 0; transform: scale(.4); } 18% { opacity: .95; transform: scale(1.12); } 40% { transform: scale(.96); } 70% { opacity: .95; } 100% { opacity: 0; transform: scale(1); } }
+  .post-actions { display: flex; align-items: center; gap: 4px; padding: 8px 0 2px; }
+  .ig-act { display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; color: var(--text); padding: 6px 8px 6px 2px; margin-right: 6px; cursor: pointer; font: inherit; font-size: 12.5px; transition: transform .12s, color .15s; }
+  .ig-act:hover { color: var(--amber); }
+  .ig-act:active { transform: scale(.88); }
+  .ig-act.like.on { color: var(--red); }
+  .ig-act.like.on svg { fill: currentColor; animation: likeBump .3s ease; }
+  @keyframes likeBump { 50% { transform: scale(1.25); } }
+  .ig-act.save { margin-left: auto; margin-right: 0; color: var(--text-mid); font-size: 12px; }
+  .ig-act.save:disabled { opacity: .55; cursor: default; }
+  .ig-act.save:disabled:hover { color: var(--text-mid); }
+  .likes-line { font-size: 13px; font-weight: 600; padding: 2px 2px 6px; }
+  .post-text { padding: 0 2px; }
+  .post-title { margin: 2px 0 8px; font-size: 18px; font-weight: 600; line-height: 1.3; letter-spacing: -.005em; word-break: break-word; }
+  .caption { font-size: 14px; line-height: 1.55; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+  .caption b { font-weight: 600; }
+  .caption.clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .more-btn { margin-top: 2px; font-size: 12.5px; text-decoration: none; }
+  .chips-m { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+  .chip-m { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; background: var(--bg-alt); border: 1px solid var(--card-border); color: var(--text-mid); font-variant-numeric: tabular-nums; }
+  .chip-m.win { color: var(--green); border-color: var(--green-dim); background: rgba(90,165,121,.08); }
+  .chip-m.loss { color: var(--red); border-color: var(--red-dim); background: rgba(193,85,61,.08); }
+  .chip-m.soft { color: var(--text-dim); border-style: dashed; }
+  .post .tags { margin: 8px 0 0; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tv-link { display: inline-flex; align-items: center; margin-top: 10px; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--amber-dim); background: var(--amber-soft); color: var(--amber); font-size: 13px; font-weight: 500; text-decoration: none; }
+  .tv-link:hover { background: rgba(212,162,76,.22); }
+  .cm-link { display: block; background: none; border: 0; padding: 8px 2px 0; color: var(--text-dim); font: inherit; font-size: 13px; cursor: pointer; text-align: left; }
+  .cm-link:hover { color: var(--text-mid); }
+  .link-btn { background: none; border: 0; color: var(--text-dim); font-size: 11.5px; cursor: pointer; padding: 0; font-family: inherit; }
+  .link-btn:hover { color: var(--text-mid); text-decoration: underline; }
+  .feed-sentinel { min-height: 40px; display: flex; justify-content: center; align-items: center; padding: 10px 0 30px; }
+  .feed-end { text-align: center; color: var(--text-dim); font-size: 12.5px; padding: 8px 0 40px; }
+  .feed-empty { padding: 56px 12px; }
+  .spinner { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--card-border); border-top-color: var(--amber); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .skeleton { border-bottom-color: transparent; animation: none; }
+  .sk, .sk-line, .sk-media { background: linear-gradient(90deg, var(--card) 25%, #232428 50%, var(--card) 75%); background-size: 200% 100%; animation: shimmer 1.3s linear infinite; }
+  .sk-line { height: 11px; border-radius: 6px; }
+  .sk-media { aspect-ratio: 4 / 3; border-radius: 6px; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  /* comments sheet */
+  .sheet-backdrop { position: fixed; inset: 0; z-index: 160; background: rgba(0,0,0,.55); display: flex; align-items: flex-end; justify-content: center; animation: fadeIn .18s ease; }
+  @keyframes fadeIn { from { opacity: 0; } }
+  .sheet { width: 100%; max-width: 520px; max-height: 82vh; background: var(--card); border: 1px solid var(--card-border); border-bottom: 0; border-radius: 14px 14px 0 0; display: flex; flex-direction: column; animation: sheetUp .22s ease; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  @keyframes sheetUp { from { transform: translateY(40px); opacity: 0; } }
+  .sheet-grab { width: 38px; height: 4px; border-radius: 4px; background: var(--card-border); margin: 8px auto 0; }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px 10px; font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--hairline); }
+  .sheet-list { overflow-y: auto; padding: 4px 16px; flex: 1; min-height: 120px; }
+  .cm { display: flex; gap: 10px; padding: 10px 0; font-size: 13.5px; }
+  .cm-main { min-width: 0; flex: 1; }
+  .cm-body { white-space: pre-wrap; color: var(--text); margin-top: 2px; word-break: break-word; line-height: 1.5; }
+  .cm-tools { display: flex; gap: 14px; margin-top: 4px; }
+  .sheet-new { display: flex; gap: 8px; align-items: flex-end; padding: 10px 14px; border-top: 1px solid var(--hairline); }
+  .sheet-new textarea { flex: 1; min-height: 40px; max-height: 120px; resize: none; }
+  @media (min-width: 700px) { .sheet-backdrop { align-items: center; } .sheet { border-radius: 14px; border-bottom: 1px solid var(--card-border); max-height: 70vh; } .sheet-grab { display: none; } }
+  /* composer */
+  .seg { display: flex; background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 8px; padding: 3px; gap: 3px; margin-bottom: 4px; }
+  .seg button { flex: 1; background: none; border: 0; color: var(--text-mid); font: inherit; font-size: 13px; padding: 7px 4px; border-radius: 6px; cursor: pointer; }
+  .seg button.active { background: var(--card); color: var(--amber); box-shadow: 0 0 0 1px var(--amber-dim) inset; }
+  label.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); text-transform: none; letter-spacing: 0; }
+  label.check input { width: auto; }
+  .pc-thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pc-thumb { position: relative; width: 78px; height: 78px; border-radius: 6px; overflow: hidden; border: 1px solid var(--card-border); }
+  .pc-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pc-thumb button { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%; border: 0; background: rgba(0,0,0,.65); color: #fff; font-size: 11px; cursor: pointer; line-height: 1; }
+  .pc-add { width: 78px; height: 78px; border-radius: 6px; border: 1px dashed var(--card-border); background: none; color: var(--text-mid); font-size: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-family: inherit; }
+  .pc-add span { font-size: 10.5px; margin-top: 2px; }
+  .pc-add:hover { border-color: var(--amber-dim); color: var(--amber); }
+  @media (max-width: 560px) { .feed-tab { padding: 9px 9px 11px; font-size: 13.5px; } .feed-bar-actions .btn { padding: 6px 11px; font-size: 12.5px; } .media-track img { max-height: 70vh; } .media, .media-track img { border-radius: 0; } .media { margin: 0 -12px; border-radius: 0; } }
+  @media (prefers-reduced-motion: reduce) { .post, .sheet, .sheet-backdrop, .heart-pop.go, .ig-act.like.on svg { animation: none; } }
 </style>
 </head>
 <body>
@@ -803,6 +878,39 @@
     invite_made: {en:'Share this code. It works for {uses} sign-up(s) in the next {days} days.', es:'Comparte este código. Sirve para {uses} registro(s) en los próximos {days} días.', nl:'Deel deze code. Hij werkt voor {uses} registratie(s) in de komende {days} dagen.'},
     invite_copy: {en:'Copy code', es:'Copiar código', nl:'Code kopiëren'},
     invite_copied: {en:'Copied', es:'Copiado', nl:'Gekopieerd'},
+    cat_journaling: {en:'Journaling', es:'Diario', nl:'Journaling'},
+    post_new: {en:'+ Post', es:'+ Publicar', nl:'+ Post'},
+    post_create_first: {en:'Create the first post', es:'Crea la primera publicación', nl:'Maak de eerste post'},
+    post_like: {en:'Like', es:'Me gusta', nl:'Liken'},
+    post_comments: {en:'Comments', es:'Comentarios', nl:'Reacties'},
+    post_add_list: {en:'Add to my list', es:'Añadir a mi lista', nl:'Aan mijn lijst'},
+    post_like_1: {en:'1 like', es:'1 me gusta', nl:'1 like'},
+    post_like_n: {en:'{n} likes', es:'{n} me gusta', nl:'{n} likes'},
+    post_more: {en:'more', es:'más', nl:'meer'},
+    post_view_1: {en:'View 1 comment', es:'Ver 1 comentario', nl:'Bekijk 1 reactie'},
+    post_view_n: {en:'View all {n} comments', es:'Ver los {n} comentarios', nl:'Bekijk alle {n} reacties'},
+    post_add_comment: {en:'Add a comment…', es:'Añade un comentario…', nl:'Voeg een reactie toe…'},
+    post_selfreported: {en:'Self-reported', es:'Declarado por el usuario', nl:'Zelf gerapporteerd'},
+    post_img_unavailable: {en:'Image unavailable', es:'Imagen no disponible', nl:'Afbeelding niet beschikbaar'},
+    feed_empty_trade: {en:'No journal posts yet. Share a trade, a trading day or a reflection.', es:'Aún no hay publicaciones de diario. Comparte un trade, un día o una reflexión.', nl:'Nog geen journaling-posts. Deel een trade, een handelsdag of een reflectie.'},
+    feed_empty_strategy: {en:'No strategies shared yet. Explain how you trade.', es:'Aún no hay estrategias. Explica cómo operas.', nl:'Nog geen strategieën gedeeld. Leg uit hoe jij handelt.'},
+    feed_empty_indicator: {en:'No indicators shared yet. Share a TradingView script you like.', es:'Aún no hay indicadores. Comparte un script de TradingView que te guste.', nl:'Nog geen indicators gedeeld. Deel een TradingView-script dat je goed vindt.'},
+    feed_end: {en:'You are all caught up.', es:'Estás al día.', nl:'Je bent helemaal bij.'},
+    pc_attach_trade: {en:'Attach one of your trades (optional)', es:'Adjuntar uno de tus trades (opcional)', nl:'Koppel een van je trades (optioneel)'},
+    pc_none: {en:'— none —', es:'— ninguno —', nl:'— geen —'},
+    pc_show_money: {en:'Show my $ result', es:'Mostrar mi resultado en $', nl:'Toon mijn $-resultaat'},
+    pc_money_hint: {en:'Off by default: only the R multiple is shown.', es:'Desactivado por defecto: solo se muestra el múltiplo R.', nl:'Standaard uit: alleen de R-multiple is zichtbaar.'},
+    pc_caption: {en:'Caption', es:'Texto', nl:'Tekst'},
+    pc_caption_ph: {en:'What happened? Setup, entry, exit, what you learned…', es:'¿Qué pasó? Setup, entrada, salida, lo que aprendiste…', nl:'Wat gebeurde er? Setup, entry, exit, wat je geleerd hebt…'},
+    pc_photos: {en:'Photos (charts, screenshots)', es:'Fotos (gráficos, capturas)', nl:'Foto’s (charts, screenshots)'},
+    pc_add_photos: {en:'Add', es:'Añadir', nl:'Toevoegen'},
+    pc_publish: {en:'Post', es:'Publicar', nl:'Plaatsen'},
+    pc_publishing: {en:'Posting…', es:'Publicando…', nl:'Plaatsen…'},
+    pc_posted: {en:'Posted.', es:'Publicado.', nl:'Geplaatst.'},
+    pc_note: {en:'Visible to everyone in the community. Your screenshots may show account numbers — check before posting. Not financial advice.', es:'Visible para toda la comunidad. Tus capturas pueden mostrar números de cuenta: revísalo antes de publicar. No es asesoramiento financiero.', nl:'Zichtbaar voor iedereen in de community. Je screenshots kunnen rekeningnummers tonen — controleer dat voor je post. Geen financieel advies.'},
+    pc_err_empty: {en:'Add a trade, some text or a photo.', es:'Añade un trade, texto o una foto.', nl:'Voeg een trade, tekst of foto toe.'},
+    pc_err_img: {en:'That image could not be used.', es:'No se pudo usar esa imagen.', nl:'Die afbeelding kon niet worden gebruikt.'},
+    pc_err_large: {en:'An image is too large (max 2 MB).', es:'Una imagen es demasiado grande (máx. 2 MB).', nl:'Een afbeelding is te groot (max 2 MB).'},
     settings_title: {en:'Settings', es:'Ajustes', nl:'Instellingen'},
     lbl_language: {en:'Language', es:'Idioma', nl:'Taal'},
     storage_note: {en:'Failed to save', es:'Error al guardar', nl:'Opslaan mislukt'},
@@ -2854,8 +2962,14 @@
 
   // ================= COMMUNITY (shared feed) =================
   const TV_URL_RE = /^https:\/\/([a-z0-9-]+\.)?tradingview\.com\/[^\s]*$/;
-  const feed = { posts: [], kind: 'all', loaded: false, loading: false, more: false, liked: {}, openCm: {}, comments: {}, drafts: {}, error: false };
-  const PAGE = 30;
+  // ---- Community feed (Instagram-style). Category = posts.kind: trade = Journaling, strategy, indicator ----
+  const FEED_KINDS = ['trade', 'strategy', 'indicator'];
+  const feed = { kind: 'trade', s: {}, liked: {}, comments: {}, urls: {}, lastClick: { id: null, at: 0, timer: null } };
+  FEED_KINDS.forEach(k => { feed.s[k] = { posts: [], more: false, loaded: false, loading: false, error: false, token: 0, at: 0 }; });
+  const PAGE = 12;
+  let feedObserver = null;
+  const catLabel = k => k === 'trade' ? t('cat_journaling') : k === 'strategy' ? t('nav_strategies') : t('nav_indicators');
+  const isAdminUser = () => !!(cloudProfile && cloudProfile.is_admin);
   function timeAgo(iso){
     const s = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 1000));
     let f; try { f = new Intl.RelativeTimeFormat(lang, { numeric: 'auto', style: 'short' }); } catch(e){ return ''; }
@@ -2866,9 +2980,140 @@
     if (s < 31536000) return f.format(-Math.floor(s / 2592000), 'month');
     return f.format(-Math.floor(s / 31536000), 'year');
   }
-  const kindLabel = k => k === 'strategy' ? t('feed_kind_strategy') : k === 'indicator' ? t('feed_kind_indicator') : t('feed_kind_trade');
-  const isAdminUser = () => !!(cloudProfile && cloudProfile.is_admin);
+  const ICON = {
+    heart: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.5 7.7 3.5 4.5 6.8 4.5c2 0 3.5 1.1 5.2 3 1.7-1.9 3.2-3 5.2-3 3.3 0 5.3 3.2 4.1 6.6-1.8 4.8-9.3 9.4-9.3 9.4z"/></svg>',
+    comment: '<svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.2 7.5L3 20.5l1.6-5.3A8.4 8.4 0 1 1 21 11.5z"/></svg>',
+    add: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3.5h12v17l-6-4.4-6 4.4z"/><path d="M12 7.5v5M9.5 10h5"/></svg>',
+    more: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>'
+  };
+  function avatarHtml(name, size){
+    const n = String(name || '?'); let h = 0; for (let i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360;
+    return `<span class="avatar" style="--h:${h}; ${size ? 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.42) + 'px;' : ''}">${escapeHtml(n.charAt(0).toUpperCase())}</span>`;
+  }
 
+  // ---- loading ----
+  async function signImages(posts){
+    const need = [];
+    posts.forEach(p => (p.image_paths || []).forEach(path => { const c = feed.urls[path]; if (!c || c.exp < Date.now() + 60000) need.push(path); }));
+    const uniq = Array.from(new Set(need)); if (!uniq.length) return;
+    try {
+      const r = await cloudReq('POST', '/storage/v1/object/sign/post-images', { body: { expiresIn: 3600, paths: uniq } });
+      if (r.ok && Array.isArray(r.data)) r.data.forEach(x => { if (x && x.signedURL && !x.error) feed.urls[x.path] = { url: CLOUD.url + '/storage/v1' + x.signedURL, exp: Date.now() + 3600e3 }; });
+    } catch(e){}
+  }
+  async function loadFeed(kind, reset){
+    const st = feed.s[kind]; if (!st || st.loading || !cloudSession) return;
+    st.loading = true; st.error = false; const tok = ++st.token;
+    if (kind === feed.kind && currentSection === 'community') drawFeed();
+    try {
+      let path = '/rest/v1/feed_posts?select=id,author_id,kind,title,body,payload,image_paths,created_at,username,like_count,comment_count&kind=eq.' + kind + '&order=created_at.desc&limit=' + PAGE;
+      if (!reset && st.posts.length) path += '&created_at=lt.' + encodeURIComponent(st.posts[st.posts.length - 1].created_at);
+      const r = await cloudReq('GET', path);
+      if (!r.ok) throw httpErr(r);
+      const rows = (Array.isArray(r.data) ? r.data : []).filter(x => x.kind === kind);   // never let another category in
+      if (tok === st.token){
+        const have = {}; if (!reset) st.posts.forEach(x => { have[x.id] = 1; });
+        st.posts = reset ? rows : st.posts.concat(rows.filter(x => !have[x.id]));
+        st.more = (Array.isArray(r.data) ? r.data.length : 0) === PAGE;
+        await signImages(rows);
+        if (rows.length){
+          const lr = await cloudReq('GET', '/rest/v1/reactions?select=post_id&kind=eq.like&user_id=eq.' + cloudSession.user_id + '&post_id=in.(' + rows.map(x => x.id).join(',') + ')');
+          if (lr.ok && Array.isArray(lr.data)) lr.data.forEach(x => { feed.liked[x.post_id] = true; });
+        }
+        st.loaded = true; st.at = Date.now();
+      }
+    } catch(e){ st.error = e && e.offline ? 'offline' : 'error'; }
+    st.loading = false;
+    if (kind === feed.kind && currentSection === 'community') drawFeed();
+  }
+  function feedInvalidate(){ FEED_KINDS.forEach(k => { const st = feed.s[k]; st.loaded = false; st.posts = []; st.more = false; st.token++; st.loading = false; }); }
+  function feedRemovePost(id){ FEED_KINDS.forEach(k => { feed.s[k].posts = feed.s[k].posts.filter(x => x.id !== id); }); }
+  const findPost = id => { for (const k of FEED_KINDS){ const p = feed.s[k].posts.find(x => x.id === id); if (p) return p; } return null; };
+
+  // ---- rendering ----
+  function metaChips(p){
+    const pl = p.payload || {}, bits = [];
+    if (pl.symbol) bits.push(`<span class="chip-m">${escapeHtml(String(pl.symbol).slice(0, 14))}</span>`);
+    if (pl.direction) bits.push(`<span class="chip-m">${pl.direction === 'short' ? t('filter_short') : t('filter_long')}</span>`);
+    const cls = pl.result === 'win' ? 'win' : pl.result === 'loss' ? 'loss' : '';
+    if (pl.r !== undefined && pl.r !== null && pl.r !== '') bits.push(`<span class="chip-m ${cls}">${Number(pl.r) > 0 ? '+' : ''}${escapeHtml(String(pl.r))}R</span>`);
+    if (typeof pl.pnl === 'number') bits.push(`<span class="chip-m ${cls}">${pl.pnl > 0 ? '+' : pl.pnl < 0 ? '-' : ''}$${fmt(Math.abs(pl.pnl), 0)}</span>`);
+    if (confEmoji(pl.confidence)) bits.push(`<span class="chip-m">${confEmoji(pl.confidence)}</span>`);
+    return bits.length ? `<div class="chips-m">${bits.join('')}<span class="chip-m soft">${t('post_selfreported')}</span></div>` : '';
+  }
+  function mediaHtml(p){
+    const paths = p.image_paths || []; if (!paths.length) return '';
+    const urls = paths.map(x => feed.urls[x] && feed.urls[x].url).filter(Boolean);
+    if (!urls.length) return `<div class="media media-missing">${t('post_img_unavailable')}</div>`;
+    return `<div class="media" data-media>
+      <div class="media-track">${urls.map(u => `<img src="${escapeHtml(u)}" alt="" loading="lazy" draggable="false">`).join('')}</div>
+      ${urls.length > 1 ? `<span class="media-count">1/${urls.length}</span><div class="media-dots">${urls.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>` : ''}
+      <div class="heart-pop" aria-hidden="true">${ICON.heart.replace('fill="none"', 'fill="currentColor"')}</div>
+    </div>`;
+  }
+  function postHtml(p){
+    const mine = p.author_id === cloudSession.user_id;
+    const url = p.payload && p.payload.url;
+    const tags = (p.payload && Array.isArray(p.payload.tags) ? p.payload.tags : []).map(x => `<span class="tag-pill">${escapeHtml(String(x))}</span>`).join('');
+    const cat = p.payload && p.payload.category ? `<span class="tag-pill">${escapeHtml(String(p.payload.category))}</span>` : '';
+    const link = p.kind === 'indicator' && url && TV_URL_RE.test(url) ? `<a class="tv-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${t('open_on_tv')}</a>` : '';
+    const saved = p.kind === 'strategy' ? strategies.some(x => x.fromPost === p.id) : p.kind === 'indicator' ? indicators.some(x => x.fromPost === p.id) : false;
+    const canSave = !mine && (p.kind === 'strategy' || p.kind === 'indicator');
+    const body = p.body || '', long = body.length > 200 || body.split('\n').length > 4;
+    const n = p.comment_count || 0;
+    return `<article class="post" data-post="${p.id}" data-kind="${p.kind}">
+      <header class="post-head">
+        ${avatarHtml(p.username)}
+        <div class="post-who"><span class="post-author">@${escapeHtml(p.username || '?')}</span><span class="post-time">${escapeHtml(timeAgo(p.created_at))}</span></div>
+        <button class="icon-btn post-menu" data-act="menu" aria-label="${t('feed_more')}">${ICON.more}</button>
+      </header>
+      ${mediaHtml(p)}
+      <div class="post-actions">
+        <button class="ig-act like ${feed.liked[p.id] ? 'on' : ''}" data-act="like" aria-label="${t('post_like')}">${ICON.heart}</button>
+        <button class="ig-act" data-act="comments" aria-label="${t('post_comments')}">${ICON.comment}</button>
+        ${canSave ? `<button class="ig-act save" data-act="save" ${saved ? 'disabled' : ''} title="${saved ? t('feed_saved') : (p.kind === 'strategy' ? t('feed_save_strategy') : t('feed_save_indicator'))}">${ICON.add}<span>${saved ? t('feed_saved') : t('post_add_list')}</span></button>` : ''}
+      </div>
+      <div class="likes-line" ${p.like_count ? '' : 'hidden'}>${t(p.like_count === 1 ? 'post_like_1' : 'post_like_n', { n: p.like_count || 0 })}</div>
+      <div class="post-text">
+        ${p.kind !== 'trade' ? `<h4 class="post-title">${escapeHtml(p.title)}</h4>` : ''}
+        ${metaChips(p)}
+        ${body ? `<div class="caption ${long ? 'clamp' : ''}">${p.kind === 'trade' ? `<b>@${escapeHtml(p.username || '?')}</b> ` : ''}${escapeHtml(body)}</div>${long ? `<button class="link-btn more-btn" data-act="expand">${t('post_more')}</button>` : ''}` : ''}
+        ${(tags || cat) ? `<div class="tags">${cat}${tags}</div>` : ''}
+        ${link}
+      </div>
+      <button class="cm-link" data-act="comments">${n ? t(n === 1 ? 'post_view_1' : 'post_view_n', { n }) : t('post_add_comment')}</button>
+    </article>`;
+  }
+  function skeletonHtml(){
+    return [1, 2].map(() => `<div class="post skeleton"><div class="post-head"><span class="avatar sk"></span><div class="sk-line" style="width:120px"></div></div><div class="sk-media"></div><div class="sk-line" style="width:60%;margin:14px 0 8px"></div><div class="sk-line" style="width:85%"></div></div>`).join('');
+  }
+  function updateTabs(){
+    $$('.feed-tab').forEach(b => { const on = b.dataset.kind === feed.kind; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+  }
+  function drawFeed(){
+    const list = $('#feedList'); if (!list) return;
+    const kind = feed.kind, st = feed.s[kind]; updateTabs();
+    if (feedObserver){ feedObserver.disconnect(); feedObserver = null; }
+    if (st.error && !st.posts.length){ list.innerHTML = `<div class="empty-state"><p>${st.error === 'offline' ? t('auth_err_network') : t('auth_err_generic')}</p><button class="btn" id="feedRetry">${t('feed_retry')}</button></div>`; $('#feedRetry').onclick = () => loadFeed(kind, true); return; }
+    if (!st.loaded && !st.posts.length){ list.innerHTML = skeletonHtml(); return; }
+    const posts = st.posts.filter(p => p.kind === kind);
+    if (!posts.length){ list.innerHTML = `<div class="empty-state feed-empty"><p>${t('feed_empty_' + kind)}</p><button class="btn btn-primary" data-act="new">${t('post_create_first')}</button></div>`; return; }
+    const scroll = window.scrollY;
+    list.innerHTML = posts.map(postHtml).join('') +
+      (st.more ? `<div id="feedSentinel" class="feed-sentinel">${st.loading ? `<span class="spinner"></span>` : (typeof IntersectionObserver === 'function' ? '' : `<button class="btn" data-act="more">${t('feed_more_posts')}</button>`)}</div>`
+               : `<div class="feed-end">${t('feed_end')}</div>`);
+    if (st.more && typeof IntersectionObserver === 'function'){
+      feedObserver = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && !st.loading && st.more) loadFeed(kind, false); }, { rootMargin: '700px 0px' });
+      const s = $('#feedSentinel'); if (s) feedObserver.observe(s);
+    }
+    if (window.scrollY !== scroll) window.scrollTo(0, scroll);
+  }
+  function refreshActions(p){
+    const art = $(`article.post[data-post="${p.id}"]`); if (!art) return;
+    const lk = $('.ig-act.like', art); if (lk) lk.classList.toggle('on', !!feed.liked[p.id]);
+    const ll = $('.likes-line', art); if (ll){ ll.hidden = !p.like_count; ll.textContent = t(p.like_count === 1 ? 'post_like_1' : 'post_like_n', { n: p.like_count || 0 }); }
+    const cl = $('.cm-link', art), n = p.comment_count || 0; if (cl) cl.textContent = n ? t(n === 1 ? 'post_view_1' : 'post_view_n', { n }) : t('post_add_comment');
+  }
   function renderCommunity(){
     const main = $('#main');
     if (!cloudSession){
@@ -2876,140 +3121,296 @@
       $('#feedLoginBtn').onclick = () => openAuthGate('login');
       return;
     }
+    const tb = document.querySelector('.topbar'); if (tb) document.documentElement.style.setProperty('--tb', tb.offsetHeight + 'px');
     main.innerHTML = `
-      <div class="section-toolbar">
-        <h2>${t('nav_community')}</h2>
-        <button class="btn" id="feedRefreshBtn">${t('feed_refresh')}</button>
-      </div>
-      <div class="section-desc">${t('feed_desc')}</div>
-      <div class="feed-chips">
-        ${['all', 'strategy', 'indicator'].map(k => `<button class="chip ${feed.kind === k ? 'active' : ''}" data-kind="${k}">${k === 'all' ? t('feed_all') : kindLabel(k)}</button>`).join('')}
-      </div>
-      <div id="feedList"></div>`;
-    $('#feedRefreshBtn').onclick = () => loadFeed(true);
-    $$('.chip[data-kind]').forEach(c => c.onclick = () => { feed.kind = c.dataset.kind; feed.loaded = false; renderCommunity(); });
-    $('#feedList').addEventListener('click', onFeedClick);
-    $('#feedList').addEventListener('input', e => { const ta = e.target.closest('[data-draft]'); if (ta) feed.drafts[ta.dataset.draft] = ta.value; });
-    if (feed.loaded) drawFeed(); else loadFeed(true);
+      <div class="feed-wrap">
+        <div class="feed-bar">
+          <div class="feed-tabs" role="tablist">${FEED_KINDS.map(k => `<button class="feed-tab ${feed.kind === k ? 'active' : ''}" role="tab" data-kind="${k}">${catLabel(k)}</button>`).join('')}</div>
+          <div class="feed-bar-actions">
+            <button class="icon-btn" id="feedRefreshBtn" aria-label="${t('feed_refresh')}" title="${t('feed_refresh')}"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v5h-5"/></svg></button>
+            <button class="btn btn-primary" id="feedNewBtn">${t('post_new')}</button>
+          </div>
+        </div>
+        <div id="feedList"></div>
+      </div>`;
+    $$('.feed-tab').forEach(b => b.onclick = () => setFeedKind(b.dataset.kind));
+    $('#feedRefreshBtn').onclick = () => { window.scrollTo({ top: 0 }); loadFeed(feed.kind, true); };
+    $('#feedNewBtn').onclick = () => openComposer(feed.kind);
+    const list = $('#feedList');
+    list.addEventListener('click', onFeedClick);
+    list.addEventListener('scroll', onMediaScroll, true);
+    const st = feed.s[feed.kind];
+    if (!st.loaded) loadFeed(feed.kind, true); else { drawFeed(); if (Date.now() - st.at > 60000) loadFeed(feed.kind, true); }
   }
-  async function loadFeed(reset){
-    if (feed.loading) return;
-    feed.loading = true; feed.error = false;
-    const list = $('#feedList'); if (list && reset && !feed.posts.length) list.innerHTML = `<div class="hint" style="padding:20px 0;">${t('feed_loading')}</div>`;
+  function setFeedKind(kind){
+    if (!FEED_KINDS.includes(kind) || kind === feed.kind) return;
+    feed.kind = kind; stSet('tally:feedcat', kind);
+    window.scrollTo({ top: 0 });
+    const st = feed.s[kind];
+    if (!st.loaded) loadFeed(kind, true); else { drawFeed(); if (Date.now() - st.at > 60000) loadFeed(kind, true); }
+    drawFeed();
+  }
+  function onMediaScroll(e){
+    const tr = e.target; if (!tr.classList || !tr.classList.contains('media-track')) return;
+    const m = tr.parentNode, i = Math.round(tr.scrollLeft / Math.max(1, tr.clientWidth));
+    $$('.media-dots i', m).forEach((d, k) => d.classList.toggle('on', k === i));
+    const c = $('.media-count', m); if (c) c.textContent = (i + 1) + '/' + tr.children.length;
+  }
+
+  // ---- interactions ----
+  async function toggleLike(p, forceOn){
+    const was = !!feed.liked[p.id];
+    if (forceOn && was) return;
+    feed.liked[p.id] = !was; p.like_count = Math.max(0, (p.like_count || 0) + (was ? -1 : 1)); refreshActions(p);
     try {
-      let path = '/rest/v1/feed_posts?select=id,author_id,kind,title,body,payload,created_at,username,like_count,comment_count&order=created_at.desc&limit=' + PAGE;
-      if (feed.kind !== 'all') path += '&kind=eq.' + feed.kind;
-      if (!reset && feed.posts.length) path += '&created_at=lt.' + encodeURIComponent(feed.posts[feed.posts.length - 1].created_at);
-      const r = await cloudReq('GET', path);
-      if (!r.ok) throw httpErr(r);
-      const rows = Array.isArray(r.data) ? r.data : [];
-      feed.posts = reset ? rows : feed.posts.concat(rows);
-      feed.more = rows.length === PAGE;
-      if (rows.length){
-        const lr = await cloudReq('GET', '/rest/v1/reactions?select=post_id&kind=eq.like&user_id=eq.' + cloudSession.user_id + '&post_id=in.(' + rows.map(x => x.id).join(',') + ')');
-        if (lr.ok && Array.isArray(lr.data)) lr.data.forEach(x => { feed.liked[x.post_id] = true; });
-      }
-      feed.loaded = true;
-    } catch(e){ feed.error = e && e.offline ? 'offline' : 'error'; }
-    feed.loading = false;
-    if (currentSection === 'community') drawFeed();
+      const r = was
+        ? await cloudReq('DELETE', '/rest/v1/reactions?post_id=eq.' + p.id + '&user_id=eq.' + cloudSession.user_id + '&kind=eq.like')
+        : await cloudReq('POST', '/rest/v1/reactions', { body: { post_id: p.id, user_id: cloudSession.user_id, kind: 'like' }, headers: { Prefer: 'return=minimal' } });
+      if (!r.ok && r.status !== 409) throw httpErr(r);
+    } catch(e){ feed.liked[p.id] = was; p.like_count = Math.max(0, p.like_count + (was ? 1 : -1)); refreshActions(p); showToast(t('auth_err_generic')); }
   }
-  function postHtml(p){
-    const mine = p.author_id === cloudSession.user_id;
-    const url = p.payload && p.payload.url;
-    const tags = (p.payload && Array.isArray(p.payload.tags) ? p.payload.tags : []).map(x => `<span class="tag-pill">${escapeHtml(String(x))}</span>`).join('');
-    const cat = p.payload && p.payload.category ? `<span class="tag-pill">${escapeHtml(String(p.payload.category))}</span>` : '';
-    const link = p.kind === 'indicator' && url ? (TV_URL_RE.test(url) ? `<a class="ind-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${t('open_on_tv')}</a>` : '') : '';
-    const saved = p.kind === 'strategy' ? strategies.some(x => x.fromPost === p.id) : p.kind === 'indicator' ? indicators.some(x => x.fromPost === p.id) : false;
-    const canSave = !mine && (p.kind === 'strategy' || p.kind === 'indicator');
-    return `<article class="post" data-post="${p.id}">
-      <div class="post-head">
-        <span class="post-author">@${escapeHtml(p.username || '?')}</span>
-        <span class="post-time">${escapeHtml(timeAgo(p.created_at))}</span>
-        <span class="post-kind k-${p.kind}">${kindLabel(p.kind)}</span>
-        <button class="icon-btn post-menu" data-act="menu" aria-label="${t('feed_more')}">⋯</button>
-      </div>
-      <h4>${escapeHtml(p.title)}</h4>
-      ${p.body ? `<div class="post-body">${escapeHtml(p.body)}</div>` : ''}
-      ${(tags || cat) ? `<div class="tags">${cat}${tags}</div>` : ''}
-      ${link}
-      <div class="post-actions">
-        <button class="act ${feed.liked[p.id] ? 'on' : ''}" data-act="like">${feed.liked[p.id] ? '♥' : '♡'} <span>${p.like_count || 0}</span></button>
-        <button class="act ${feed.openCm[p.id] ? 'on' : ''}" data-act="comments">💬 <span>${p.comment_count || 0}</span></button>
-        ${canSave ? `<button class="act" data-act="save" ${saved ? 'disabled' : ''}>${saved ? t('feed_saved') : (p.kind === 'strategy' ? t('feed_save_strategy') : t('feed_save_indicator'))}</button>` : ''}
-        ${mine ? `<span class="hint" style="margin-left:auto;">${t('feed_yours')}</span>` : ''}
-      </div>
-      <div class="post-comments" ${feed.openCm[p.id] ? '' : 'hidden'}>${feed.openCm[p.id] ? commentsHtml(p) : ''}</div>
-    </article>`;
+  function popHeart(media){
+    const h = $('.heart-pop', media); if (!h) return;
+    h.classList.remove('go'); void h.offsetWidth; h.classList.add('go');
   }
-  function commentsHtml(p){
-    const cs = feed.comments[p.id];
-    const list = cs === undefined ? `<div class="hint">${t('feed_loading')}</div>` : cs === null ? `<div class="hint">${t('auth_err_generic')}</div>`
-      : cs.map(c => `<div class="cm" data-cm="${c.id}"><div><b>@${escapeHtml(c.username || '?')}</b> <span class="post-time">${escapeHtml(timeAgo(c.created_at))}</span></div>
-          <div class="cm-body">${escapeHtml(c.body)}</div>
-          <div class="cm-tools">${c.author_id === cloudSession.user_id || p.author_id === cloudSession.user_id || isAdminUser() ? `<button class="link-btn" data-act="cm-del">${t('btn_delete')}</button>` : ''}${c.author_id !== cloudSession.user_id ? `<button class="link-btn" data-act="cm-report">${t('feed_report')}</button>` : ''}</div></div>`).join('') || `<div class="hint">${t('feed_no_comments')}</div>`;
-    return `${list}<div class="cm-new"><textarea data-draft="${p.id}" maxlength="1000" rows="2" placeholder="${t('feed_comment_ph')}">${escapeHtml(feed.drafts[p.id] || '')}</textarea><button class="btn btn-primary" data-act="cm-send">${t('feed_send')}</button></div>`;
+  async function saveToLibrary(p){
+    if (p.kind === 'strategy'){
+      strategies = [...strategies, { id: uid(), title: p.title, tags: (p.payload && p.payload.tags) || [], content: p.body || '', createdAt: Date.now(), fromPost: p.id }];
+      await saveStrategies();
+    } else {
+      indicators = [...indicators, { id: uid(), name: p.title, url: p.payload.url, category: p.payload.category || '', description: p.body || '', createdAt: Date.now(), fromPost: p.id }];
+      await saveIndicators();
+    }
+    showToast(t('feed_saved_toast'));
+    const art = $(`article.post[data-post="${p.id}"]`); const b = art && $('[data-act="save"]', art);
+    if (b){ b.disabled = true; const sp = $('span', b); if (sp) sp.textContent = t('feed_saved'); }
   }
-  function drawFeed(){
-    const list = $('#feedList'); if (!list) return;
-    if (feed.error && !feed.posts.length){ list.innerHTML = `<div class="empty-state"><p>${feed.error === 'offline' ? t('auth_err_network') : t('auth_err_generic')}</p><button class="btn" id="feedRetry">${t('feed_retry')}</button></div>`; $('#feedRetry').onclick = () => loadFeed(true); return; }
-    if (!feed.posts.length){ list.innerHTML = `<div class="empty-state"><p>${t('feed_empty')}</p></div>`; return; }
-    // keep typing state: remember focus + caret of a comment box across redraws
-    const ae = document.activeElement; const keep = ae && ae.dataset && ae.dataset.draft ? { id: ae.dataset.draft, pos: ae.selectionStart } : null;
-    list.innerHTML = feed.posts.map(postHtml).join('') + (feed.more ? `<div style="text-align:center; margin:14px 0;"><button class="btn" data-act="more">${t('feed_more_posts')}</button></div>` : '');
-    if (keep){ const el = list.querySelector(`[data-draft="${keep.id}"]`); if (el){ el.focus(); try { el.setSelectionRange(keep.pos, keep.pos); } catch(e){} } }
+  async function onFeedClick(e){
+    const media = e.target.closest('[data-media]');
+    if (media && !e.target.closest('[data-act]')){
+      const art = media.closest('[data-post]'), p = art && findPost(art.dataset.post); if (!p) return;
+      const img = e.target.closest('img'), L = feed.lastClick, now = Date.now();
+      if (L.id === p.id && now - L.at < 320){ clearTimeout(L.timer); L.id = null; popHeart(media); toggleLike(p, true); return; }
+      L.id = p.id; L.at = now; clearTimeout(L.timer);
+      L.timer = setTimeout(() => { L.id = null; if (img && img.src) openLightbox(img.src); }, 320);
+      return;
+    }
+    const btn = e.target.closest('[data-act]'); if (!btn) return;
+    const act = btn.dataset.act;
+    if (act === 'more'){ loadFeed(feed.kind, false); return; }
+    if (act === 'new'){ openComposer(feed.kind); return; }
+    const art = btn.closest('[data-post]'); const p = art && findPost(art.dataset.post); if (!p) return;
+    try {
+      if (act === 'like') await toggleLike(p);
+      else if (act === 'comments') openComments(p);
+      else if (act === 'save') await saveToLibrary(p);
+      else if (act === 'menu') openPostMenu(p);
+      else if (act === 'expand'){ const c = $('.caption', art); if (c) c.classList.remove('clamp'); btn.remove(); }
+    } catch(err){ showToast(err && err.offline ? t('auth_err_network') : t('auth_err_generic')); }
   }
+
+  // ---- comments sheet ----
   async function loadComments(p){
     try {
       const r = await cloudReq('GET', '/rest/v1/comments?select=id,body,created_at,author_id,profiles(username)&post_id=eq.' + p.id + '&order=created_at.asc&limit=200');
       if (!r.ok) throw httpErr(r);
       feed.comments[p.id] = r.data.map(c => ({ id: c.id, body: c.body, created_at: c.created_at, author_id: c.author_id, username: c.profiles && c.profiles.username }));
     } catch(e){ feed.comments[p.id] = null; }
-    drawFeed();
   }
-  async function onFeedClick(e){
-    const btn = e.target.closest('[data-act]'); if (!btn) return;
-    const act = btn.dataset.act;
-    if (act === 'more'){ loadFeed(false); return; }
-    const art = btn.closest('[data-post]'); const p = art && feed.posts.find(x => x.id === art.dataset.post); if (!p) return;
-    try {
-      if (act === 'like'){
-        const was = !!feed.liked[p.id];
-        feed.liked[p.id] = !was; p.like_count = Math.max(0, (p.like_count || 0) + (was ? -1 : 1)); drawFeed();
-        const r = was
-          ? await cloudReq('DELETE', '/rest/v1/reactions?post_id=eq.' + p.id + '&user_id=eq.' + cloudSession.user_id + '&kind=eq.like')
-          : await cloudReq('POST', '/rest/v1/reactions', { body: { post_id: p.id, user_id: cloudSession.user_id, kind: 'like' }, headers: { Prefer: 'return=minimal' } });
-        if (!r.ok && r.status !== 409){ feed.liked[p.id] = was; p.like_count = Math.max(0, p.like_count + (was ? 1 : -1)); drawFeed(); showToast(t('auth_err_generic')); }
-      } else if (act === 'comments'){
-        feed.openCm[p.id] = !feed.openCm[p.id]; drawFeed();
-        if (feed.openCm[p.id] && feed.comments[p.id] === undefined) loadComments(p);
-      } else if (act === 'cm-send'){
-        const body = (feed.drafts[p.id] || '').trim(); if (!body) return;
-        btn.disabled = true;
-        const r = await cloudReq('POST', '/rest/v1/comments', { body: { post_id: p.id, author_id: cloudSession.user_id, body: body.slice(0, 1000) }, headers: { Prefer: 'return=minimal' } });
-        if (!r.ok){ btn.disabled = false; showToast(t('auth_err_generic')); return; }
-        feed.drafts[p.id] = ''; p.comment_count = (p.comment_count || 0) + 1; await loadComments(p);
-      } else if (act === 'cm-del'){
-        const cid = btn.closest('[data-cm]').dataset.cm;
+  function openComments(p){
+    if ($('#commentSheet')) return;
+    const b = document.createElement('div'); b.className = 'sheet-backdrop'; b.id = 'commentSheet';
+    b.innerHTML = `<div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet-grab"></div>
+      <div class="sheet-head"><span>${t('post_comments')}</span><button class="icon-btn" data-x aria-label="${t('btn_cancel')}" style="font-size:18px;">✕</button></div>
+      <div class="sheet-list" id="cs_list"><div class="hint" style="padding:16px;">${t('feed_loading')}</div></div>
+      <div class="sheet-new"><textarea id="cs_input" maxlength="1000" rows="1" placeholder="${t('feed_comment_ph')}"></textarea><button class="btn btn-primary" id="cs_send">${t('feed_send')}</button></div>
+    </div>`;
+    document.body.appendChild(b);
+    const close = () => { document.removeEventListener('keydown', onKey); b.remove(); };
+    const onKey = ev => { if (ev.key === 'Escape') close(); };
+    document.addEventListener('keydown', onKey);
+    b.addEventListener('click', ev => { if (ev.target === b || ev.target.closest('[data-x]')) close(); });
+    const draw = () => {
+      const cs = feed.comments[p.id], list = $('#cs_list', b); if (!list) return;
+      if (cs === undefined){ list.innerHTML = `<div class="hint" style="padding:16px;">${t('feed_loading')}</div>`; return; }
+      if (cs === null){ list.innerHTML = `<div class="hint" style="padding:16px;">${t('auth_err_generic')}</div>`; return; }
+      list.innerHTML = (cs.length ? '' : `<div class="hint" style="padding:16px;">${t('feed_no_comments')}</div>`) + cs.map(c => `
+        <div class="cm" data-cm="${c.id}">
+          ${avatarHtml(c.username, 30)}
+          <div class="cm-main"><div><b>@${escapeHtml(c.username || '?')}</b> <span class="post-time">${escapeHtml(timeAgo(c.created_at))}</span></div>
+            <div class="cm-body">${escapeHtml(c.body)}</div>
+            <div class="cm-tools">${c.author_id === cloudSession.user_id || p.author_id === cloudSession.user_id || isAdminUser() ? `<button class="link-btn" data-act="cm-del">${t('btn_delete')}</button>` : ''}${c.author_id !== cloudSession.user_id ? `<button class="link-btn" data-act="cm-report">${t('feed_report')}</button>` : ''}</div></div>
+        </div>`).join('');
+    };
+    const reload = async () => { await loadComments(p); draw(); const l = $('#cs_list', b); if (l) l.scrollTop = l.scrollHeight; };
+    $('#cs_list', b).addEventListener('click', async ev => {
+      const bt = ev.target.closest('[data-act]'); if (!bt) return;
+      const row = bt.closest('[data-cm]'), cid = row && row.dataset.cm; if (!cid) return;
+      if (bt.dataset.act === 'cm-del'){
         if (!await showConfirm(t('feed_confirm_del_comment'))) return;
-        const r = await cloudReq('DELETE', '/rest/v1/comments?id=eq.' + cid);
-        if (r.ok){ p.comment_count = Math.max(0, (p.comment_count || 1) - 1); await loadComments(p); } else showToast(t('auth_err_generic'));
-      } else if (act === 'cm-report'){
-        openReportModal({ comment_id: btn.closest('[data-cm]').dataset.cm });
-      } else if (act === 'save'){
-        if (p.kind === 'strategy'){
-          strategies = [...strategies, { id: uid(), title: p.title, tags: (p.payload && p.payload.tags) || [], content: p.body || '', createdAt: Date.now(), fromPost: p.id }];
-          await saveStrategies();
-        } else {
-          indicators = [...indicators, { id: uid(), name: p.title, url: p.payload.url, category: p.payload.category || '', description: p.body || '', createdAt: Date.now(), fromPost: p.id }];
-          await saveIndicators();
-        }
-        showToast(t('feed_saved_toast')); drawFeed();
-      } else if (act === 'menu'){
-        openPostMenu(p);
-      }
-    } catch(err){ showToast(err && err.offline ? t('auth_err_network') : t('auth_err_generic')); }
+        try {
+          const r = await cloudReq('DELETE', '/rest/v1/comments?id=eq.' + cid);
+          if (!r.ok) throw httpErr(r);
+          p.comment_count = Math.max(0, (p.comment_count || 1) - 1); refreshActions(p); await reload();
+        } catch(er){ showToast(t('auth_err_generic')); }
+      } else if (bt.dataset.act === 'cm-report') openReportModal({ comment_id: cid });
+    });
+    const input = $('#cs_input', b);
+    input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(120, input.scrollHeight) + 'px'; });
+    $('#cs_send', b).onclick = async () => {
+      const body = input.value.trim(); if (!body) return;
+      const btn = $('#cs_send', b); btn.disabled = true;
+      try {
+        const r = await cloudReq('POST', '/rest/v1/comments', { body: { post_id: p.id, author_id: cloudSession.user_id, body: body.slice(0, 1000) }, headers: { Prefer: 'return=minimal' } });
+        if (!r.ok) throw httpErr(r);
+        input.value = ''; input.style.height = 'auto'; p.comment_count = (p.comment_count || 0) + 1; refreshActions(p); await reload();
+      } catch(er){ showToast(er && er.offline ? t('auth_err_network') : t('auth_err_generic')); }
+      btn.disabled = false;
+    };
+    if (feed.comments[p.id] === undefined) reload(); else { draw(); }
+    if (feed.comments[p.id] !== undefined) loadComments(p).then(draw);
   }
+
+  // ---- composer (new post) ----
+  const compressForPost = f => ((window.__TALLY_TEST__ && window.__TALLY_TEST__.compress) || compressImage)(f, 1600, 0.78);
+  async function uploadPostImage(dataUrl){
+    const blob = dataUrlToBlob(dataUrl);
+    if (!blob || blob.size > 2 * 1024 * 1024){ const e = new Error('toolarge'); e.tooLarge = true; throw e; }
+    const path = cloudSession.user_id + '/' + uid() + Math.random().toString(36).slice(2, 6) + '.jpg';
+    const r = await cloudReq('POST', '/storage/v1/object/post-images/' + path, { raw: true, body: blob, headers: { 'Content-Type': 'image/jpeg', 'x-upsert': 'false' } });
+    if (!r.ok) throw httpErr(r);
+    return path;
+  }
+  async function removePostImages(paths){
+    if (!paths || !paths.length || !cloudSession) return;
+    try { await cloudReq('DELETE', '/storage/v1/object/post-images', { body: { prefixes: paths } }); } catch(e){}
+  }
+  function tradeLabel(x){
+    return `${x.date || ''} · ${x.symbol || '?'} ${x.direction === 'short' ? t('filter_short') : t('filter_long')}${x.r !== null && x.r !== undefined ? ' · ' + (x.r > 0 ? '+' : '') + x.r + 'R' : ''}`;
+  }
+  function openComposer(startKind){
+    if ($('#composer')) return;
+    const MAXIMG = 6;
+    let kind = FEED_KINDS.includes(startKind) ? startKind : 'trade', busy = false;
+    const v = { trade: '', money: false, caption: '', title: '', tags: '', url: '', cat: '' };
+    let images = [];   // { dataUrl, fromTrade }
+    const b = document.createElement('div'); b.className = 'modal-backdrop'; b.id = 'composer'; b.style.zIndex = '150';
+    document.body.appendChild(b);
+    const close = () => b.remove();
+    const recentTrades = () => trades.slice().sort((a, c) => (c.createdAt || 0) - (a.createdAt || 0)).slice(0, 40);
+    const sync = () => {
+      const g = id => { const e = $(id, b); return e ? e.value : null; };
+      if (g('#pc_caption') !== null) v.caption = g('#pc_caption');
+      if (g('#pc_title') !== null) v.title = g('#pc_title');
+      if (g('#pc_tags') !== null) v.tags = g('#pc_tags');
+      if (g('#pc_url') !== null) v.url = g('#pc_url');
+      if (g('#pc_cat') !== null) v.cat = g('#pc_cat');
+      if (g('#pc_trade') !== null) v.trade = g('#pc_trade');
+      const m = $('#pc_money', b); if (m) v.money = m.checked;
+    };
+    const drawThumbs = () => {
+      const w = $('#pc_thumbs', b); if (!w) return;
+      w.innerHTML = images.map((im, i) => `<div class="pc-thumb"><img src="${im.dataUrl}" alt=""><button type="button" data-rm="${i}" aria-label="${t('btn_delete')}">✕</button></div>`).join('') +
+        (images.length < MAXIMG ? `<button type="button" class="pc-add" id="pc_addbtn">+<span>${t('pc_add_photos')}</span></button>` : '');
+      $$('[data-rm]', w).forEach(x => x.onclick = () => { images.splice(+x.dataset.rm, 1); drawThumbs(); });
+      const a = $('#pc_addbtn', w); if (a) a.onclick = () => $('#pc_files', b).click();
+    };
+    const draw = () => {
+      const trs = recentTrades();
+      b.innerHTML = `<div class="modal" style="max-width:480px;">
+        <div class="modal-head"><h3>${t('post_new')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
+        <div class="modal-body">
+          <div class="seg">${FEED_KINDS.map(k => `<button type="button" class="${k === kind ? 'active' : ''}" data-k="${k}">${catLabel(k)}</button>`).join('')}</div>
+          ${kind === 'trade' ? `
+            <label>${t('pc_attach_trade')}</label>
+            <select id="pc_trade"><option value="">${t('pc_none')}</option>${trs.map(x => `<option value="${x.id}" ${v.trade === x.id ? 'selected' : ''}>${escapeHtml(tradeLabel(x))}</option>`).join('')}</select>
+            <label class="check" style="margin-top:10px;"><input type="checkbox" id="pc_money" ${v.money ? 'checked' : ''}> <span>${t('pc_show_money')}</span></label>
+            <div class="hint" style="margin:2px 0 0;">${t('pc_money_hint')}</div>
+            <label>${t('pc_caption')}</label>
+            <textarea id="pc_caption" maxlength="2000" style="min-height:96px;" placeholder="${t('pc_caption_ph')}">${escapeHtml(v.caption)}</textarea>` : ''}
+          ${kind === 'strategy' ? `
+            <label>${t('lbl_title')}</label><input type="text" id="pc_title" maxlength="120" value="${escapeHtml(v.title)}">
+            <label>${t('lbl_notes')}</label><textarea id="pc_caption" maxlength="5000" style="min-height:130px;">${escapeHtml(v.caption)}</textarea>
+            <label>${t('lbl_tags')}</label><input type="text" id="pc_tags" value="${escapeHtml(v.tags)}">` : ''}
+          ${kind === 'indicator' ? `
+            <label>${t('lbl_name')}</label><input type="text" id="pc_title" maxlength="120" value="${escapeHtml(v.title)}">
+            <label>TradingView URL</label><input type="url" id="pc_url" maxlength="300" placeholder="https://www.tradingview.com/script/…" value="${escapeHtml(v.url)}" autocapitalize="off" autocorrect="off">
+            <label>${t('lbl_category')}</label><input type="text" id="pc_cat" maxlength="40" value="${escapeHtml(v.cat)}">
+            <label>${t('lbl_description')}</label><textarea id="pc_caption" maxlength="5000" style="min-height:90px;">${escapeHtml(v.caption)}</textarea>` : ''}
+          <label>${t('pc_photos')}</label>
+          <div class="pc-thumbs" id="pc_thumbs"></div>
+          <input type="file" id="pc_files" accept="image/*" multiple hidden>
+          <div class="hint" id="pc_err" style="color:var(--red); min-height:16px; margin-top:10px;"></div>
+          <div class="hint">${t('pc_note')}</div>
+        </div>
+        <div class="modal-foot"><span></span><div style="display:flex; gap:8px;"><button class="btn btn-ghost" data-x>${t('btn_cancel')}</button><button class="btn btn-primary" id="pc_go">${t('pc_publish')}</button></div></div>
+      </div>`;
+      drawThumbs();
+      $$('[data-k]', b).forEach(x => x.onclick = () => { if (busy) return; sync(); kind = x.dataset.k; draw(); });
+      const sel = $('#pc_trade', b);
+      if (sel) sel.onchange = async () => {
+        sync(); const tr = trades.find(x => x.id === v.trade);
+        images = images.filter(x => !x.fromTrade);
+        if (tr){
+          if (!v.caption && tr.notes){ v.caption = tr.notes.slice(0, 2000); const c = $('#pc_caption', b); if (c) c.value = v.caption; }
+          for (const id of (tr.images || [])){ if (images.length >= MAXIMG) break; const d = await imgGetLocal(id); if (d) images.unshift({ dataUrl: d, fromTrade: true }); }
+        }
+        drawThumbs();
+      };
+      $('#pc_files', b).onchange = async ev => {
+        const files = Array.from(ev.target.files || []).slice(0, MAXIMG - images.length);
+        for (const f of files){ try { images.push({ dataUrl: await compressForPost(f) }); } catch(e){ showToast(t('pc_err_img')); } }
+        ev.target.value = ''; drawThumbs();
+      };
+      $('#pc_go', b).onclick = go;
+    };
+    const err = msg => { const e = $('#pc_err', b); if (e) e.textContent = msg || ''; };
+    const go = async () => {
+      if (busy) return; sync(); err('');
+      let post = null;
+      if (kind === 'trade'){
+        const tr = trades.find(x => x.id === v.trade), cap = v.caption.trim();
+        if (!tr && !cap && !images.length) return err(t('pc_err_empty'));
+        const pl = {};
+        if (tr){
+          pl.symbol = String(tr.symbol || '').slice(0, 14); pl.direction = tr.direction === 'short' ? 'short' : 'long'; pl.date = tr.date;
+          if (tr.r !== null && tr.r !== undefined) pl.r = tr.r;
+          pl.result = tr.pnl > 0 ? 'win' : tr.pnl < 0 ? 'loss' : 'be';
+          if (tr.confidence) pl.confidence = tr.confidence;
+          if (v.money) pl.pnl = Number(tr.pnl);
+        }
+        const title = tr ? (pl.symbol + ' ' + pl.direction + (pl.r !== undefined ? ' · ' + (pl.r > 0 ? '+' : '') + pl.r + 'R' : '')).trim() : (cap.split('\n')[0].slice(0, 80) || 'Journal');
+        post = { kind, title: title.slice(0, 120), body: cap, payload: pl };
+      } else if (kind === 'strategy'){
+        const title = v.title.trim(); if (!title) return err(t('share_err_title'));
+        post = { kind, title, body: v.caption.trim(), payload: { tags: v.tags.split(',').map(x => x.trim()).filter(Boolean).slice(0, 10).map(x => x.slice(0, 30)) } };
+      } else {
+        const title = v.title.trim(), url = v.url.trim();
+        if (!title) return err(t('share_err_title'));
+        if (url.length > 300 || !TV_URL_RE.test(url)) return err(t('share_err_url'));
+        post = { kind, title, body: v.caption.trim(), payload: { url, category: v.cat.trim().slice(0, 40) } };
+      }
+      busy = true; const btn = $('#pc_go', b); btn.disabled = true; btn.textContent = t('pc_publishing');
+      const paths = [];
+      try {
+        for (const im of images) paths.push(await uploadPostImage(im.dataUrl));
+        const r = await cloudReq('POST', '/rest/v1/posts', { body: Object.assign({ author_id: cloudSession.user_id, image_paths: paths }, post), headers: { Prefer: 'return=representation' } });
+        if (!r.ok || !Array.isArray(r.data) || !r.data[0]) throw httpErr(r);
+        close(); showToast(t('pc_posted'));
+        feed.kind = kind; stSet('tally:feedcat', kind); feed.s[kind].loaded = false;
+        currentSection = 'community'; render(); window.scrollTo({ top: 0 });
+        return;
+      } catch(e){
+        await removePostImages(paths);
+        err(e && e.offline ? t('auth_err_network') : e && e.tooLarge ? t('pc_err_large') : t('auth_err_generic'));
+      }
+      busy = false; btn.disabled = false; btn.textContent = t('pc_publish');
+    };
+    b.addEventListener('click', e => { if (e.target === b || e.target.closest('[data-x]')) { if (!busy) close(); } });
+    draw();
+  }
+
   function openSheet(title, rows){
     const b = document.createElement('div'); b.className = 'modal-backdrop'; b.style.zIndex = '150';
     b.innerHTML = `<div class="modal" style="max-width:340px;"><div class="modal-head"><h3>${title}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
@@ -3025,13 +3426,13 @@
       rows.push({ label: t('feed_block_user', { name: '@' + escapeHtml(p.username || '') }), danger: true, run: async () => {
         if (!await showConfirm(t('feed_confirm_block', { name: '@' + escapeHtml(p.username || '') }), t('feed_block'))) return;
         const r = await cloudReq('POST', '/rest/v1/blocks', { body: { blocker_id: cloudSession.user_id, blocked_id: p.author_id }, headers: { Prefer: 'return=minimal' } });
-        if (r.ok || r.status === 409){ showToast(t('feed_blocked_toast')); feed.loaded = false; feed.posts = []; loadFeed(true); } else showToast(t('auth_err_generic'));
+        if (r.ok || r.status === 409){ showToast(t('feed_blocked_toast')); feedInvalidate(); if (currentSection === 'community') loadFeed(feed.kind, true); } else showToast(t('auth_err_generic'));
       } });
     }
     if (mine || isAdminUser()) rows.push({ label: t('feed_delete_post'), danger: true, run: async () => {
       if (!await showConfirm(t('feed_confirm_del_post'))) return;
       const r = await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + p.id);
-      if (r.ok){ feed.posts = feed.posts.filter(x => x.id !== p.id); unlinkShared(p.id); drawFeed(); } else showToast(t('auth_err_generic'));
+      if (r.ok){ feedRemovePost(p.id); unlinkShared(p.id); drawFeed(); if (p.author_id === cloudSession.user_id) removePostImages(p.image_paths); } else showToast(t('auth_err_generic'));
     } });
     openSheet(escapeHtml(p.title.length > 30 ? p.title.slice(0, 30) + '…' : p.title), rows);
   }
@@ -3091,7 +3492,7 @@
         const r = await cloudReq('GET', '/rest/v1/blocks?select=blocked_id,profiles!blocks_blocked_id_fkey(username)');
         if (!r.ok) throw httpErr(r);
         $('#blk_body', b).innerHTML = r.data.length ? r.data.map(x => `<div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;"><span>@${escapeHtml((x.profiles && x.profiles.username) || '?')}</span><button class="btn btn-ghost" data-un="${x.blocked_id}">${t('feed_unblock')}</button></div>`).join('') : `<div class="hint">${t('feed_no_blocked')}</div>`;
-        $$('[data-un]', b).forEach(u => u.onclick = async () => { await cloudReq('DELETE', '/rest/v1/blocks?blocked_id=eq.' + u.dataset.un + '&blocker_id=eq.' + cloudSession.user_id); feed.loaded = false; draw(); });
+        $$('[data-un]', b).forEach(u => u.onclick = async () => { await cloudReq('DELETE', '/rest/v1/blocks?blocked_id=eq.' + u.dataset.un + '&blocker_id=eq.' + cloudSession.user_id); feedInvalidate(); draw(); });
       } catch(e){ $('#blk_body', b).innerHTML = `<div class="hint">${t('auth_err_generic')}</div>`; }
     };
     draw();
@@ -3146,7 +3547,7 @@
       sb.disabled = true;
       try {
         const id = await publishRecord(kind, rec);
-        if (id){ await store(list().map(x => x.id === rec.id ? Object.assign({}, x, { sharedPostId: id }) : x)); feed.loaded = false; close(); render(); showToast(t('share_done')); return; }
+        if (id){ await store(list().map(x => x.id === rec.id ? Object.assign({}, x, { sharedPostId: id }) : x)); feedInvalidate(); close(); render(); showToast(t('share_done')); return; }
       } catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
       sb.disabled = false;
     };
@@ -3156,13 +3557,13 @@
         const r = await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + rec.sharedPostId);
         if (!r.ok) throw httpErr(r);
         await store(list().map(x => { if (x.id !== rec.id) return x; const { sharedPostId, ...rest } = x; return rest; }));
-        feed.loaded = false; close(); render(); showToast(t('share_stopped'));
+        feedInvalidate(); close(); render(); showToast(t('share_stopped'));
       } catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
     };
   }
   async function deleteSharedPost(rec){
     if (!rec || !rec.sharedPostId || !cloudSession) return;
-    try { await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + rec.sharedPostId); feed.loaded = false; } catch(e){}
+    try { await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + rec.sharedPostId); feedInvalidate(); } catch(e){}
   }
 
   // ---------- init ----------
@@ -3197,6 +3598,7 @@
     await loadAll();
     if (accounts.length && !currentAccountId) currentAccountId = accounts[0].id;
     await cloudLoadState();
+    { const fc = await stGet('tally:feedcat'); if (FEED_KINDS.indexOf(fc) >= 0) feed.kind = fc; }
     render();
     updateSyncUi();
     cloudStart();
