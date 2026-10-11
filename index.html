@@ -397,6 +397,31 @@
   #settingsBtn[data-sync="idle"]::after { background:var(--green); }
   #settingsBtn[data-sync="syncing"]::after { background:var(--amber); }
   #settingsBtn[data-sync="error"]::after, #settingsBtn[data-sync="offline"]::after { background:var(--red); }
+  .feed-chips { display:flex; gap:8px; margin:0 0 14px; flex-wrap:wrap; }
+  .chip { background:var(--card); border:1px solid var(--card-border); color:var(--text-mid); border-radius:999px; padding:6px 14px; font-size:12.5px; cursor:pointer; font-family:inherit; }
+  .chip.active { color:var(--amber); border-color:var(--amber-dim); background:var(--amber-soft); }
+  .post { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:16px 18px; margin:0 0 12px; max-width:720px; }
+  .post h4 { margin:8px 0 6px; font-size:15.5px; }
+  .post-head { display:flex; align-items:center; gap:10px; font-size:12.5px; }
+  .post-author { color:var(--text); font-weight:600; }
+  .post-time { color:var(--text-dim); font-size:11.5px; }
+  .post-kind { font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; padding:2px 8px; border-radius:999px; border:1px solid var(--card-border); color:var(--text-mid); }
+  .post-kind.k-strategy { color:var(--amber); border-color:var(--amber-dim); }
+  .post-kind.k-indicator { color:var(--green); border-color:var(--green-dim); }
+  .post-menu { margin-left:auto; font-size:18px; }
+  .post-body { white-space:pre-wrap; font-size:13.5px; line-height:1.6; color:var(--text-mid); margin:0 0 8px; word-break:break-word; }
+  .post .tags { margin:6px 0; }
+  .post-actions { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+  .act { background:transparent; border:1px solid var(--card-border); color:var(--text-mid); border-radius:999px; padding:5px 12px; font-size:12.5px; cursor:pointer; font-family:inherit; }
+  .act.on { color:var(--amber); border-color:var(--amber-dim); }
+  .act:disabled { opacity:.55; cursor:default; }
+  .post-comments { border-top:1px solid var(--hairline); margin-top:12px; padding-top:10px; }
+  .cm { padding:8px 0; border-bottom:1px solid var(--hairline); font-size:13px; }
+  .cm-body { white-space:pre-wrap; color:var(--text-mid); margin-top:2px; word-break:break-word; }
+  .cm-tools { display:flex; gap:12px; margin-top:4px; }
+  .link-btn { background:none; border:0; color:var(--text-dim); font-size:11.5px; cursor:pointer; padding:0; font-family:inherit; text-decoration:underline; }
+  .cm-new { display:flex; gap:8px; margin-top:10px; align-items:flex-end; }
+  .cm-new textarea { flex:1; min-height:44px; }
 </style>
 </head>
 <body>
@@ -443,6 +468,7 @@
     <button class="tab-btn active" data-section="journal" data-i18n="nav_journal">Journal</button>
     <button class="tab-btn" data-section="strategies" data-i18n="nav_strategies">Strategies</button>
     <button class="tab-btn" data-section="indicators" data-i18n="nav_indicators">Indicators</button>
+    <button class="tab-btn" data-section="community" data-i18n="nav_community">Community</button>
   </div>
 </div>
 
@@ -724,6 +750,59 @@
     sync_done: {en:'Synced · {time}', es:'Sincronizado · {time}', nl:'Gesynchroniseerd · {time}'},
     sync_offline: {en:'Offline — will sync when you are back online', es:'Sin conexión: se sincronizará al volver', nl:'Offline — synchroniseert zodra je weer online bent'},
     sync_error: {en:'Sync problem — will retry', es:'Problema de sincronización: se reintentará', nl:'Sync-probleem — wordt opnieuw geprobeerd'},
+    nav_community: {en:'Community', es:'Comunidad', nl:'Community'},
+    feed_desc: {en:'Strategies and indicators shared by members. Nothing here is financial advice.', es:'Estrategias e indicadores compartidos por miembros. Nada de esto es asesoramiento financiero.', nl:'Strategieën en indicators die leden delen. Niets hier is financieel advies.'},
+    feed_login_needed: {en:'Log in to see what other members share and to share your own strategies and indicators.', es:'Inicia sesión para ver lo que comparten otros miembros y compartir tus estrategias e indicadores.', nl:'Log in om te zien wat andere leden delen en om je eigen strategieën en indicators te delen.'},
+    feed_refresh: {en:'Refresh', es:'Actualizar', nl:'Vernieuwen'},
+    feed_all: {en:'All', es:'Todo', nl:'Alles'},
+    feed_kind_strategy: {en:'Strategy', es:'Estrategia', nl:'Strategie'},
+    feed_kind_indicator: {en:'Indicator', es:'Indicador', nl:'Indicator'},
+    feed_kind_trade: {en:'Trade', es:'Trade', nl:'Trade'},
+    feed_loading: {en:'Loading…', es:'Cargando…', nl:'Laden…'},
+    feed_empty: {en:'Nothing shared yet. Open one of your strategies or indicators and tap “Share to community”.', es:'Aún no hay nada compartido. Abre una de tus estrategias o indicadores y pulsa «Compartir con la comunidad».', nl:'Nog niets gedeeld. Open een van je strategieën of indicators en kies “Delen met community”.'},
+    feed_retry: {en:'Try again', es:'Reintentar', nl:'Opnieuw proberen'},
+    feed_more: {en:'More', es:'Más', nl:'Meer'},
+    feed_more_posts: {en:'Load more', es:'Cargar más', nl:'Meer laden'},
+    feed_yours: {en:'Your post', es:'Tu publicación', nl:'Jouw post'},
+    feed_save_strategy: {en:'+ Add to my strategies', es:'+ Añadir a mis estrategias', nl:'+ Aan mijn strategieën toevoegen'},
+    feed_save_indicator: {en:'+ Add to my indicators', es:'+ Añadir a mis indicadores', nl:'+ Aan mijn indicators toevoegen'},
+    feed_saved: {en:'Added ✓', es:'Añadido ✓', nl:'Toegevoegd ✓'},
+    feed_saved_toast: {en:'Added to your list.', es:'Añadido a tu lista.', nl:'Toegevoegd aan je lijst.'},
+    feed_comment_ph: {en:'Write a comment…', es:'Escribe un comentario…', nl:'Schrijf een reactie…'},
+    feed_send: {en:'Send', es:'Enviar', nl:'Versturen'},
+    feed_no_comments: {en:'No comments yet.', es:'Aún no hay comentarios.', nl:'Nog geen reacties.'},
+    feed_report: {en:'Report', es:'Denunciar', nl:'Melden'},
+    feed_report_post: {en:'Report this post', es:'Denunciar esta publicación', nl:'Deze post melden'},
+    feed_report_reason: {en:'What is wrong with it?', es:'¿Qué problema tiene?', nl:'Wat is er mis mee?'},
+    feed_report_reason_req: {en:'Please add a short reason.', es:'Añade un motivo breve.', nl:'Geef een korte reden.'},
+    feed_report_thanks: {en:'Thanks — the admin will take a look.', es:'Gracias: el administrador lo revisará.', nl:'Bedankt — de beheerder kijkt ernaar.'},
+    feed_block_user: {en:'Block {name}', es:'Bloquear a {name}', nl:'{name} blokkeren'},
+    feed_confirm_block: {en:'Block {name}? You will no longer see each other’s posts and comments.', es:'¿Bloquear a {name}? Ya no veréis las publicaciones ni comentarios del otro.', nl:'{name} blokkeren? Jullie zien elkaars posts en reacties niet meer.'},
+    feed_block: {en:'Block', es:'Bloquear', nl:'Blokkeren'},
+    feed_blocked_toast: {en:'User blocked.', es:'Usuario bloqueado.', nl:'Gebruiker geblokkeerd.'},
+    feed_blocked_title: {en:'Blocked users', es:'Usuarios bloqueados', nl:'Geblokkeerde gebruikers'},
+    feed_blocked_btn: {en:'Blocked users', es:'Usuarios bloqueados', nl:'Geblokkeerde gebruikers'},
+    feed_unblock: {en:'Unblock', es:'Desbloquear', nl:'Deblokkeren'},
+    feed_no_blocked: {en:'You have not blocked anyone.', es:'No has bloqueado a nadie.', nl:'Je hebt niemand geblokkeerd.'},
+    feed_delete_post: {en:'Delete post', es:'Eliminar publicación', nl:'Post verwijderen'},
+    feed_confirm_del_post: {en:'Delete this post for everyone?', es:'¿Eliminar esta publicación para todos?', nl:'Deze post voor iedereen verwijderen?'},
+    feed_confirm_del_comment: {en:'Delete this comment?', es:'¿Eliminar este comentario?', nl:'Deze reactie verwijderen?'},
+    share_btn: {en:'Share to community', es:'Compartir con la comunidad', nl:'Delen met community'},
+    share_update: {en:'Update shared post', es:'Actualizar publicación', nl:'Gedeelde post bijwerken'},
+    share_stop: {en:'Stop sharing', es:'Dejar de compartir', nl:'Stoppen met delen'},
+    share_done: {en:'Shared with the community.', es:'Compartido con la comunidad.', nl:'Gedeeld met de community.'},
+    share_stopped: {en:'No longer shared.', es:'Ya no se comparte.', nl:'Niet meer gedeeld.'},
+    share_err_title: {en:'Title must be 1–120 characters.', es:'El título debe tener 1–120 caracteres.', nl:'Titel moet 1–120 tekens zijn.'},
+    share_err_long: {en:'Text is too long to share (max 5000 characters).', es:'El texto es demasiado largo (máx. 5000 caracteres).', nl:'Tekst is te lang om te delen (max. 5000 tekens).'},
+    share_err_url: {en:'Only TradingView links can be shared (https://…tradingview.com/…).', es:'Solo se pueden compartir enlaces de TradingView (https://…tradingview.com/…).', nl:'Alleen TradingView-links kunnen gedeeld worden (https://…tradingview.com/…).'},
+    invite_btn: {en:'Create invite code', es:'Crear código de invitación', nl:'Uitnodigingscode maken'},
+    invite_title: {en:'New invite code', es:'Nuevo código de invitación', nl:'Nieuwe uitnodigingscode'},
+    invite_uses: {en:'Number of people who can use it', es:'Personas que pueden usarlo', nl:'Aantal personen dat hem mag gebruiken'},
+    invite_days: {en:'Valid for (days)', es:'Válido durante (días)', nl:'Geldig voor (dagen)'},
+    invite_create: {en:'Create code', es:'Crear código', nl:'Code maken'},
+    invite_made: {en:'Share this code. It works for {uses} sign-up(s) in the next {days} days.', es:'Comparte este código. Sirve para {uses} registro(s) en los próximos {days} días.', nl:'Deel deze code. Hij werkt voor {uses} registratie(s) in de komende {days} dagen.'},
+    invite_copy: {en:'Copy code', es:'Copiar código', nl:'Code kopiëren'},
+    invite_copied: {en:'Copied', es:'Copiado', nl:'Gekopieerd'},
     settings_title: {en:'Settings', es:'Ajustes', nl:'Instellingen'},
     lbl_language: {en:'Language', es:'Idioma', nl:'Taal'},
     storage_note: {en:'Failed to save', es:'Error al guardar', nl:'Opslaan mislukt'},
@@ -938,6 +1017,7 @@
     $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
     if (currentSection === 'journal') renderJournal();
     else if (currentSection === 'strategies') renderStrategies();
+    else if (currentSection === 'community') renderCommunity();
     else renderIndicators();
   }
 
@@ -1863,7 +1943,7 @@
           </div>
         </div>
         <div class="modal-foot">
-          <div>${s? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">${s? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}${shareRowHtml(s)}</div>
           <div style="display:flex; gap:8px;"><button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button><button class="btn btn-primary" id="saveBtn">${t('btn_save')}</button></div>
         </div>
       </div>`;
@@ -1872,8 +1952,10 @@
     $('#closeModal', backdrop).onclick = close;
     $('#cancelBtn', backdrop).onclick = close;
     backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    wireShare(backdrop, 'strategy', s, close);
     if (s) $('#deleteBtn', backdrop).onclick = async () => {
       if (!(await showConfirm(t('confirm_delete_strategy')))) return;
+      await deleteSharedPost(s);
       strategies = strategies.filter(x=>x.id!==s.id);
       await saveStrategies(); close(); render();
     };
@@ -1882,7 +1964,7 @@
       if (!title){ showToast(t('toast_title_required')); return; }
       const tags = $('#s_tags', backdrop).value.split(',').map(x=>x.trim()).filter(Boolean);
       const content = $('#s_content', backdrop).value.trim();
-      const record = { id: s? s.id : uid(), title, tags, content, createdAt: s? s.createdAt : Date.now() };
+      const record = { ...(s || {}), id: s? s.id : uid(), title, tags, content, createdAt: s? s.createdAt : Date.now() };
       strategies = s ? strategies.map(x=>x.id===s.id?record:x) : [...strategies, record];
       await saveStrategies(); close(); render();
     };
@@ -1927,7 +2009,7 @@
           </div>
         </div>
         <div class="modal-foot">
-          <div>${i? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">${i? `<button class="btn btn-danger" id="deleteBtn">${t('btn_delete')}</button>` : ''}${shareRowHtml(i)}</div>
           <div style="display:flex; gap:8px;"><button class="btn btn-ghost" id="cancelBtn">${t('btn_cancel')}</button><button class="btn btn-primary" id="saveBtn">${t('btn_save')}</button></div>
         </div>
       </div>`;
@@ -1936,8 +2018,10 @@
     $('#closeModal', backdrop).onclick = close;
     $('#cancelBtn', backdrop).onclick = close;
     backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    wireShare(backdrop, 'indicator', i, close);
     if (i) $('#deleteBtn', backdrop).onclick = async () => {
       if (!(await showConfirm(t('confirm_delete_indicator')))) return;
+      await deleteSharedPost(i);
       indicators = indicators.filter(x=>x.id!==i.id);
       await saveIndicators(); close(); render();
     };
@@ -1946,7 +2030,7 @@
       const url = $('#i_url', backdrop).value.trim();
       if (!name){ showToast(t('toast_title_required')); return; }
       if (!url){ showToast(t('toast_url_required')); return; }
-      const record = { id: i? i.id : uid(), name, url, category: $('#i_category', backdrop).value.trim(), description: $('#i_desc', backdrop).value.trim(), createdAt: i? i.createdAt : Date.now() };
+      const record = { ...(i || {}), id: i? i.id : uid(), name, url, category: $('#i_category', backdrop).value.trim(), description: $('#i_desc', backdrop).value.trim(), createdAt: i? i.createdAt : Date.now() };
       indicators = i ? indicators.map(x=>x.id===i.id?record:x) : [...indicators, record];
       await saveIndicators(); close(); render();
     };
@@ -2744,6 +2828,8 @@
         <div style="font-size:13px; line-height:1.6; margin-bottom:10px;">${t('acct_signed_in', { name: escapeHtml(name) })}<br><span class="hint" id="acctStatus">${escapeHtml(cloudStatusText())}</span></div>
         <div style="display:flex; flex-direction:column; gap:8px;">
           <button class="btn" id="acctSyncBtn">${t('acct_sync_now')}</button>
+          ${isAdminUser() ? `<button class="btn" id="acctInviteBtn">${t('invite_btn')}</button>` : ''}
+          <button class="btn" id="acctBlockedBtn">${t('feed_blocked_btn')}</button>
           <button class="btn" id="acctLogoutBtn">${t('acct_logout')}</button>
           <button class="btn btn-danger" id="acctDeleteBtn">${t('acct_delete')}</button>
         </div>`;
@@ -2756,12 +2842,327 @@
     const on = (id, fn) => { const e = $(id, backdrop); if (e) e.onclick = fn; };
     on('#acctLoginBtn', () => { close(); openAuthGate('login'); });
     on('#acctSyncBtn', () => { cloudSync(); });
+    on('#acctBlockedBtn', () => { close(); openBlockedModal(); });
+    on('#acctInviteBtn', () => { close(); openInviteModal(); });
     on('#acctLogoutBtn', async () => { close(); await cloudLogout(); });
     on('#acctDeleteBtn', async () => {
       if (!await showConfirm(t('acct_delete_confirm'), t('acct_delete'))) return;
       try { await cloudDeleteAccount(); close(); showToast(t('acct_deleted')); openAuthGate('login'); }
       catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
     });
+  }
+
+  // ================= COMMUNITY (shared feed) =================
+  const TV_URL_RE = /^https:\/\/([a-z0-9-]+\.)?tradingview\.com\/[^\s]*$/;
+  const feed = { posts: [], kind: 'all', loaded: false, loading: false, more: false, liked: {}, openCm: {}, comments: {}, drafts: {}, error: false };
+  const PAGE = 30;
+  function timeAgo(iso){
+    const s = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 1000));
+    let f; try { f = new Intl.RelativeTimeFormat(lang, { numeric: 'auto', style: 'short' }); } catch(e){ return ''; }
+    if (s < 60) return f.format(0, 'second');
+    if (s < 3600) return f.format(-Math.floor(s / 60), 'minute');
+    if (s < 86400) return f.format(-Math.floor(s / 3600), 'hour');
+    if (s < 2592000) return f.format(-Math.floor(s / 86400), 'day');
+    if (s < 31536000) return f.format(-Math.floor(s / 2592000), 'month');
+    return f.format(-Math.floor(s / 31536000), 'year');
+  }
+  const kindLabel = k => k === 'strategy' ? t('feed_kind_strategy') : k === 'indicator' ? t('feed_kind_indicator') : t('feed_kind_trade');
+  const isAdminUser = () => !!(cloudProfile && cloudProfile.is_admin);
+
+  function renderCommunity(){
+    const main = $('#main');
+    if (!cloudSession){
+      main.innerHTML = `<div class="empty-state"><h2>${t('nav_community')}</h2><p>${t('feed_login_needed')}</p><button class="btn btn-primary" id="feedLoginBtn">${t('acct_login')}</button></div>`;
+      $('#feedLoginBtn').onclick = () => openAuthGate('login');
+      return;
+    }
+    main.innerHTML = `
+      <div class="section-toolbar">
+        <h2>${t('nav_community')}</h2>
+        <button class="btn" id="feedRefreshBtn">${t('feed_refresh')}</button>
+      </div>
+      <div class="section-desc">${t('feed_desc')}</div>
+      <div class="feed-chips">
+        ${['all', 'strategy', 'indicator'].map(k => `<button class="chip ${feed.kind === k ? 'active' : ''}" data-kind="${k}">${k === 'all' ? t('feed_all') : kindLabel(k)}</button>`).join('')}
+      </div>
+      <div id="feedList"></div>`;
+    $('#feedRefreshBtn').onclick = () => loadFeed(true);
+    $$('.chip[data-kind]').forEach(c => c.onclick = () => { feed.kind = c.dataset.kind; feed.loaded = false; renderCommunity(); });
+    $('#feedList').addEventListener('click', onFeedClick);
+    $('#feedList').addEventListener('input', e => { const ta = e.target.closest('[data-draft]'); if (ta) feed.drafts[ta.dataset.draft] = ta.value; });
+    if (feed.loaded) drawFeed(); else loadFeed(true);
+  }
+  async function loadFeed(reset){
+    if (feed.loading) return;
+    feed.loading = true; feed.error = false;
+    const list = $('#feedList'); if (list && reset && !feed.posts.length) list.innerHTML = `<div class="hint" style="padding:20px 0;">${t('feed_loading')}</div>`;
+    try {
+      let path = '/rest/v1/feed_posts?select=id,author_id,kind,title,body,payload,created_at,username,like_count,comment_count&order=created_at.desc&limit=' + PAGE;
+      if (feed.kind !== 'all') path += '&kind=eq.' + feed.kind;
+      if (!reset && feed.posts.length) path += '&created_at=lt.' + encodeURIComponent(feed.posts[feed.posts.length - 1].created_at);
+      const r = await cloudReq('GET', path);
+      if (!r.ok) throw httpErr(r);
+      const rows = Array.isArray(r.data) ? r.data : [];
+      feed.posts = reset ? rows : feed.posts.concat(rows);
+      feed.more = rows.length === PAGE;
+      if (rows.length){
+        const lr = await cloudReq('GET', '/rest/v1/reactions?select=post_id&kind=eq.like&user_id=eq.' + cloudSession.user_id + '&post_id=in.(' + rows.map(x => x.id).join(',') + ')');
+        if (lr.ok && Array.isArray(lr.data)) lr.data.forEach(x => { feed.liked[x.post_id] = true; });
+      }
+      feed.loaded = true;
+    } catch(e){ feed.error = e && e.offline ? 'offline' : 'error'; }
+    feed.loading = false;
+    if (currentSection === 'community') drawFeed();
+  }
+  function postHtml(p){
+    const mine = p.author_id === cloudSession.user_id;
+    const url = p.payload && p.payload.url;
+    const tags = (p.payload && Array.isArray(p.payload.tags) ? p.payload.tags : []).map(x => `<span class="tag-pill">${escapeHtml(String(x))}</span>`).join('');
+    const cat = p.payload && p.payload.category ? `<span class="tag-pill">${escapeHtml(String(p.payload.category))}</span>` : '';
+    const link = p.kind === 'indicator' && url ? (TV_URL_RE.test(url) ? `<a class="ind-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${t('open_on_tv')}</a>` : '') : '';
+    const saved = p.kind === 'strategy' ? strategies.some(x => x.fromPost === p.id) : p.kind === 'indicator' ? indicators.some(x => x.fromPost === p.id) : false;
+    const canSave = !mine && (p.kind === 'strategy' || p.kind === 'indicator');
+    return `<article class="post" data-post="${p.id}">
+      <div class="post-head">
+        <span class="post-author">@${escapeHtml(p.username || '?')}</span>
+        <span class="post-time">${escapeHtml(timeAgo(p.created_at))}</span>
+        <span class="post-kind k-${p.kind}">${kindLabel(p.kind)}</span>
+        <button class="icon-btn post-menu" data-act="menu" aria-label="${t('feed_more')}">⋯</button>
+      </div>
+      <h4>${escapeHtml(p.title)}</h4>
+      ${p.body ? `<div class="post-body">${escapeHtml(p.body)}</div>` : ''}
+      ${(tags || cat) ? `<div class="tags">${cat}${tags}</div>` : ''}
+      ${link}
+      <div class="post-actions">
+        <button class="act ${feed.liked[p.id] ? 'on' : ''}" data-act="like">${feed.liked[p.id] ? '♥' : '♡'} <span>${p.like_count || 0}</span></button>
+        <button class="act ${feed.openCm[p.id] ? 'on' : ''}" data-act="comments">💬 <span>${p.comment_count || 0}</span></button>
+        ${canSave ? `<button class="act" data-act="save" ${saved ? 'disabled' : ''}>${saved ? t('feed_saved') : (p.kind === 'strategy' ? t('feed_save_strategy') : t('feed_save_indicator'))}</button>` : ''}
+        ${mine ? `<span class="hint" style="margin-left:auto;">${t('feed_yours')}</span>` : ''}
+      </div>
+      <div class="post-comments" ${feed.openCm[p.id] ? '' : 'hidden'}>${feed.openCm[p.id] ? commentsHtml(p) : ''}</div>
+    </article>`;
+  }
+  function commentsHtml(p){
+    const cs = feed.comments[p.id];
+    const list = cs === undefined ? `<div class="hint">${t('feed_loading')}</div>` : cs === null ? `<div class="hint">${t('auth_err_generic')}</div>`
+      : cs.map(c => `<div class="cm" data-cm="${c.id}"><div><b>@${escapeHtml(c.username || '?')}</b> <span class="post-time">${escapeHtml(timeAgo(c.created_at))}</span></div>
+          <div class="cm-body">${escapeHtml(c.body)}</div>
+          <div class="cm-tools">${c.author_id === cloudSession.user_id || p.author_id === cloudSession.user_id || isAdminUser() ? `<button class="link-btn" data-act="cm-del">${t('btn_delete')}</button>` : ''}${c.author_id !== cloudSession.user_id ? `<button class="link-btn" data-act="cm-report">${t('feed_report')}</button>` : ''}</div></div>`).join('') || `<div class="hint">${t('feed_no_comments')}</div>`;
+    return `${list}<div class="cm-new"><textarea data-draft="${p.id}" maxlength="1000" rows="2" placeholder="${t('feed_comment_ph')}">${escapeHtml(feed.drafts[p.id] || '')}</textarea><button class="btn btn-primary" data-act="cm-send">${t('feed_send')}</button></div>`;
+  }
+  function drawFeed(){
+    const list = $('#feedList'); if (!list) return;
+    if (feed.error && !feed.posts.length){ list.innerHTML = `<div class="empty-state"><p>${feed.error === 'offline' ? t('auth_err_network') : t('auth_err_generic')}</p><button class="btn" id="feedRetry">${t('feed_retry')}</button></div>`; $('#feedRetry').onclick = () => loadFeed(true); return; }
+    if (!feed.posts.length){ list.innerHTML = `<div class="empty-state"><p>${t('feed_empty')}</p></div>`; return; }
+    // keep typing state: remember focus + caret of a comment box across redraws
+    const ae = document.activeElement; const keep = ae && ae.dataset && ae.dataset.draft ? { id: ae.dataset.draft, pos: ae.selectionStart } : null;
+    list.innerHTML = feed.posts.map(postHtml).join('') + (feed.more ? `<div style="text-align:center; margin:14px 0;"><button class="btn" data-act="more">${t('feed_more_posts')}</button></div>` : '');
+    if (keep){ const el = list.querySelector(`[data-draft="${keep.id}"]`); if (el){ el.focus(); try { el.setSelectionRange(keep.pos, keep.pos); } catch(e){} } }
+  }
+  async function loadComments(p){
+    try {
+      const r = await cloudReq('GET', '/rest/v1/comments?select=id,body,created_at,author_id,profiles(username)&post_id=eq.' + p.id + '&order=created_at.asc&limit=200');
+      if (!r.ok) throw httpErr(r);
+      feed.comments[p.id] = r.data.map(c => ({ id: c.id, body: c.body, created_at: c.created_at, author_id: c.author_id, username: c.profiles && c.profiles.username }));
+    } catch(e){ feed.comments[p.id] = null; }
+    drawFeed();
+  }
+  async function onFeedClick(e){
+    const btn = e.target.closest('[data-act]'); if (!btn) return;
+    const act = btn.dataset.act;
+    if (act === 'more'){ loadFeed(false); return; }
+    const art = btn.closest('[data-post]'); const p = art && feed.posts.find(x => x.id === art.dataset.post); if (!p) return;
+    try {
+      if (act === 'like'){
+        const was = !!feed.liked[p.id];
+        feed.liked[p.id] = !was; p.like_count = Math.max(0, (p.like_count || 0) + (was ? -1 : 1)); drawFeed();
+        const r = was
+          ? await cloudReq('DELETE', '/rest/v1/reactions?post_id=eq.' + p.id + '&user_id=eq.' + cloudSession.user_id + '&kind=eq.like')
+          : await cloudReq('POST', '/rest/v1/reactions', { body: { post_id: p.id, user_id: cloudSession.user_id, kind: 'like' }, headers: { Prefer: 'return=minimal' } });
+        if (!r.ok && r.status !== 409){ feed.liked[p.id] = was; p.like_count = Math.max(0, p.like_count + (was ? 1 : -1)); drawFeed(); showToast(t('auth_err_generic')); }
+      } else if (act === 'comments'){
+        feed.openCm[p.id] = !feed.openCm[p.id]; drawFeed();
+        if (feed.openCm[p.id] && feed.comments[p.id] === undefined) loadComments(p);
+      } else if (act === 'cm-send'){
+        const body = (feed.drafts[p.id] || '').trim(); if (!body) return;
+        btn.disabled = true;
+        const r = await cloudReq('POST', '/rest/v1/comments', { body: { post_id: p.id, author_id: cloudSession.user_id, body: body.slice(0, 1000) }, headers: { Prefer: 'return=minimal' } });
+        if (!r.ok){ btn.disabled = false; showToast(t('auth_err_generic')); return; }
+        feed.drafts[p.id] = ''; p.comment_count = (p.comment_count || 0) + 1; await loadComments(p);
+      } else if (act === 'cm-del'){
+        const cid = btn.closest('[data-cm]').dataset.cm;
+        if (!await showConfirm(t('feed_confirm_del_comment'))) return;
+        const r = await cloudReq('DELETE', '/rest/v1/comments?id=eq.' + cid);
+        if (r.ok){ p.comment_count = Math.max(0, (p.comment_count || 1) - 1); await loadComments(p); } else showToast(t('auth_err_generic'));
+      } else if (act === 'cm-report'){
+        openReportModal({ comment_id: btn.closest('[data-cm]').dataset.cm });
+      } else if (act === 'save'){
+        if (p.kind === 'strategy'){
+          strategies = [...strategies, { id: uid(), title: p.title, tags: (p.payload && p.payload.tags) || [], content: p.body || '', createdAt: Date.now(), fromPost: p.id }];
+          await saveStrategies();
+        } else {
+          indicators = [...indicators, { id: uid(), name: p.title, url: p.payload.url, category: p.payload.category || '', description: p.body || '', createdAt: Date.now(), fromPost: p.id }];
+          await saveIndicators();
+        }
+        showToast(t('feed_saved_toast')); drawFeed();
+      } else if (act === 'menu'){
+        openPostMenu(p);
+      }
+    } catch(err){ showToast(err && err.offline ? t('auth_err_network') : t('auth_err_generic')); }
+  }
+  function openSheet(title, rows){
+    const b = document.createElement('div'); b.className = 'modal-backdrop'; b.style.zIndex = '150';
+    b.innerHTML = `<div class="modal" style="max-width:340px;"><div class="modal-head"><h3>${title}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:8px;">${rows.map((r, i) => `<button class="btn ${r.danger ? 'btn-danger' : ''}" data-i="${i}">${r.label}</button>`).join('')}</div></div>`;
+    document.body.appendChild(b);
+    const close = () => b.remove();
+    b.addEventListener('click', e => { if (e.target === b || e.target.closest('[data-x]')) return close(); const i = e.target.closest('[data-i]'); if (i){ close(); rows[+i.dataset.i].run(); } });
+  }
+  function openPostMenu(p){
+    const mine = p.author_id === cloudSession.user_id, rows = [];
+    if (!mine){
+      rows.push({ label: t('feed_report_post'), run: () => openReportModal({ post_id: p.id }) });
+      rows.push({ label: t('feed_block_user', { name: '@' + escapeHtml(p.username || '') }), danger: true, run: async () => {
+        if (!await showConfirm(t('feed_confirm_block', { name: '@' + escapeHtml(p.username || '') }), t('feed_block'))) return;
+        const r = await cloudReq('POST', '/rest/v1/blocks', { body: { blocker_id: cloudSession.user_id, blocked_id: p.author_id }, headers: { Prefer: 'return=minimal' } });
+        if (r.ok || r.status === 409){ showToast(t('feed_blocked_toast')); feed.loaded = false; feed.posts = []; loadFeed(true); } else showToast(t('auth_err_generic'));
+      } });
+    }
+    if (mine || isAdminUser()) rows.push({ label: t('feed_delete_post'), danger: true, run: async () => {
+      if (!await showConfirm(t('feed_confirm_del_post'))) return;
+      const r = await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + p.id);
+      if (r.ok){ feed.posts = feed.posts.filter(x => x.id !== p.id); unlinkShared(p.id); drawFeed(); } else showToast(t('auth_err_generic'));
+    } });
+    openSheet(escapeHtml(p.title.length > 30 ? p.title.slice(0, 30) + '…' : p.title), rows);
+  }
+  function openReportModal(target){
+    const b = document.createElement('div'); b.className = 'modal-backdrop'; b.style.zIndex = '150';
+    b.innerHTML = `<div class="modal" style="max-width:380px;"><div class="modal-head"><h3>${t('feed_report')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
+      <div class="modal-body"><label>${t('feed_report_reason')}</label><textarea id="rp_reason" maxlength="500" style="min-height:90px;"></textarea></div>
+      <div class="modal-foot"><span></span><div style="display:flex; gap:8px;"><button class="btn btn-ghost" data-x>${t('btn_cancel')}</button><button class="btn btn-primary" id="rp_send">${t('feed_send')}</button></div></div></div>`;
+    document.body.appendChild(b);
+    const close = () => b.remove();
+    b.addEventListener('click', e => { if (e.target === b || e.target.closest('[data-x]')) close(); });
+    $('#rp_send', b).onclick = async () => {
+      const reason = $('#rp_reason', b).value.trim(); if (!reason){ showToast(t('feed_report_reason_req')); return; }
+      try {
+        const r = await cloudReq('POST', '/rest/v1/reports', { body: Object.assign({ reporter_id: cloudSession.user_id, reason }, target), headers: { Prefer: 'return=minimal' } });
+        if (r.ok){ close(); showToast(t('feed_report_thanks')); } else showToast(t('auth_err_generic'));
+      } catch(e){ showToast(t('auth_err_network')); }
+    };
+  }
+  function openInviteModal(){
+    const b = document.createElement('div'); b.className = 'modal-backdrop'; b.style.zIndex = '150';
+    b.innerHTML = `<div class="modal" style="max-width:360px;"><div class="modal-head"><h3>${t('invite_title')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
+      <div class="modal-body" id="inv_body">
+        <label>${t('invite_uses')}</label><input type="number" id="inv_uses" min="1" max="100" value="1">
+        <label>${t('invite_days')}</label><input type="number" id="inv_days" min="1" max="365" value="14">
+        <div id="inv_out"></div>
+      </div>
+      <div class="modal-foot"><span></span><button class="btn btn-primary" id="inv_go">${t('invite_create')}</button></div></div>`;
+    document.body.appendChild(b);
+    b.addEventListener('click', e => { if (e.target === b || e.target.closest('[data-x]')) b.remove(); });
+    $('#inv_go', b).onclick = async () => {
+      const uses = Math.min(100, Math.max(1, parseInt($('#inv_uses', b).value, 10) || 1));
+      const days = Math.min(365, Math.max(1, parseInt($('#inv_days', b).value, 10) || 14));
+      const go = $('#inv_go', b); go.disabled = true;
+      try {
+        const r = await cloudReq('POST', '/rest/v1/rpc/create_invite', { body: { p_max_uses: uses, p_days: days } });
+        if (!r.ok || typeof r.data !== 'string') throw httpErr(r);
+        const code = r.data;
+        $('#inv_out', b).innerHTML = `<div style="margin-top:14px; text-align:center;"><div id="inv_code" style="font-family:ui-monospace,Menlo,monospace; font-size:22px; letter-spacing:0.08em; color:var(--amber); user-select:all;">${escapeHtml(code)}</div>
+          <div class="hint" style="margin:8px 0;">${t('invite_made', { uses, days })}</div>
+          <button class="btn" id="inv_copy">${t('invite_copy')}</button></div>`;
+        $('#inv_copy', b).onclick = async () => {
+          try { await navigator.clipboard.writeText(code); showToast(t('invite_copied')); }
+          catch(e){ const rg = document.createRange(); rg.selectNodeContents($('#inv_code', b)); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rg); }
+        };
+      } catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
+      go.disabled = false;
+    };
+  }
+  async function openBlockedModal(){
+    const b = document.createElement('div'); b.className = 'modal-backdrop'; b.style.zIndex = '150';
+    b.innerHTML = `<div class="modal" style="max-width:360px;"><div class="modal-head"><h3>${t('feed_blocked_title')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div><div class="modal-body" id="blk_body"><div class="hint">${t('feed_loading')}</div></div></div>`;
+    document.body.appendChild(b);
+    b.addEventListener('click', e => { if (e.target === b || e.target.closest('[data-x]')) b.remove(); });
+    const draw = async () => {
+      try {
+        const r = await cloudReq('GET', '/rest/v1/blocks?select=blocked_id,profiles!blocks_blocked_id_fkey(username)');
+        if (!r.ok) throw httpErr(r);
+        $('#blk_body', b).innerHTML = r.data.length ? r.data.map(x => `<div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;"><span>@${escapeHtml((x.profiles && x.profiles.username) || '?')}</span><button class="btn btn-ghost" data-un="${x.blocked_id}">${t('feed_unblock')}</button></div>`).join('') : `<div class="hint">${t('feed_no_blocked')}</div>`;
+        $$('[data-un]', b).forEach(u => u.onclick = async () => { await cloudReq('DELETE', '/rest/v1/blocks?blocked_id=eq.' + u.dataset.un + '&blocker_id=eq.' + cloudSession.user_id); feed.loaded = false; draw(); });
+      } catch(e){ $('#blk_body', b).innerHTML = `<div class="hint">${t('auth_err_generic')}</div>`; }
+    };
+    draw();
+  }
+
+  // ---------- sharing your own strategies / indicators ----------
+  function unlinkShared(postId){
+    let ch = false;
+    strategies = strategies.map(s => { if (s.sharedPostId === postId){ ch = true; const { sharedPostId, ...rest } = s; return rest; } return s; });
+    if (ch) saveStrategies();
+    ch = false;
+    indicators = indicators.map(s => { if (s.sharedPostId === postId){ ch = true; const { sharedPostId, ...rest } = s; return rest; } return s; });
+    if (ch) saveIndicators();
+  }
+  function postFromRecord(kind, r){
+    if (kind === 'strategy'){
+      const title = (r.title || '').trim(), body = (r.content || '').trim();
+      if (!title || title.length > 120) return { err: t('share_err_title') };
+      if (body.length > 5000) return { err: t('share_err_long') };
+      return { post: { kind, title, body, payload: { tags: (r.tags || []).slice(0, 10).map(x => String(x).slice(0, 30)) } } };
+    }
+    const title = (r.name || '').trim(), body = (r.description || '').trim(), url = (r.url || '').trim();
+    if (!title || title.length > 120) return { err: t('share_err_title') };
+    if (!TV_URL_RE.test(url)) return { err: t('share_err_url') };
+    if (body.length > 5000) return { err: t('share_err_long') };
+    return { post: { kind, title, body, payload: { url, category: (r.category || '').slice(0, 40) } } };
+  }
+  // publish or update; resolves to the post id
+  async function publishRecord(kind, rec){
+    const { post, err } = postFromRecord(kind, rec);
+    if (err){ showToast(err); return null; }
+    if (rec.sharedPostId){
+      const u = await cloudReq('PATCH', '/rest/v1/posts?id=eq.' + rec.sharedPostId, { body: { title: post.title, body: post.body, payload: post.payload }, headers: { Prefer: 'return=representation' } });
+      if (u.ok && Array.isArray(u.data) && u.data.length) return rec.sharedPostId;
+      if (!u.ok){ showToast(t('auth_err_generic')); return null; }
+    }
+    const r = await cloudReq('POST', '/rest/v1/posts', { body: Object.assign({ author_id: cloudSession.user_id }, post), headers: { Prefer: 'return=representation' } });
+    if (!r.ok || !Array.isArray(r.data) || !r.data[0]){ showToast(t('auth_err_generic')); return null; }
+    return r.data[0].id;
+  }
+  function shareRowHtml(rec){
+    if (!cloudSession || !rec) return '';
+    return rec.sharedPostId
+      ? `<button class="btn" id="shareBtn">${t('share_update')}</button><button class="btn btn-ghost" id="unshareBtn">${t('share_stop')}</button>`
+      : `<button class="btn" id="shareBtn">${t('share_btn')}</button>`;
+  }
+  function wireShare(backdrop, kind, rec, close){
+    const sb = $('#shareBtn', backdrop); if (!sb) return;
+    const list = () => kind === 'strategy' ? strategies : indicators;
+    const store = async (next) => { if (kind === 'strategy'){ strategies = next; await saveStrategies(); } else { indicators = next; await saveIndicators(); } };
+    sb.onclick = async () => {
+      sb.disabled = true;
+      try {
+        const id = await publishRecord(kind, rec);
+        if (id){ await store(list().map(x => x.id === rec.id ? Object.assign({}, x, { sharedPostId: id }) : x)); feed.loaded = false; close(); render(); showToast(t('share_done')); return; }
+      } catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
+      sb.disabled = false;
+    };
+    const ub = $('#unshareBtn', backdrop);
+    if (ub) ub.onclick = async () => {
+      try {
+        const r = await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + rec.sharedPostId);
+        if (!r.ok) throw httpErr(r);
+        await store(list().map(x => { if (x.id !== rec.id) return x; const { sharedPostId, ...rest } = x; return rest; }));
+        feed.loaded = false; close(); render(); showToast(t('share_stopped'));
+      } catch(e){ showToast(e && e.offline ? t('auth_err_network') : t('auth_err_generic')); }
+    };
+  }
+  async function deleteSharedPost(rec){
+    if (!rec || !rec.sharedPostId || !cloudSession) return;
+    try { await cloudReq('DELETE', '/rest/v1/posts?id=eq.' + rec.sharedPostId); feed.loaded = false; } catch(e){}
   }
 
   // ---------- init ----------
@@ -2788,9 +3189,9 @@
 
   if (window.__TALLY_TEST__) Object.assign(window.__TALLY_TEST__, {
     st: () => ({ accounts, trades, strategies, indicators, checkins }),
-    setTrades: v => { trades = v; }, setStrategies: v => { strategies = v; },
+    setTrades: v => { trades = v; }, setStrategies: v => { strategies = v; }, setIndicators: v => { indicators = v; }, saveIndicators,
     saveTrades, saveStrategies, saveAccounts, cloudSync, imgPut, imgGet, imgDel, imgGetLocal,
-    session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
+    feedState: () => feed, session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
   });
   (async function init(){
     await loadAll();
