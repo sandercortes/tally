@@ -496,6 +496,8 @@
   .pc-add span { font-size: 10.5px; margin-top: 2px; }
   .pc-add:hover { border-color: var(--amber-dim); color: var(--amber); }
   @media (max-width: 560px) { .feed-tab { padding: 9px 9px 11px; font-size: 13.5px; } .feed-bar-actions .btn { padding: 6px 11px; font-size: 12.5px; } .media-track img { max-height: 70vh; } .media, .media-track img { border-radius: 0; } .media { margin: 0 -12px; border-radius: 0; } }
+  @media (max-width: 380px) { .section-nav { padding-left: 14px; padding-right: 14px; } .tab-btn { margin-right: 10px; font-size: 13px; white-space: nowrap; } .section-nav { overflow-x: auto; scrollbar-width: none; } .section-nav::-webkit-scrollbar { display: none; } .feed-bar { gap: 4px; } .feed-tab { padding: 9px 6px 11px; font-size: 13px; } .feed-tab.active::after { left: 6px; right: 6px; } .feed-bar-actions .btn { padding: 6px 9px; font-size: 12px; } }
+  @media (max-width: 340px) { .feed-tab { padding: 9px 4px 11px; font-size: 12.5px; } .feed-tab.active::after { left: 4px; right: 4px; } .feed-bar-actions .btn { padding: 6px 8px; } }
   @media (prefers-reduced-motion: reduce) { .post, .sheet, .sheet-backdrop, .heart-pop.go, .ig-act.like.on svg { animation: none; } }
 </style>
 </head>
@@ -3006,8 +3008,11 @@
     st.loading = true; st.error = false; const tok = ++st.token;
     if (kind === feed.kind && currentSection === 'community') drawFeed();
     try {
-      let path = '/rest/v1/feed_posts?select=id,author_id,kind,title,body,payload,image_paths,created_at,username,like_count,comment_count&kind=eq.' + kind + '&order=created_at.desc&limit=' + PAGE;
-      if (!reset && st.posts.length) path += '&created_at=lt.' + encodeURIComponent(st.posts[st.posts.length - 1].created_at);
+      let path = '/rest/v1/feed_posts?select=id,author_id,kind,title,body,payload,image_paths,created_at,username,like_count,comment_count&kind=eq.' + kind + '&order=created_at.desc,id.desc&limit=' + PAGE;
+      if (!reset && st.posts.length) {
+        const lp = st.posts[st.posts.length - 1], ts = '"' + lp.created_at + '"';
+        path += '&or=' + encodeURIComponent('(created_at.lt.' + ts + ',and(created_at.eq.' + ts + ',id.lt.' + lp.id + '))');
+      }
       const r = await cloudReq('GET', path);
       if (!r.ok) throw httpErr(r);
       const rows = (Array.isArray(r.data) ? r.data : []).filter(x => x.kind === kind);   // never let another category in
