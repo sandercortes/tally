@@ -3278,6 +3278,7 @@
   }
 
   // ---- composer (new post) ----
+  const newUuid = () => (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
   const compressForPost = f => ((window.__TALLY_TEST__ && window.__TALLY_TEST__.compress) || compressImage)(f, 1600, 0.78);
   async function uploadPostImage(dataUrl){
     const blob = dataUrlToBlob(dataUrl);
@@ -3300,6 +3301,7 @@
     let kind = FEED_KINDS.includes(startKind) ? startKind : 'trade', busy = false;
     const v = { trade: '', money: false, caption: '', title: '', tags: '', url: '', cat: '' };
     let images = [];   // { dataUrl, fromTrade }
+    let attempt = null;   // { sig, id, paths } kept across retries so an unconfirmed publish can never create a duplicate
     const b = document.createElement('div'); b.className = 'modal-backdrop'; b.id = 'composer'; b.style.zIndex = '150';
     document.body.appendChild(b);
     const close = () => b.remove();
@@ -3397,17 +3399,29 @@
         post = { kind, title, body: v.caption.trim(), payload: { url, category: v.cat.trim().slice(0, 40) } };
       }
       busy = true; const btn = $('#pc_go', b); btn.disabled = true; btn.textContent = t('pc_publishing');
-      const paths = [];
-      try {
-        for (const im of images) paths.push(await uploadPostImage(im.dataUrl));
-        const r = await cloudReq('POST', '/rest/v1/posts', { body: Object.assign({ author_id: cloudSession.user_id, image_paths: paths }, post), headers: { Prefer: 'return=representation' } });
-        if (!r.ok || !Array.isArray(r.data) || !r.data[0]) throw httpErr(r);
-        close(); showToast(t('pc_posted'));
+      // Idempotency: the post id is chosen here, so a retry after a lost response hits the same primary key (409) instead of creating a second post.
+      const sig = JSON.stringify([post, images.map(x => x.dataUrl.length)]);
+      if (!attempt || attempt.sig !== sig) attempt = { sig, id: newUuid(), paths: [] };
+      const paths = attempt.paths;
+      const done = () => {
+        attempt = null; close(); showToast(t('pc_posted'));
         feed.kind = kind; stSet('tally:feedcat', kind); feed.s[kind].loaded = false;
         currentSection = 'community'; render(); window.scrollTo({ top: 0 });
-        return;
+      };
+      try {
+        for (let i = paths.length; i < images.length; i++) paths.push(await uploadPostImage(images[i].dataUrl));
+        const r = await cloudReq('POST', '/rest/v1/posts', { body: Object.assign({ id: attempt.id, author_id: cloudSession.user_id, image_paths: paths }, post), headers: { Prefer: 'return=representation' } });
+        if (r.status === 409){   // an earlier attempt with this id already arrived: confirm it is ours, then treat as success
+          const c = await cloudReq('GET', '/rest/v1/posts?select=id,author_id&id=eq.' + attempt.id);
+          if (c.ok && Array.isArray(c.data) && c.data[0] && c.data[0].author_id === cloudSession.user_id) return done();
+          attempt = null; throw httpErr(r);
+        }
+        if (!r.ok || !Array.isArray(r.data) || !r.data[0]) throw httpErr(r);
+        return done();
       } catch(e){
-        await removePostImages(paths);
+        // Outcome unknown (network / server error): keep the uploaded images and the id, so "Publish" again is a safe retry.
+        const unknown = e && (e.offline || (e.status && e.status >= 500));
+        if (!unknown){ await removePostImages(paths); attempt = null; }
         err(e && e.offline ? t('auth_err_network') : e && e.tooLarge ? t('pc_err_large') : t('auth_err_generic'));
       }
       busy = false; btn.disabled = false; btn.textContent = t('pc_publish');
