@@ -400,6 +400,32 @@
   /* ---- Community feed ---- */
   .feed-wrap { max-width: 560px; margin: 0 auto; }
   .feed-bar { position: sticky; top: var(--tb, 0px); z-index: 15; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0 0; margin: -6px 0 18px; background: linear-gradient(180deg, var(--bg) 86%, transparent); }
+  .avatar { position: relative; overflow: hidden; }
+  .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pf-top { display: flex; align-items: center; gap: 6px; margin: 0 0 6px -8px; color: var(--text); font-weight: 600; font-size: 15px; }
+  .pf-card { position: relative; background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; padding: 0 18px 16px; margin-bottom: 14px; }
+  .pf-cover { height: 68px; margin: 0 -18px; background: radial-gradient(120% 140% at 15% 0%, rgba(212,162,76,0.34), transparent 60%), linear-gradient(135deg, #22201a, #17181c); }
+  .pf-main { display: flex; gap: 14px; align-items: flex-start; margin-top: -34px; }
+  .pf-ava .avatar { border: 3px solid var(--card); box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+  .pf-names { min-width: 0; padding-top: 38px; flex: 1; }
+  .pf-dn { margin: 0; font-size: 20px; line-height: 1.2; color: var(--text); font-weight: 650; overflow-wrap: anywhere; }
+  .pf-handle { color: var(--text-dim); font-size: 13px; margin-top: 1px; overflow-wrap: anywhere; }
+  .pf-quote { margin-top: 7px; font-style: italic; font-size: 13.5px; color: var(--amber); line-height: 1.45; overflow-wrap: anywhere; }
+  .pf-cta { margin: 14px 0 12px; }
+  .pf-cta .btn { width: 100%; justify-content: center; }
+  .pf-bio { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: var(--text); white-space: pre-line; overflow-wrap: anywhere; }
+  .pf-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip-m.style { border-color: rgba(212,162,76,0.45); color: var(--amber); }
+  .pf-stats { display: flex; border-top: 1px solid var(--card-border); padding-top: 12px; }
+  .pf-stats > * { flex: 1; background: none; border: 0; color: inherit; font: inherit; text-align: center; display: flex; flex-direction: column; gap: 1px; cursor: default; padding: 0; }
+  .pf-stats button { cursor: pointer; }
+  .pf-stats b { font-size: 17px; color: var(--text); }
+  .pf-stats span { font-size: 12px; color: var(--text-dim); }
+  .feed-bar-pf { position: static; background: none; margin: 4px 0 14px; }
+  .pf-un { color: var(--text-dim); font-weight: 400; font-size: 12.5px; }
+  .pe-photo { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+  .pe-photo-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pe-count { float: right; color: var(--text-dim); font-size: 11.5px; }
   .feed-bar { flex-direction: column; align-items: stretch; gap: 0; }
   .feed-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 6px; }
   .feed-modes { display: inline-flex; padding: 3px; border-radius: 999px; background: rgba(255,255,255,0.045); border: 1px solid var(--card-border); }
@@ -929,6 +955,31 @@
     follow_list_empty: {en:'Nobody here yet.', es:'Nadie todavía.', nl:'Nog niemand.'},
     follow_toast_on: {en:'You now follow {name}', es:'Ahora sigues a {name}', nl:'Je volgt nu {name}'},
     follow_toast_off: {en:'You unfollowed {name}', es:'Dejaste de seguir a {name}', nl:'Je volgt {name} niet meer'},
+    profile_title: {en:'Profile', es:'Perfil', nl:'Profiel'},
+    profile_back: {en:'Back', es:'Atrás', nl:'Terug'},
+    profile_mine: {en:'My profile', es:'Mi perfil', nl:'Mijn profiel'},
+    profile_edit: {en:'Edit profile', es:'Editar perfil', nl:'Profiel bewerken'},
+    profile_posts: {en:'Posts', es:'Publicaciones', nl:'Posts'},
+    profile_no_posts: {en:'No {cat} posts yet.', es:'Aún no hay publicaciones de {cat}.', nl:'Nog geen {cat}-posts.'},
+    profile_not_found: {en:'This profile could not be found.', es:'No se encontró este perfil.', nl:'Dit profiel is niet gevonden.'},
+    profile_save: {en:'Save', es:'Guardar', nl:'Opslaan'},
+    profile_saving: {en:'Saving…', es:'Guardando…', nl:'Opslaan…'},
+    profile_saved: {en:'Profile saved ✓', es:'Perfil guardado ✓', nl:'Profiel opgeslagen ✓'},
+    profile_photo_upload: {en:'Upload photo', es:'Subir foto', nl:'Foto uploaden'},
+    profile_photo_remove: {en:'Remove photo', es:'Quitar foto', nl:'Foto verwijderen'},
+    profile_dn: {en:'Display name', es:'Nombre visible', nl:'Weergavenaam'},
+    profile_quote: {en:'Quote / status', es:'Frase / estado', nl:'Quote / status'},
+    profile_quote_ph: {en:'One setup at a time.', es:'Un setup a la vez.', nl:'One setup at a time.'},
+    profile_bio: {en:'Bio', es:'Bio', nl:'Bio'},
+    profile_bio_ph: {en:'Futures trader | NQ & Gold | NY session', es:'Trader de futuros | NQ y oro | sesión NY', nl:'Futures trader | NQ & Gold | NY-sessie'},
+    profile_markets: {en:'Markets (comma separated)', es:'Mercados (separados por comas)', nl:'Markten (kommagescheiden)'},
+    profile_markets_ph: {en:'NQ, ES, GC, Forex', es:'NQ, ES, GC, Forex', nl:'NQ, ES, GC, Forex'},
+    profile_style: {en:'Trading style', es:'Estilo de trading', nl:'Tradingstijl'},
+    profile_location: {en:'Country / time zone (optional)', es:'País / zona horaria (opcional)', nl:'Land / tijdzone (optioneel)'},
+    profile_err_img: {en:'Choose an image smaller than 10 MB (JPEG, PNG or WebP).', es:'Elige una imagen de menos de 10 MB (JPEG, PNG o WebP).', nl:'Kies een afbeelding kleiner dan 10 MB (JPEG, PNG of WebP).'},
+    profile_err_len: {en:'One of the fields is too long.', es:'Uno de los campos es demasiado largo.', nl:'Een van de velden is te lang.'},
+    profile_err_markets: {en:'Up to 8 markets, max. 12 characters each.', es:'Hasta 8 mercados, máx. 12 caracteres cada uno.', nl:'Maximaal 8 markten, elk max. 12 tekens.'},
+    profile_err_saving: {en:'Could not save your profile. Please try again.', es:'No se pudo guardar tu perfil. Inténtalo de nuevo.', nl:'Je profiel kon niet worden opgeslagen. Probeer het opnieuw.'},
     feed_end: {en:'You are all caught up.', es:'Estás al día.', nl:'Je bent helemaal bij.'},
     pc_attach_trade: {en:'Attach one of your trades (optional)', es:'Adjuntar uno de tus trades (opcional)', nl:'Koppel een van je trades (optioneel)'},
     pc_none: {en:'— none —', es:'— ninguno —', nl:'— geen —'},
@@ -2999,12 +3050,13 @@
   // ---- Community feed (Instagram-style). Category = posts.kind: trade = Journaling, strategy, indicator ----
   const FEED_KINDS = ['trade', 'strategy', 'indicator'];
   const FEED_MODES = ['foryou', 'following'];   // For You = ranked discovery, Following = chronological, accounts I follow
-  const feed = { mode: 'foryou', kind: 'trade', s: {}, liked: {}, comments: {}, urls: {}, lastClick: { id: null, at: 0, timer: null },
+  const feed = { mode: 'foryou', view: 'feed', profileId: null, profileData: null, prof: {}, kind: 'trade', s: {}, liked: {}, comments: {}, urls: {}, lastClick: { id: null, at: 0, timer: null },
                  follow: null, followBusy: {}, noRpc: false };   // follow: Set of user ids I follow (null = not loaded yet)
   feed.pin = null;
   const sKey = (mode, kind) => mode + ':' + kind;
-  const ALL_KEYS = []; FEED_MODES.forEach(m => FEED_KINDS.forEach(k => { ALL_KEYS.push(sKey(m, k)); feed.s[sKey(m, k)] = { posts: [], more: false, loaded: false, loading: false, error: false, token: 0, at: 0, offset: 0, asof: null }; }));
-  const curKey = () => sKey(feed.mode, feed.kind);
+  const ALL_KEYS = []; FEED_MODES.concat('profile').forEach(m => FEED_KINDS.forEach(k => { ALL_KEYS.push(sKey(m, k)); feed.s[sKey(m, k)] = { posts: [], more: false, loaded: false, loading: false, error: false, token: 0, at: 0, offset: 0, asof: null }; }));
+  const curMode = () => feed.view === 'profile' ? 'profile' : feed.mode;
+  const curKey = () => sKey(curMode(), feed.kind);
   const PAGE = 12;
   let feedObserver = null;
   const catLabel = k => k === 'trade' ? t('cat_journaling') : k === 'strategy' ? t('nav_strategies') : t('nav_indicators');
@@ -3025,21 +3077,37 @@
     add: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3.5h12v17l-6-4.4-6 4.4z"/><path d="M12 7.5v5M9.5 10h5"/></svg>',
     more: '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>'
   };
-  function avatarHtml(name, size){
+  function avatarHtml(name, size, uid){
     const n = String(name || '?'); let h = 0; for (let i = 0; i < n.length; i++) h = (h * 31 + n.charCodeAt(i)) % 360;
-    return `<span class="avatar" style="--h:${h}; ${size ? 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.42) + 'px;' : ''}">${escapeHtml(n.charAt(0).toUpperCase())}</span>`;
+    const pr = uid && feed.prof[uid], u = pr && pr.avatar_path && feed.urls[pr.avatar_path] && feed.urls[pr.avatar_path].url;
+    const lbl = ((pr && pr.display_name) || n).trim() || '?';
+    return `<span class="avatar" style="--h:${h}; ${size ? 'width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.42) + 'px;' : ''}">${escapeHtml(lbl.charAt(0).toUpperCase())}${u ? `<img src="${escapeHtml(u)}" alt="" loading="lazy" draggable="false" onerror="this.remove()">` : ''}</span>`;
   }
 
   // ---- loading ----
-  async function signImages(posts){
+  async function signImages(posts){ return signPaths([].concat(...posts.map(p => p.image_paths || []))); }
+  async function signPaths(paths){
     const need = [];
-    posts.forEach(p => (p.image_paths || []).forEach(path => { const c = feed.urls[path]; if (!c || c.exp < Date.now() + 60000) need.push(path); }));
+    paths.forEach(path => { const c = feed.urls[path]; if (!c || c.exp < Date.now() + 60000) need.push(path); });
     const uniq = Array.from(new Set(need)); if (!uniq.length) return;
     try {
       const r = await cloudReq('POST', '/storage/v1/object/sign/post-images', { body: { expiresIn: 3600, paths: uniq } });
       if (r.ok && Array.isArray(r.data)) r.data.forEach(x => { if (x && x.signedURL && !x.error) feed.urls[x.path] = { url: CLOUD.url + '/storage/v1' + x.signedURL, exp: Date.now() + 3600e3 }; });
     } catch(e){}
   }
+  // Profile cache (display name + photo of every author on screen). Tolerant: before the 2.1 migration the avatar column does not exist and this simply stays empty.
+  async function loadProfiles(ids, force){
+    const need = Array.from(new Set(ids.filter(Boolean))).filter(id => { const c = feed.prof[id]; return force || !c || Date.now() - c.at > 120000; });
+    if (!need.length || !cloudSession) return;
+    try {
+      const r = await cloudReq('GET', '/rest/v1/profiles?select=id,username,display_name,avatar_path&id=in.(' + need.join(',') + ')');
+      if (r.ok && Array.isArray(r.data)){
+        r.data.forEach(x => { feed.prof[x.id] = Object.assign({}, feed.prof[x.id], x, { at: Date.now() }); });
+        await signPaths(r.data.map(x => x.avatar_path).filter(Boolean));
+      } else throw httpErr(r);
+    } catch(e){ need.forEach(id => { if (!feed.prof[id]) feed.prof[id] = { at: Date.now() }; }); }
+  }
+  const profName = (uid, fresh) => fresh !== undefined ? (fresh || '') : ((feed.prof[uid] && feed.prof[uid].display_name) || '');   // display name if set; a value that came with the row itself is the freshest
   async function loadFollows(force){
     if (feed.follow && !force) return true;
     try {
@@ -3048,12 +3116,13 @@
       feed.follow = new Set(r.data.map(x => x.followed_id)); return true;
     } catch(e){ return false; }
   }
-  const FEED_COLS = 'id,author_id,kind,title,body,payload,image_paths,created_at,username,like_count,comment_count';
+  const FEED_COLS = 'id,author_id,kind,title,body,payload,image_paths,created_at,username,display_name,like_count,comment_count';
   async function loadFeed(kind, reset, mode){
-    mode = mode || feed.mode;
+    mode = mode || curMode();
     const key = sKey(mode, kind), st = feed.s[key]; if (!st || st.loading || !cloudSession) return;
     st.loading = true; st.error = false; const tok = ++st.token;
-    const here = () => kind === feed.kind && mode === feed.mode && currentSection === 'community';
+    const here = () => kind === feed.kind && mode === curMode() && currentSection === 'community';
+    const pid = feed.profileId;
     if (here()) drawFeed();
     try {
       const off = reset ? 0 : st.offset, asof = reset || !st.asof ? new Date().toISOString() : st.asof, last = reset ? null : st.last;
@@ -3061,7 +3130,9 @@
         (last ? '&or=' + encodeURIComponent('(created_at.lt."' + last.created_at + '",and(created_at.eq."' + last.created_at + '",id.lt.' + last.id + '))') : '');
       const fp = mode === 'foryou' ? loadFollows() : null;   // follow buttons need the set; fetched in parallel
       let r = null;
-      if (mode === 'following'){
+      if (mode === 'profile'){
+        r = await cloudReq('GET', chrono('feed_posts') + '&author_id=eq.' + pid);
+      } else if (mode === 'following'){
         if (!(await loadFollows())) { const e = new Error('follows'); e.status = 503; throw e; }
         r = await cloudReq('GET', chrono('feed_following'));
       } else {
@@ -3078,14 +3149,14 @@
         const pid = feed.pin; feed.pin = null;
         try { const pr = await cloudReq('GET', '/rest/v1/feed_posts?select=' + FEED_COLS + '&id=eq.' + pid + '&kind=eq.' + kind); if (pr.ok && pr.data && pr.data[0]) st.pinned = pr.data[0]; } catch(e){}
       }
-      const rows = raw.filter(x => x.kind === kind && (mode !== 'following' || (feed.follow && feed.follow.has(x.author_id))));   // never let another category / a stranger in
+      const rows = raw.filter(x => x.kind === kind && (mode !== 'following' || (feed.follow && feed.follow.has(x.author_id))) && (mode !== 'profile' || x.author_id === pid));   // never let another category / a stranger in
       if (tok === st.token){
         const have = {}; if (!reset) st.posts.forEach(x => { have[x.id] = 1; });
         st.posts = reset ? rows : st.posts.concat(rows.filter(x => !have[x.id]));
         if (reset && st.pinned){ const pn = st.pinned; st.pinned = null; if (pn.kind === kind) st.posts = [pn].concat(st.posts.filter(x => x.id !== pn.id)); }
         st.more = raw.length === PAGE;
         st.offset = off + raw.length; st.asof = asof; if (raw.length) st.last = { created_at: raw[raw.length - 1].created_at, id: raw[raw.length - 1].id };
-        await signImages(rows);
+        await Promise.all([signImages(rows), loadProfiles(rows.map(x => x.author_id), reset)]);
         if (rows.length){
           const lr = await cloudReq('GET', '/rest/v1/reactions?select=post_id&kind=eq.like&user_id=eq.' + cloudSession.user_id + '&post_id=in.(' + rows.map(x => x.id).join(',') + ')');
           if (lr.ok && Array.isArray(lr.data)) lr.data.forEach(x => { feed.liked[x.post_id] = true; });
@@ -3134,8 +3205,8 @@
     const n = p.comment_count || 0;
     return `<article class="post" data-post="${p.id}" data-kind="${p.kind}">
       <header class="post-head">
-        <span data-act="profile" style="cursor:pointer">${avatarHtml(p.username)}</span>
-        <div class="post-who" data-act="profile"><span class="post-author">@${escapeHtml(p.username || '?')}</span><span class="post-time">${escapeHtml(timeAgo(p.created_at))}</span></div>
+        <span data-act="profile" style="cursor:pointer">${avatarHtml(p.username, 0, p.author_id)}</span>
+        <div class="post-who" data-act="profile"><span class="post-author">${escapeHtml(profName(p.author_id, p.display_name) || '@' + (p.username || '?'))}</span><span class="post-time">${profName(p.author_id, p.display_name) ? '@' + escapeHtml(p.username || '?') + ' · ' : ''}${escapeHtml(timeAgo(p.created_at))}</span></div>
         ${!mine && feed.follow && !feed.follow.has(p.author_id) ? `<button class="follow-mini" data-act="follow">${t('follow_btn')}</button>` : ''}
         <button class="icon-btn post-menu" data-act="menu" aria-label="${t('feed_more')}">${ICON.more}</button>
       </header>
@@ -3165,13 +3236,15 @@
   }
   function drawFeed(){
     const list = $('#feedList'); if (!list) return;
-    const kind = feed.kind, mode = feed.mode, st = feed.s[curKey()]; updateTabs();
+    const kind = feed.kind, mode = curMode(), st = feed.s[curKey()]; updateTabs();
     if (feedObserver){ feedObserver.disconnect(); feedObserver = null; }
     if (st.error && !st.posts.length){ list.innerHTML = `<div class="empty-state"><p>${st.error === 'offline' ? t('auth_err_network') : t('auth_err_generic')}</p><button class="btn" id="feedRetry">${t('feed_retry')}</button></div>`; $('#feedRetry').onclick = () => loadFeed(kind, true, mode); return; }
     if (!st.loaded && !st.posts.length){ list.innerHTML = skeletonHtml(); return; }
     const posts = st.posts.filter(p => p.kind === kind);
     if (!posts.length){
-      if (mode === 'following'){
+      if (mode === 'profile'){
+        list.innerHTML = `<div class="empty-state feed-empty"><p>${t('profile_no_posts', { cat: catLabel(kind) })}</p></div>`;
+      } else if (mode === 'following'){
         const none = !feed.follow || feed.follow.size === 0;
         list.innerHTML = `<div class="empty-state feed-empty"><h2>${none ? t('follow_empty_title') : catLabel(kind)}</h2><p>${none ? t('follow_empty_text') : t('follow_none_in_cat')}</p><button class="btn btn-primary" data-act="goforyou">${t('follow_discover')}</button></div>`;
       } else list.innerHTML = `<div class="empty-state feed-empty"><p>${t('feed_empty_' + kind)}</p><button class="btn btn-primary" data-act="new">${t('post_create_first')}</button></div>`;
@@ -3201,13 +3274,14 @@
       return;
     }
     const tb = document.querySelector('.topbar'); if (tb) document.documentElement.style.setProperty('--tb', tb.offsetHeight + 'px');
+    if (feed.view === 'profile') return renderProfilePage();
     main.innerHTML = `
       <div class="feed-wrap">
         <div class="feed-bar">
           <div class="feed-top">
             <div class="feed-modes" role="tablist">${FEED_MODES.map(m => `<button class="feed-mode ${feed.mode === m ? 'active' : ''}" role="tab" data-mode="${m}">${t('feed_' + m)}</button>`).join('')}</div>
             <div class="feed-bar-actions">
-              <button class="icon-btn" id="feedPeopleBtn" aria-label="${t('follow_people')}" title="${t('follow_people')}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.3 3-5 6-5s5.4 1.7 6 5"/><path d="M16.5 5.2a3 3 0 0 1 0 5.6M18 14.3c1.6.6 2.7 2 3 4.7"/></svg></button>
+              <button class="icon-btn" id="feedPeopleBtn" aria-label="${t('profile_mine')}" title="${t('profile_mine')}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.8 3.6-5.8 7-5.8s6.2 2 7 5.8"/></svg></button>
               <button class="btn btn-primary" id="feedNewBtn">${t('post_new')}</button>
             </div>
           </div>
@@ -3222,7 +3296,7 @@
     $$('.feed-mode').forEach(b => b.onclick = () => setFeedMode(b.dataset.mode));
     $('#feedRefreshBtn').onclick = () => { window.scrollTo({ top: 0 }); loadFeed(feed.kind, true); };
     $('#feedNewBtn').onclick = () => openComposer(feed.kind);
-    $('#feedPeopleBtn').onclick = () => openProfile(cloudSession.user_id, (cloudProfile && cloudProfile.username) || '', 'following');
+    $('#feedPeopleBtn').onclick = () => openProfile(cloudSession.user_id);
     const list = $('#feedList');
     list.addEventListener('click', onFeedClick);
     list.addEventListener('scroll', onMediaScroll, true);
@@ -3301,7 +3375,7 @@
       else if (act === 'save') await saveToLibrary(p);
       else if (act === 'menu') openPostMenu(p);
       else if (act === 'follow') await toggleFollow(p.author_id, p.username);
-      else if (act === 'profile') openProfile(p.author_id, p.username);
+      else if (act === 'profile') openProfile(p.author_id);
       else if (act === 'expand'){ const c = $('.caption', art); if (c) c.classList.remove('clamp'); btn.remove(); }
     } catch(err){ showToast(err && err.offline ? t('auth_err_network') : t('auth_err_generic')); }
   }
@@ -3309,9 +3383,10 @@
   // ---- comments sheet ----
   async function loadComments(p){
     try {
-      const r = await cloudReq('GET', '/rest/v1/comments?select=id,body,created_at,author_id,profiles(username)&post_id=eq.' + p.id + '&order=created_at.asc&limit=200');
+      const r = await cloudReq('GET', '/rest/v1/comments?select=id,body,created_at,author_id,profiles(username,display_name)&post_id=eq.' + p.id + '&order=created_at.asc&limit=200');
       if (!r.ok) throw httpErr(r);
-      feed.comments[p.id] = r.data.map(c => ({ id: c.id, body: c.body, created_at: c.created_at, author_id: c.author_id, username: c.profiles && c.profiles.username }));
+      feed.comments[p.id] = r.data.map(c => ({ id: c.id, body: c.body, created_at: c.created_at, author_id: c.author_id, username: c.profiles && c.profiles.username, display_name: c.profiles && c.profiles.display_name }));
+      await loadProfiles(feed.comments[p.id].map(c => c.author_id));
     } catch(e){ feed.comments[p.id] = null; }
   }
   function openComments(p){
@@ -3334,8 +3409,8 @@
       if (cs === null){ list.innerHTML = `<div class="hint" style="padding:16px;">${t('auth_err_generic')}</div>`; return; }
       list.innerHTML = (cs.length ? '' : `<div class="hint" style="padding:16px;">${t('feed_no_comments')}</div>`) + cs.map(c => `
         <div class="cm" data-cm="${c.id}">
-          ${avatarHtml(c.username, 30)}
-          <div class="cm-main"><div><b>@${escapeHtml(c.username || '?')}</b> <span class="post-time">${escapeHtml(timeAgo(c.created_at))}</span></div>
+          ${avatarHtml(c.username, 30, c.author_id)}
+          <div class="cm-main"><div><b>${escapeHtml(profName(c.author_id, c.display_name) || '@' + (c.username || '?'))}</b> <span class="post-time">${escapeHtml(timeAgo(c.created_at))}</span></div>
             <div class="cm-body">${escapeHtml(c.body)}</div>
             <div class="cm-tools">${c.author_id === cloudSession.user_id || p.author_id === cloudSession.user_id || isAdminUser() ? `<button class="link-btn" data-act="cm-del">${t('btn_delete')}</button>` : ''}${c.author_id !== cloudSession.user_id ? `<button class="link-btn" data-act="cm-report">${t('feed_report')}</button>` : ''}</div></div>
         </div>`).join('');
@@ -3534,7 +3609,9 @@
   function followChanged(userId){
     // Following-feed content depends on the set: drop the unfollowed author's posts at once, reload the rest.
     FEED_KINDS.forEach(k => { const st = feed.s[sKey('following', k)]; st.token++; st.loading = false; st.loaded = false; st.offset = 0; st.last = null; st.posts = st.posts.filter(x => feed.follow.has(x.author_id)); });
+    if (feed.profileData && feed.profileId === userId && cloudSession){ const me = cloudSession.user_id, f = feed.profileData.followers.filter(x => x !== me); if (feed.follow.has(userId)) f.push(me); feed.profileData.followers = f; }
     if (currentSection !== 'community') return;
+    if (feed.view === 'profile'){ drawProfileCard(); drawFeed(); return; }
     if (feed.mode === 'following'){ drawFeed(); loadFeed(feed.kind, true); }
     else if (feed.follow.has(userId)) $$('.follow-mini[data-act="follow"]').forEach(btn => { const a = btn.closest('[data-post]'), p = a && findPost(a.dataset.post); if (p && p.author_id === userId) btn.remove(); });
     else drawFeed();
@@ -3560,9 +3637,10 @@
     feed.followBusy[userId] = false;
     return ok;
   }
-  async function openProfile(userId, name, startTab){
+  // ---- follower / following lists (modal) ----
+  async function openFollowList(userId, startTab){
     const old = $('#profileModal'); if (old) old.remove();
-    const me = cloudSession.user_id, mine = userId === me;
+    const me = cloudSession.user_id;
     let tab = startTab || 'followers', data = null, failed = false;
     const b = document.createElement('div'); b.className = 'modal-backdrop'; b.id = 'profileModal'; b.style.zIndex = '140';
     document.body.appendChild(b);
@@ -3571,35 +3649,185 @@
     document.addEventListener('keydown', onKey);
     const draw = () => {
       const rows = data ? data[tab] : null;
-      b.innerHTML = `<div class="modal" style="max-width:420px;"><div class="modal-head"><h3>${mine ? t('follow_people') : '@' + escapeHtml(name || '?')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
+      b.innerHTML = `<div class="modal" style="max-width:420px;"><div class="modal-head"><h3>${t('follow_people')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
         <div class="modal-body">
-          <div class="pf-head">${avatarHtml(name, 48)}<div style="flex:1;min-width:0;"><h4>@${escapeHtml(name || '?')}</h4></div>
-            ${mine ? '' : `<button class="follow-mini ${feed.follow && feed.follow.has(userId) ? 'on' : ''}" data-pf="follow" style="font-size:13px;padding:6px 16px;">${t(feed.follow && feed.follow.has(userId) ? 'follow_unfollow' : 'follow_btn')}</button>`}</div>
           <div class="pf-tabs"><button data-tab="followers" class="${tab === 'followers' ? 'active' : ''}">${t('follow_followers')}${data ? ' · ' + data.followers.length : ''}</button><button data-tab="following" class="${tab === 'following' ? 'active' : ''}">${t('feed_following')}${data ? ' · ' + data.following.length : ''}</button></div>
           <div class="pf-list">${failed ? `<div class="hint" style="padding:14px;">${t('auth_err_generic')}</div>` : !rows ? `<div class="hint" style="padding:14px;">${t('feed_loading')}</div>` : !rows.length ? `<div class="hint" style="padding:14px;">${t('follow_list_empty')}</div>` :
-            rows.map(x => `<div class="pf-row">${avatarHtml(x.username, 30)}<span class="pf-name" data-open="${x.id}" data-name="${escapeHtml(x.username)}">@${escapeHtml(x.username)}</span>${x.id === me ? '' : `<button class="follow-mini ${feed.follow && feed.follow.has(x.id) ? 'on' : ''}" data-pf="row" data-uid="${x.id}" data-name="${escapeHtml(x.username)}">${t(feed.follow && feed.follow.has(x.id) ? 'follow_unfollow' : 'follow_btn')}</button>`}</div>`).join('')}</div>
+            rows.map(x => { const dn = profName(x.id, x.display_name); return `<div class="pf-row" data-open="${x.id}">${avatarHtml(x.username, 34, x.id)}<span class="pf-name">${dn ? escapeHtml(dn) + ' <span class="pf-un">@' + escapeHtml(x.username) + '</span>' : '@' + escapeHtml(x.username)}</span>${x.id === me ? '' : `<button class="follow-mini ${feed.follow && feed.follow.has(x.id) ? 'on' : ''}" data-pf="row" data-uid="${x.id}" data-name="${escapeHtml(x.username)}">${t(feed.follow && feed.follow.has(x.id) ? 'follow_unfollow' : 'follow_btn')}</button>`}</div>`; }).join('')}</div>
         </div></div>`;
     };
     const load = async () => {
       try {
         const [a, c] = await Promise.all([
-          cloudReq('GET', '/rest/v1/follows?select=created_at,u:profiles!follows_follower_id_fkey(id,username)&followed_id=eq.' + userId + '&order=created_at.desc&limit=500'),
-          cloudReq('GET', '/rest/v1/follows?select=created_at,u:profiles!follows_followed_id_fkey(id,username)&follower_id=eq.' + userId + '&order=created_at.desc&limit=500')]);
+          cloudReq('GET', '/rest/v1/follows?select=created_at,u:profiles!follows_follower_id_fkey(id,username,display_name)&followed_id=eq.' + userId + '&order=created_at.desc&limit=500'),
+          cloudReq('GET', '/rest/v1/follows?select=created_at,u:profiles!follows_followed_id_fkey(id,username,display_name)&follower_id=eq.' + userId + '&order=created_at.desc&limit=500')]);
         if (!a.ok || !c.ok) throw httpErr(a.ok ? c : a);
-        const pick = r => r.data.filter(x => x.u && x.u.username).map(x => ({ id: x.u.id, username: x.u.username }));
+        const pick = r => r.data.filter(x => x.u && x.u.username).map(x => ({ id: x.u.id, username: x.u.username, display_name: x.u.display_name }));
         data = { followers: pick(a), following: pick(c) }; failed = false;
+        await loadProfiles(data.followers.concat(data.following).map(x => x.id));
       } catch(e){ failed = true; }
       if ($('#profileModal') === b) draw();
     };
     b.addEventListener('click', async ev => {
       if (ev.target === b || ev.target.closest('[data-x]')) return close();
       const tb = ev.target.closest('[data-tab]'); if (tb){ tab = tb.dataset.tab; return draw(); }
-      const op = ev.target.closest('[data-open]'); if (op){ return openProfile(op.dataset.open, op.dataset.name); }
-      const f = ev.target.closest('[data-pf]'); if (!f) return;
-      const target = f.dataset.pf === 'follow' ? userId : f.dataset.uid, nm = f.dataset.pf === 'follow' ? name : f.dataset.name;
-      f.disabled = true; await toggleFollow(target, nm); if ($('#profileModal') === b){ draw(); load(); }
+      const f = ev.target.closest('[data-pf]');
+      if (f){ f.disabled = true; await toggleFollow(f.dataset.uid, f.dataset.name); if ($('#profileModal') === b){ draw(); load(); } return; }
+      const op = ev.target.closest('[data-open]'); if (op){ close(); openProfile(op.dataset.open); }
     });
     draw(); load();
+  }
+
+  // ---- profile page (inside Community) ----
+  const csvList = v => String(v || '').split(',').map(x => x.trim()).filter(Boolean);
+  function resetProfileStates(){ FEED_KINDS.forEach(k => { const st = feed.s[sKey('profile', k)]; st.posts = []; st.more = false; st.loaded = false; st.loading = false; st.error = false; st.token++; st.offset = 0; st.last = null; }); }
+  function openProfile(userId){
+    const old = $('#profileModal'); if (old) old.remove();
+    if (!userId) return;
+    if (feed.profileId !== userId || feed.view !== 'profile'){ feed.profileId = userId; feed.profileData = null; resetProfileStates(); }
+    try { if (feed.view === 'profile') history.replaceState({ tallyProfile: 1 }, ''); else history.pushState({ tallyProfile: 1 }, ''); } catch(e){}
+    feed.view = 'profile'; currentSection = 'community';
+    render(); window.scrollTo({ top: 0 });
+  }
+  function closeProfile(){
+    if (feed.view !== 'profile') return;
+    feed.view = 'feed'; if (currentSection === 'community') render();
+  }
+  window.addEventListener('popstate', () => { if (feed.view === 'profile') closeProfile(); });
+  function renderProfilePage(){
+    const main = $('#main');
+    main.innerHTML = `
+      <div class="feed-wrap">
+        <div class="pf-top"><button class="icon-btn" id="pfBack" aria-label="${t('profile_back')}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span>${t('profile_title')}</span></div>
+        <div id="pfCard"><div class="pf-card"><div class="sk-line" style="width:55%;height:22px;margin:30px 0 14px"></div><div class="sk-line" style="width:80%"></div></div></div>
+        <div class="feed-bar feed-bar-pf"><div class="feed-tabrow"><div class="feed-tabs" role="tablist">${FEED_KINDS.map(k => `<button class="feed-tab ${feed.kind === k ? 'active' : ''}" role="tab" data-kind="${k}">${catLabel(k)}</button>`).join('')}</div></div></div>
+        <div id="feedList"></div>
+      </div>`;
+    $('#pfBack').onclick = () => { try { if (history.state && history.state.tallyProfile){ history.back(); return; } } catch(e){} closeProfile(); };
+    $$('.feed-tab').forEach(b => b.onclick = () => setFeedKind(b.dataset.kind));
+    const list = $('#feedList'); list.addEventListener('click', onFeedClick); list.addEventListener('scroll', onMediaScroll, true);
+    if (feed.profileData) drawProfileCard(); 
+    loadProfilePage(); openFeedState();
+  }
+  async function loadProfilePage(){
+    const id = feed.profileId;
+    try {
+      const sel = 'id,username,display_name,avatar_path,bio,quote,markets,trading_style,location,created_at';
+      let pr = await cloudReq('GET', '/rest/v1/profiles?select=' + sel + '&id=eq.' + id);
+      if (!pr.ok) pr = await cloudReq('GET', '/rest/v1/profiles?select=id,username,display_name,created_at&id=eq.' + id);   // before the 2.1 migration
+      const [fl, fg, ps] = await Promise.all([
+        cloudReq('GET', '/rest/v1/follows?select=follower_id&followed_id=eq.' + id + '&limit=1000'),
+        cloudReq('GET', '/rest/v1/follows?select=followed_id&follower_id=eq.' + id + '&limit=1000'),
+        cloudReq('GET', '/rest/v1/feed_posts?select=id&author_id=eq.' + id + '&limit=1000'), loadFollows()]);
+      if (!pr.ok) throw httpErr(pr);
+      if (feed.profileId !== id) return;
+      const row = Array.isArray(pr.data) && pr.data[0];
+      feed.profileData = row ? { profile: row, followers: fl.ok ? fl.data.map(x => x.follower_id) : [], following: fg.ok ? fg.data.map(x => x.followed_id) : [], posts: ps.ok ? ps.data.length : 0 } : { missing: true };
+      if (row){ feed.prof[id] = Object.assign({}, feed.prof[id], { id, username: row.username, display_name: row.display_name, avatar_path: row.avatar_path || null, at: Date.now() }); await signPaths(row.avatar_path ? [row.avatar_path] : []); }
+    } catch(e){ if (feed.profileId === id) feed.profileData = { error: true }; }
+    if (feed.view === 'profile' && feed.profileId === id){ drawProfileCard(); drawFeed(); }
+  }
+  function drawProfileCard(){
+    const box = $('#pfCard'); if (!box) return;
+    const d = feed.profileData, id = feed.profileId; if (!d) return;
+    if (d.error || d.missing){ box.innerHTML = `<div class="empty-state"><p>${t(d.missing ? 'profile_not_found' : 'auth_err_generic')}</p>${d.error ? `<button class="btn" id="pfRetry">${t('feed_retry')}</button>` : ''}</div>`; const rb = $('#pfRetry'); if (rb) rb.onclick = () => { feed.profileData = null; loadProfilePage(); }; return; }
+    const p = d.profile, mine = id === cloudSession.user_id, fol = !!(feed.follow && feed.follow.has(id));
+    const dn = p.display_name, chips = csvList(p.markets).map(x => `<span class="chip-m">${escapeHtml(x)}</span>`).join('') + (p.trading_style ? `<span class="chip-m style">${escapeHtml(p.trading_style)}</span>` : '') + (p.location ? `<span class="chip-m soft">📍 ${escapeHtml(p.location)}</span>` : '');
+    box.innerHTML = `<section class="pf-card">
+      <div class="pf-cover"></div>
+      <div class="pf-main">
+        <div class="pf-ava">${avatarHtml(p.username, 88, id)}</div>
+        <div class="pf-names"><h2 class="pf-dn">${escapeHtml(dn || '@' + p.username)}</h2>${dn ? `<div class="pf-handle">@${escapeHtml(p.username)}</div>` : ''}
+          ${p.quote ? `<div class="pf-quote">“${escapeHtml(p.quote)}”</div>` : ''}</div>
+      </div>
+      <div class="pf-cta">${mine ? `<button class="btn" id="pfEdit">${t('profile_edit')}</button>` : `<button class="btn ${fol ? '' : 'btn-primary'}" id="pfFollow">${t(fol ? 'follow_unfollow' : 'follow_btn')}</button>`}</div>
+      ${p.bio ? `<p class="pf-bio">${escapeHtml(p.bio)}</p>` : ''}
+      ${chips ? `<div class="pf-chips">${chips}</div>` : ''}
+      <div class="pf-stats"><div><b>${d.posts}</b><span>${t('profile_posts')}</span></div><button data-fl="followers"><b>${d.followers.length}</b><span>${t('follow_followers')}</span></button><button data-fl="following"><b>${d.following.length}</b><span>${t('feed_following')}</span></button></div>
+    </section>`;
+    const ed = $('#pfEdit'); if (ed) ed.onclick = () => openProfileEditor();
+    const fb = $('#pfFollow'); if (fb) fb.onclick = async () => { fb.disabled = true; await toggleFollow(id, p.username); const me = cloudSession.user_id, on = !!(feed.follow && feed.follow.has(id)); if (feed.profileData === d) d.followers = d.followers.filter(x => x !== me).concat(on ? [me] : []); drawProfileCard(); };
+    $$('[data-fl]', box).forEach(x => x.onclick = () => openFollowList(id, x.dataset.fl));
+  }
+
+  // ---- edit my profile ----
+  const compressAvatar = f => ((window.__TALLY_TEST__ && window.__TALLY_TEST__.compressAvatar) || (file => new Promise((resolve, reject) => {
+    const rd = new FileReader(); rd.onerror = () => reject(new Error('read'));
+    rd.onload = () => { const im = new Image(); im.onerror = () => reject(new Error('decode')); im.onload = () => { try {
+      const w = im.naturalWidth || im.width, h = im.naturalHeight || im.height, m = Math.min(w, h), S = 512, c = document.createElement('canvas'); c.width = c.height = S;
+      c.getContext('2d').drawImage(im, (w - m) / 2, (h - m) / 2, m, m, 0, 0, S, S); resolve(c.toDataURL('image/jpeg', 0.85)); } catch(e){ reject(e); } }; im.src = rd.result; };
+    rd.readAsDataURL(file); })))(f);
+  function openProfileEditor(){
+    const me = cloudSession.user_id, cur = (feed.profileData && feed.profileData.profile) || {};
+    if ($('#profileEditor')) return;
+    let newAvatar = null, removeAvatar = false, busy = false;
+    const b = document.createElement('div'); b.className = 'modal-backdrop'; b.id = 'profileEditor'; b.style.zIndex = '150';
+    const styles = ['Scalping', 'Day Trading', 'Swing Trading', 'ICT/SMC'];
+    b.innerHTML = `<div class="modal" style="max-width:460px;"><div class="modal-head"><h3>${t('profile_edit')}</h3><button class="icon-btn" data-x style="font-size:18px;">✕</button></div>
+      <div class="modal-body">
+        <div class="pe-photo"><div id="pe_ava"></div><div class="pe-photo-btns"><button type="button" class="btn" id="pe_up">${t('profile_photo_upload')}</button><button type="button" class="btn btn-ghost" id="pe_rm">${t('profile_photo_remove')}</button><input type="file" id="pe_file" accept="image/jpeg,image/png,image/webp,image/*" hidden></div></div>
+        <label>${t('profile_dn')}</label><input type="text" id="pe_dn" maxlength="40" value="${escapeHtml(cur.display_name || '')}" placeholder="${escapeHtml(cur.username || '')}">
+        <label>${t('profile_quote')} <span class="pe-count" id="pe_quote_c"></span></label><input type="text" id="pe_quote" maxlength="80" value="${escapeHtml(cur.quote || '')}" placeholder="${t('profile_quote_ph')}">
+        <label>${t('profile_bio')} <span class="pe-count" id="pe_bio_c"></span></label><textarea id="pe_bio" maxlength="160" style="min-height:76px;" placeholder="${t('profile_bio_ph')}">${escapeHtml(cur.bio || '')}</textarea>
+        <label>${t('profile_markets')}</label><input type="text" id="pe_markets" maxlength="100" value="${escapeHtml(cur.markets || '')}" placeholder="${t('profile_markets_ph')}">
+        <label>${t('profile_style')}</label><input type="text" id="pe_style" maxlength="30" list="pe_styles" value="${escapeHtml(cur.trading_style || '')}"><datalist id="pe_styles">${styles.map(x => `<option value="${x}">`).join('')}</datalist>
+        <label>${t('profile_location')}</label><input type="text" id="pe_loc" maxlength="40" value="${escapeHtml(cur.location || '')}">
+        <div class="hint" id="pe_err" style="color:var(--red); min-height:16px; margin-top:10px;"></div>
+      </div>
+      <div class="modal-foot"><span></span><div style="display:flex; gap:8px;"><button class="btn btn-ghost" data-x>${t('btn_cancel')}</button><button class="btn btn-primary" id="pe_save">${t('profile_save')}</button></div></div></div>`;
+    document.body.appendChild(b);
+    const close = () => { document.removeEventListener('keydown', onKey); b.remove(); };
+    const onKey = ev => { if (ev.key === 'Escape' && !busy) close(); };
+    document.addEventListener('keydown', onKey);
+    const err = m => { $('#pe_err', b).textContent = m || ''; };
+    const counts = () => { $('#pe_quote_c', b).textContent = $('#pe_quote', b).value.length + '/80'; $('#pe_bio_c', b).textContent = $('#pe_bio', b).value.length + '/160'; };
+    const drawAva = () => {
+      const box = $('#pe_ava', b);
+      if (newAvatar) box.innerHTML = `<span class="avatar" style="width:72px;height:72px;"><img src="${newAvatar}" alt=""></span>`;
+      else if (removeAvatar) box.innerHTML = avatarHtml(cur.username, 72);
+      else box.innerHTML = avatarHtml(cur.username, 72, me);
+      $('#pe_rm', b).hidden = !(newAvatar || (!removeAvatar && cur.avatar_path));
+    };
+    ['pe_quote', 'pe_bio'].forEach(i => $('#' + i, b).addEventListener('input', counts)); counts(); drawAva();
+    $('#pe_up', b).onclick = () => $('#pe_file', b).click();
+    $('#pe_rm', b).onclick = () => { newAvatar = null; removeAvatar = true; drawAva(); };
+    $('#pe_file', b).onchange = async ev => {
+      const f = ev.target.files && ev.target.files[0]; ev.target.value = ''; if (!f) return; err('');
+      if (f.size > 10 * 1024 * 1024) return err(t('profile_err_img'));
+      try { newAvatar = await compressAvatar(f); removeAvatar = false; drawAva(); } catch(e){ err(t('profile_err_img')); }
+    };
+    b.addEventListener('click', e => { if (e.target === b || e.target.closest('[data-x]')) { if (!busy) close(); } });
+    $('#pe_save', b).onclick = async () => {
+      if (busy) return; err('');
+      const v = id => $('#' + id, b).value.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
+      const bio = $('#pe_bio', b).value.replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, '').trim();
+      const body = { display_name: v('pe_dn') || null, quote: v('pe_quote') || null, bio: bio || null, markets: v('pe_markets') || null, trading_style: v('pe_style') || null, location: v('pe_loc') || null };
+      if ((body.display_name || '').length > 40 || (body.quote || '').length > 80 || (body.bio || '').length > 160 || (body.trading_style || '').length > 30 || (body.location || '').length > 40) return err(t('profile_err_len'));
+      const mk = csvList(body.markets || ''); if (mk.length > 8 || mk.some(x => x.length > 12)) return err(t('profile_err_markets'));
+      if (body.markets) body.markets = mk.join(', ');
+      busy = true; const btn = $('#pe_save', b); btn.disabled = true; btn.textContent = t('profile_saving');
+      let uploaded = null, ok = false;
+      try {
+        if (newAvatar){ uploaded = await uploadPostImage(newAvatar); body.avatar_path = uploaded; }
+        else if (removeAvatar) body.avatar_path = null;
+        const r = await cloudReq('PATCH', '/rest/v1/profiles?id=eq.' + me, { body, headers: { Prefer: 'return=representation' } });
+        if (!r.ok || !Array.isArray(r.data) || !r.data[0]) throw httpErr(r);
+        ok = true; const row = r.data[0];
+        if ('avatar_path' in body && cur.avatar_path && cur.avatar_path !== body.avatar_path) removePostImages([cur.avatar_path]);   // old photo no longer needed
+        feed.prof[me] = Object.assign({}, feed.prof[me], { id: me, username: row.username, display_name: row.display_name, avatar_path: row.avatar_path || null, at: Date.now() });
+        if (row.avatar_path) await signPaths([row.avatar_path]);
+        if (cloudProfile) cloudProfile.display_name = row.display_name;
+        if (feed.profileData && feed.profileData.profile && feed.profileId === me) feed.profileData.profile = Object.assign({}, feed.profileData.profile, row);
+        ALL_KEYS.forEach(k => feed.s[k].posts.forEach(x => { if (x.author_id === me) x.display_name = row.display_name; }));
+        close(); showToast(t('profile_saved'));
+        if (feed.view === 'profile') drawProfileCard(); drawFeed();
+        return;
+      } catch(e){
+        if (uploaded && !ok) removePostImages([uploaded]);
+        err(e && e.offline ? t('auth_err_network') : e && e.tooLarge ? t('profile_err_img') : t('profile_err_saving'));
+      }
+      busy = false; btn.disabled = false; btn.textContent = t('profile_save');
+    };
   }
   function openPostMenu(p){
     const mine = p.author_id === cloudSession.user_id, rows = [];
@@ -3770,7 +3998,7 @@
   };
   $('#settingsBtn').onclick = () => openSettingsModal();
   $('#fabLog').onclick = () => $('#newTradeBtn').onclick();
-  $$('.tab-btn').forEach(b => b.addEventListener('click', () => { currentSection = b.dataset.section; render(); }));
+  $$('.tab-btn').forEach(b => b.addEventListener('click', () => { if (b.dataset.section === 'community' && currentSection === 'community') feed.view = 'feed'; currentSection = b.dataset.section; render(); }));
 
   if (window.__TALLY_TEST__) Object.assign(window.__TALLY_TEST__, {
     st: () => ({ accounts, trades, strategies, indicators, checkins }),
