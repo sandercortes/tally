@@ -544,6 +544,26 @@
   @media (max-width: 560px) { .section-nav { overflow-x: auto; scrollbar-width: none; } .section-nav::-webkit-scrollbar { display: none; } .tab-btn { margin-right: 12px; white-space: nowrap; flex: 0 0 auto; } }
   @media (max-width: 380px) { .feed-mode { padding: 5px 11px; font-size: 13px; } .feed-top { gap: 6px; } .follow-mini { padding: 3px 9px; font-size: 11.5px; } .section-nav { padding-left: 14px; padding-right: 14px; } .tab-btn { margin-right: 10px; font-size: 13px; white-space: nowrap; } .section-nav { overflow-x: auto; scrollbar-width: none; } .section-nav::-webkit-scrollbar { display: none; } .feed-bar { gap: 4px; } .feed-tab { padding: 9px 6px 11px; font-size: 13px; } .feed-tab.active::after { left: 6px; right: 6px; } .feed-bar-actions .btn { padding: 6px 9px; font-size: 12px; } }
 
+
+  /* ---- Plan checklist ---- */
+  .plan { border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 12px 12px; background: var(--bg-alt); }
+  .plan-h { font-size: 12.5px; color: var(--text-mid); margin-bottom: 8px; overflow-wrap: anywhere; }
+  .plan-seg button.active { background: var(--card); color: var(--text); box-shadow: inset 0 0 0 1px var(--amber-dim); }
+  .plan-seg button.active.followed { color: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+  .plan-seg button.active.deviated { color: #e08770; box-shadow: inset 0 0 0 1px #e08770; }
+  .plan-rules { display: flex; flex-direction: column; gap: 2px; margin: 10px 0 2px; }
+  .plan-rule { display: flex; align-items: flex-start; gap: 9px; padding: 5px 2px; font-size: 13.5px; color: var(--text); cursor: pointer; line-height: 1.35; text-transform: none; letter-spacing: 0; margin: 0; }
+  .plan-rule input { width: auto; margin-top: 2px; flex: 0 0 auto; }
+  .plan-rule span { min-width: 0; overflow-wrap: anywhere; }
+  .plan-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+  .plan-chip { background: var(--card); border: 1px solid var(--card-border); color: var(--text-mid); border-radius: 20px; padding: 4px 11px; font: inherit; font-size: 12.5px; cursor: pointer; }
+  .plan-chip.on { border-color: var(--amber-dim); color: var(--amber); background: var(--amber-soft); }
+  .rule-row { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+  .rule-row input { flex: 1 1 auto; min-width: 0; }
+  .rule-row .icon-btn { flex: 0 0 auto; width: 30px; height: 30px; font-size: 14px; }
+  .rule-sugg { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+  .tmeta.plan-ok { color: var(--green); } .tmeta.plan-dev { color: #e08770; }
+  .rules-count { font-size: 11.5px; color: var(--text-dim); }
   /* ---- Home ---- */
   .home { max-width: 1180px; margin: 0 auto; padding-bottom: 40px; min-width: 0; }
   .home * { min-width: 0; }
@@ -713,6 +733,33 @@
     home_k_strategy: {en:'Strategy', es:'Estrategia', nl:'Strategie'},
     home_k_indicator: {en:'Indicator', es:'Indicador', nl:'Indicator'},
     home_daily: {en:'Daily motivation', es:'Motivación del día', nl:'Dagelijkse motivatie'},
+    plan_followed: {en:'Plan followed', es:'Plan seguido', nl:'Plan gevolgd'},
+    plan_deviated: {en:'Deviated', es:'Desviado', nl:'Afgeweken'},
+    plan_skip: {en:'Skip', es:'Omitir', nl:'Overslaan'},
+    plan_title: {en:'Rules · {name}', es:'Reglas · {name}', nl:'Regels · {name}'},
+    plan_which: {en:'Untick the rules you broke', es:'Desmarca las reglas que rompiste', nl:'Vink uit wat je brak'},
+    plan_reason: {en:'Reason (optional)', es:'Motivo (opcional)', nl:'Reden (optioneel)'},
+    plan_r_early: {en:'Entered too early', es:'Entré demasiado pronto', nl:'Te vroeg ingestapt'},
+    plan_r_fomo: {en:'FOMO', es:'FOMO', nl:'FOMO'},
+    plan_r_sl: {en:'Moved stop-loss', es:'Moví el stop-loss', nl:'Stop-loss verplaatst'},
+    plan_r_other: {en:'Other reason', es:'Otro motivo', nl:'Andere reden'},
+    plan_r_ph: {en:'Short reason…', es:'Motivo breve…', nl:'Korte reden…'},
+    plan_rules_n: {en:'{n} rules', es:'{n} reglas', nl:'{n} regels'},
+    plan_rules_1: {en:'1 rule', es:'1 regla', nl:'1 regel'},
+    rules_title: {en:'Rules (optional)', es:'Reglas (opcional)', nl:'Regels (optioneel)'},
+    rules_add: {en:'+ Add rule', es:'+ Añadir regla', nl:'+ Regel toevoegen'},
+    rules_ph: {en:'e.g. Wait for confirmation', es:'p. ej. Esperar confirmación', nl:'bijv. Wacht op bevestiging'},
+    rules_hint: {en:'Shown as a quick checklist when you log a trade with this strategy. Never shared with Community.', es:'Se muestra como lista rápida al registrar un trade con esta estrategia. Nunca se comparte con la Comunidad.', nl:'Verschijnt als snelle checklist als je een trade met deze strategie logt. Wordt nooit met Community gedeeld.'},
+    rules_suggest: {en:'Suggestions', es:'Sugerencias', nl:'Suggesties'},
+    rules_max: {en:'Maximum {n} rules', es:'Máximo {n} reglas', nl:'Maximaal {n} regels'},
+    rules_up: {en:'Move up', es:'Subir', nl:'Omhoog'},
+    rules_down: {en:'Move down', es:'Bajar', nl:'Omlaag'},
+    rules_del: {en:'Remove rule', es:'Quitar regla', nl:'Regel verwijderen'},
+    rule_s1: {en:'Wait for confirmation', es:'Esperar confirmación', nl:'Wacht op bevestiging'},
+    rule_s2: {en:'Risk within my limit', es:'Riesgo dentro de mi límite', nl:'Risico binnen mijn limiet'},
+    rule_s3: {en:'Trade inside my session', es:'Operar dentro de mi sesión', nl:'Binnen mijn sessie handelen'},
+    rule_s4: {en:'Stop-loss set before entry', es:'Stop-loss antes de entrar', nl:'Stop-loss vóór entry gezet'},
+    rule_s5: {en:'Only A+ setups', es:'Solo setups A+', nl:'Alleen A+ setups'},
     nav_journal: {en:'Journal', es:'Diario', nl:'Journaling'},
     nav_strategies: {en:'Strategies', es:'Estrategias', nl:'Strategieën'},
     nav_indicators: {en:'Indicators', es:'Indicadores', nl:'Indicators'},
@@ -1568,7 +1615,7 @@
   }
 
   function strategyFilterOptions(acc){
-    const used = Array.from(new Set(accountTrades(acc.id).map(x=>x.strategy).filter(Boolean)));
+    const used = Array.from(new Set(accountTrades(acc.id).map(tradeStrategyName).filter(Boolean)));
     let html = `<option value="all">${t('filter_all_strategies')}</option>`;
     used.forEach(s => { html += `<option value="${escapeHtml(s)}" ${filters.strategy===s?'selected':''}>${escapeHtml(s)}</option>`; });
     return html;
@@ -1740,7 +1787,7 @@
     if (filters.direction !== 'all') tr = tr.filter(x => x.direction === filters.direction);
     if (filters.result === 'win') tr = tr.filter(x => x.pnl > 0);
     if (filters.result === 'loss') tr = tr.filter(x => x.pnl < 0);
-    if (filters.strategy !== 'all') tr = tr.filter(x => x.strategy === filters.strategy);
+    if (filters.strategy !== 'all') tr = tr.filter(x => tradeStrategyName(x) === filters.strategy);
     return tr;
   }
 
@@ -1759,7 +1806,7 @@
         <td>${x.size ?? '—'}</td>
         <td class="${x.pnl>=0?'pos':'neg'}">${x.pnl>=0?'+':''}${fmtMoney(x.pnl, acc.currency)}</td>
         <td>${x.r!==null && x.r!=='' && x.r!==undefined ? fmt(Number(x.r),1)+'R' : '—'}</td>
-        <td>${x.strategy ? `<span class="tag-pill">${escapeHtml(x.strategy)}</span>` : '—'}</td>
+        <td>${tradeStrategyName(x) ? `<span class="tag-pill">${escapeHtml(tradeStrategyName(x))}</span>` : '—'}</td>
         <td><div class="row-actions"><button class="icon-btn del-trade" data-id="${x.id}" title="${t('btn_delete')}">✕</button></div></td>
       </tr>`).join('');
     return `<table class="trades">
@@ -1915,8 +1962,9 @@
               <input type="number" step="any" id="f_pnl" value="${x? x.pnl ?? '' : ''}">
               <div class="hint">${t('hint_pnl')}</div>
             </div>
-            <div><label>${t('lbl_strategy')}</label><input type="text" id="f_strategy" value="${x? escapeHtml(x.strategy||'') : ''}"></div>
+            <div><label>${t('lbl_strategy')}</label><input type="text" id="f_strategy" list="f_strat_list" autocomplete="off" value="${x? escapeHtml(tradeStrategyName(x)) : ''}"><datalist id="f_strat_list">${strategies.map(v => `<option value="${escapeHtml(v.title)}">`).join('')}</datalist></div>
             <div><label>${t('lbl_emotion')}</label><input type="text" id="f_emotion" value="${x? escapeHtml(x.emotion||'') : ''}"></div>
+            <div class="full" id="planBox" hidden></div>
             <div class="full">
               <label>${t('lbl_confidence')}</label>
               <div class="conf-row">
@@ -1953,6 +2001,50 @@
         b.classList.add('active', selectedDir);
       };
     });
+
+
+    // ----- plan checklist (optional, never blocks saving) -----
+    const lastPlan = x ? readPlan(x) : null;
+    const stratOf = text => { const cur = strategyFor(x); return (cur && normText(cur.title) === normText(text)) ? cur : matchStrategyByText(text); };
+    let strat = stratOf($('#f_strategy', backdrop).value);
+    let planSt = lastPlan ? { status: lastPlan.status, rules: lastPlan.rules.map(r => ({ id: r.id, text: r.text, ok: r.ok })), reasonKey: lastPlan.reasonKey, reason: lastPlan.reason, stratId: x.strategyId || null } : null;
+    let planTouched = false;
+    const drawPlan = () => {
+      const box = $('#planBox', backdrop), rules = strat ? cleanRules(strat.rules) : [];
+      const active = !!(planSt && strat && planSt.stratId === strat.id);
+      if (!strat || (!rules.length && !active)){ box.hidden = true; box.innerHTML = ''; return; }
+      const st = active ? planSt.status : null;
+      const list = active ? planSt.rules : rules.map(r => ({ id: r.id, text: r.text, ok: true }));
+      const chips = PLAN_REASONS.map(([k, lbl]) => `<button type="button" class="plan-chip ${active && planSt.reasonKey === k ? 'on' : ''}" data-reason="${k}">${t(lbl)}</button>`).join('');
+      box.hidden = false;
+      box.innerHTML = `<div class="plan"><div class="plan-h">${t('plan_title', { name: escapeHtml(strat.title) })} · ${rulesCountLabel(list.length)}</div>
+        <div class="seg plan-seg"><button type="button" data-plan="followed" class="${st === 'followed' ? 'active followed' : ''}">${t('plan_followed')}</button><button type="button" data-plan="deviated" class="${st === 'deviated' ? 'active deviated' : ''}">${t('plan_deviated')}</button><button type="button" data-plan="skip" class="${!st ? 'active' : ''}">${t('plan_skip')}</button></div>
+        ${st === 'deviated' ? `<div class="hint" style="margin-top:10px">${t('plan_which')}</div><div class="plan-rules">${list.map((r, i) => `<label class="plan-rule"><input type="checkbox" data-ri="${i}" ${r.ok ? 'checked' : ''}><span>${escapeHtml(r.text)}</span></label>`).join('')}</div>
+          <div class="hint" style="margin-top:8px">${t('plan_reason')}</div><div class="plan-chips">${chips}</div>
+          <input type="text" id="plan_reason_txt" maxlength="${REASON_MAX}" placeholder="${t('plan_r_ph')}" value="${escapeHtml(planSt.reasonKey && planSt.reasonKey !== 'other' ? '' : (planSt.reason || ''))}">` : ''}</div>`;
+      $$('[data-plan]', box).forEach(b => b.onclick = () => {
+        const v = b.dataset.plan; planTouched = true;
+        if (v === 'skip') planSt = null;
+        else if (!active) planSt = { status: v, rules: rules.map(r => ({ id: r.id, text: r.text, ok: true })), reasonKey: '', reason: '', stratId: strat.id };
+        else planSt.status = v;
+        drawPlan();
+      });
+      $$('[data-ri]', box).forEach(c => c.onchange = () => { planTouched = true; planSt.rules[Number(c.dataset.ri)].ok = c.checked; });
+      const txt = $('#plan_reason_txt', box), sync = () => $$('.plan-chip', box).forEach(c => c.classList.toggle('on', c.dataset.reason === planSt.reasonKey));
+      $$('[data-reason]', box).forEach(c => c.onclick = () => {
+        planTouched = true; const k = c.dataset.reason;
+        if (planSt.reasonKey === k){ planSt.reasonKey = ''; planSt.reason = ''; if (txt) txt.value = ''; }
+        else { planSt.reasonKey = k; planSt.reason = k === 'other' ? cleanLine(txt.value, REASON_MAX) : t(PLAN_REASONS.find(r => r[0] === k)[1]); if (k !== 'other') txt.value = ''; else txt.focus(); }
+        sync();
+      });
+      if (txt) txt.oninput = () => { planTouched = true; const v = cleanLine(txt.value, REASON_MAX); planSt.reason = v; planSt.reasonKey = v ? 'other' : ''; sync(); };
+    };
+    $('#f_strategy', backdrop).addEventListener('input', () => {
+      const ns = stratOf($('#f_strategy', backdrop).value);
+      if (ns && planSt && planSt.stratId !== ns.id){ planSt = null; planTouched = true; }
+      strat = ns; drawPlan();
+    });
+    drawPlan();
 
     // ----- confidence (optional smiley) -----
     let confidence = (x && [1,2,3].includes(x.confidence)) ? x.confidence : null;
@@ -2033,6 +2125,7 @@
       let pnl = $('#f_pnl', backdrop).value;
       const r = $('#f_r', backdrop).value;
       const strategy = $('#f_strategy', backdrop).value.trim();
+      const stratNow = stratOf(strategy);
       const emotion = $('#f_emotion', backdrop).value.trim();
       const notes = $('#f_notes', backdrop).value.trim();
 
@@ -2061,10 +2154,17 @@
         exit: exit===''? null : Number(exit),
         size: size===''? null : Number(size),
         pnl: Number(pnl), r: r===''? null : Number(r),
-        strategy, emotion, notes,
+        strategy: stratNow ? stratNow.title : strategy, emotion, notes,
         confidence, images: finalIds,
         createdAt: x ? x.createdAt : Date.now()
       };
+      // optional strategy link + plan checklist; legacy trades without them are saved exactly as before
+      // an unchanged strategy field keeps its link and plan even if that strategy was deleted or renamed later (history stays as recorded)
+      const stratSame = !!x && normText(strategy) === normText(tradeStrategyName(x));
+      if (stratNow) record.strategyId = stratNow.id; else if (!(stratSame && x.strategyId)) delete record.strategyId;
+      if (planTouched){
+        if (planSt && stratNow && planSt.stratId === stratNow.id) record.plan = buildPlan(planSt); else delete record.plan;
+      } else if (x && x.plan && !stratSame && (!stratNow || stratNow.id !== x.strategyId)) delete record.plan;
       const acc = accounts.find(a=>a.id===currentAccountId);
       const prevAllGreen = allChecksGreen(computeStats(acc));
       trades = x ? trades.map(v => v.id===x.id ? record : v) : [...trades, record];
@@ -2213,6 +2313,7 @@
       <h4>${escapeHtml(s.title)}</h4>
       <p>${escapeHtml(s.content||'')}</p>
       <div class="tags">${tags}</div>
+      ${cleanRules(s.rules).length ? `<div class="rules-count" style="margin-top:8px">☑ ${rulesCountLabel(cleanRules(s.rules).length)}</div>` : ''}
     </div>`;
   }
   function openStrategyModal(id){
@@ -2226,6 +2327,11 @@
           <div class="form-grid">
             <div class="full"><label>${t('lbl_title')}</label><input type="text" id="s_title" value="${s? escapeHtml(s.title):''}"></div>
             <div class="full"><label>${t('lbl_tags')}</label><input type="text" id="s_tags" placeholder="breakout, London session" value="${s? escapeHtml((s.tags||[]).join(', ')):''}"></div>
+            <div class="full"><label>${t('rules_title')} <span class="pe-count" id="s_rules_c"></span></label>
+              <div id="ruleList"></div>
+              <button type="button" class="btn btn-ghost" id="ruleAdd" style="padding:6px 10px;font-size:12.5px;">${t('rules_add')}</button>
+              <div class="rule-sugg" id="ruleSugg"></div>
+              <div class="hint">${t('rules_hint')}</div></div>
             <div class="full"><label>${t('lbl_content')}</label><textarea id="s_content" style="min-height:140px;" placeholder="${t('ph_strategy_content')}">${s? escapeHtml(s.content||''):''}</textarea></div>
           </div>
         </div>
@@ -2240,6 +2346,23 @@
     $('#cancelBtn', backdrop).onclick = close;
     backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
     wireShare(backdrop, 'strategy', s, close);
+    // ----- rules (optional checklist for this strategy) -----
+    let rules = cleanRules(s && s.rules);
+    const drawRules = () => {
+      $('#ruleList', backdrop).innerHTML = rules.map((r, i) => `<div class="rule-row"><input type="text" maxlength="${RULE_MAX}" data-rt="${i}" placeholder="${t('rules_ph')}" value="${escapeHtml(r.text)}"><button type="button" class="icon-btn" data-ru="${i}" title="${t('rules_up')}" aria-label="${t('rules_up')}" ${i === 0 ? 'disabled' : ''}>↑</button><button type="button" class="icon-btn" data-rd="${i}" title="${t('rules_down')}" aria-label="${t('rules_down')}" ${i === rules.length - 1 ? 'disabled' : ''}>↓</button><button type="button" class="icon-btn" data-rx="${i}" title="${t('rules_del')}" aria-label="${t('rules_del')}">✕</button></div>`).join('');
+      $('#s_rules_c', backdrop).textContent = rules.length + '/' + MAX_RULES;
+      $('#ruleAdd', backdrop).disabled = rules.length >= MAX_RULES;
+      const have = rules.map(r => normText(r.text));
+      $('#ruleSugg', backdrop).innerHTML = rules.length >= MAX_RULES ? '' : STARTER_RULES.filter(k => have.indexOf(normText(t(k))) < 0).map(k => `<button type="button" class="plan-chip" data-sg="${k}">+ ${t(k)}</button>`).join('');
+      $$('[data-rt]', backdrop).forEach(i => i.oninput = () => { rules[Number(i.dataset.rt)].text = i.value; });
+      $$('[data-ru]', backdrop).forEach(b => b.onclick = () => { const i = Number(b.dataset.ru); [rules[i - 1], rules[i]] = [rules[i], rules[i - 1]]; drawRules(); });
+      $$('[data-rd]', backdrop).forEach(b => b.onclick = () => { const i = Number(b.dataset.rd); [rules[i + 1], rules[i]] = [rules[i], rules[i + 1]]; drawRules(); });
+      $$('[data-rx]', backdrop).forEach(b => b.onclick = () => { rules.splice(Number(b.dataset.rx), 1); drawRules(); });
+      $$('[data-sg]', backdrop).forEach(b => b.onclick = () => { if (rules.length < MAX_RULES){ rules.push({ id: uid(), text: t(b.dataset.sg) }); drawRules(); } });
+    };
+    $('#ruleAdd', backdrop).onclick = () => { if (rules.length >= MAX_RULES) return; rules.push({ id: uid(), text: '' }); drawRules(); const ins = $$('[data-rt]', backdrop); if (ins.length) ins[ins.length - 1].focus(); };
+    drawRules();
+
     if (s) $('#deleteBtn', backdrop).onclick = async () => {
       if (!(await showConfirm(t('confirm_delete_strategy')))) return;
       await deleteSharedPost(s);
@@ -2252,6 +2375,7 @@
       const tags = $('#s_tags', backdrop).value.split(',').map(x=>x.trim()).filter(Boolean);
       const content = $('#s_content', backdrop).value.trim();
       const record = { ...(s || {}), id: s? s.id : uid(), title, tags, content, createdAt: s? s.createdAt : Date.now() };
+      const cleaned = cleanRules(rules); if (cleaned.length) record.rules = cleaned; else delete record.rules;
       strategies = s ? strategies.map(x=>x.id===s.id?record:x) : [...strategies, record];
       await saveStrategies(); close(); render();
     };
@@ -2454,10 +2578,61 @@
     document.body.appendChild(el);
   }
 
+
+  // ================= CHECKLIST (plan adherence, optional) =================
+  // Stored inside the existing records: strategy.rules = [{id,text}], trade.strategyId, trade.plan = {status, rules:[{id,text,ok}], reason?, reasonKey?, at}.
+  // trade.strategy (free text) is never removed: it stays as label and fallback.
+  const MAX_RULES = 12, RULE_MAX = 80, REASON_MAX = 60;
+  const PLAN_REASONS = [['early', 'plan_r_early'], ['fomo', 'plan_r_fomo'], ['sl_moved', 'plan_r_sl'], ['other', 'plan_r_other']];
+  const STARTER_RULES = ['rule_s1', 'rule_s2', 'rule_s3', 'rule_s4', 'rule_s5'];
+  const normText = v => String(v == null ? '' : v).trim().replace(/\s+/g, ' ').toLowerCase();
+  const cleanLine = (v, max) => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+  function cleanRules(list){
+    if (!Array.isArray(list)) return [];
+    const out = [], seen = {};
+    list.forEach(r => {
+      if (!r || typeof r !== 'object') return;
+      const text = cleanLine(r.text, RULE_MAX); if (!text) return;
+      let id = String(r.id == null ? '' : r.id); if (!/^[A-Za-z0-9_-]{1,32}$/.test(id) || seen[id]) id = uid();
+      seen[id] = 1; out.push({ id, text });
+    });
+    return out.slice(0, MAX_RULES);
+  }
+  const strategyFor = tr => (tr && tr.strategyId && strategies.find(s => s && s.id === tr.strategyId)) || null;
+  const tradeStrategyName = tr => { const s = strategyFor(tr); return (s && s.title) || (tr && tr.strategy) || ''; };
+  function matchStrategyByText(text){
+    const n = normText(text); if (!n) return null;
+    const m = strategies.filter(s => s && normText(s.title) === n);
+    return m.length === 1 ? m[0] : null;   // ambiguous or unknown: stay free text
+  }
+  function readPlan(tr){   // defensive: anything malformed counts as "not answered"
+    const p = tr && tr.plan;
+    if (!p || typeof p !== 'object' || (p.status !== 'followed' && p.status !== 'deviated')) return null;
+    const rules = Array.isArray(p.rules) ? p.rules.filter(r => r && typeof r.text === 'string' && typeof r.ok === 'boolean').map(r => ({ id: String(r.id || ''), text: r.text, ok: r.ok })) : [];
+    return { status: p.status, rules, reason: typeof p.reason === 'string' ? p.reason : '', reasonKey: typeof p.reasonKey === 'string' ? p.reasonKey : '', at: +p.at || 0 };
+  }
+  // follow-the-rules vs. outcome are kept apart: followed/deviated x win/loss/break-even (null when not answered or no numeric result)
+  function planQuadrant(tr){
+    const p = readPlan(tr); if (!p) return null;
+    const n = Number(tr.pnl); if (tr.pnl === null || tr.pnl === undefined || tr.pnl === '' || !isFinite(n)) return null;
+    return p.status + '_' + (n > 0 ? 'win' : n < 0 ? 'loss' : 'be');
+  }
+  function buildPlan(ps){
+    const followed = ps.status === 'followed';
+    const p = { status: ps.status, rules: ps.rules.map(r => ({ id: r.id, text: r.text, ok: followed ? true : !!r.ok })), at: Date.now() };
+    if (!followed){
+      const reason = cleanLine(ps.reason, REASON_MAX);
+      if (reason){ p.reason = reason; if (PLAN_REASONS.some(r => r[0] === ps.reasonKey)) p.reasonKey = ps.reasonKey; }
+    }
+    return p;
+  }
+  const rulesCountLabel = n => n === 1 ? t('plan_rules_1') : t('plan_rules_n', { n });
+
   function confEmoji(c){ return ({1:'😞', 2:'😐', 3:'😄'})[c] || ''; }
   function tradeMeta(x){
     let m = '';
     if (confEmoji(x.confidence)) m += `<span class="tmeta" title="${t('lbl_confidence_short')}">${confEmoji(x.confidence)}</span>`;
+    { const pl = readPlan(x); if (pl) m += `<span class="tmeta ${pl.status === 'followed' ? 'plan-ok' : 'plan-dev'}" title="${t(pl.status === 'followed' ? 'plan_followed' : 'plan_deviated')}">${pl.status === 'followed' ? '✓' : '✗'}</span>`; }
     if (Array.isArray(x.images) && x.images.length) m += `<span class="tmeta" title="${t('lbl_screenshots')}">📷${x.images.length > 1 ? x.images.length : ''}</span>`;
     return m;
   }
@@ -2513,7 +2688,7 @@
   }
 
   function buildTradesCsv(){
-    const head = ['Account','Type','Phase','Date','Symbol','Direction','Entry','Exit','Size','PnL','R','Strategy','Emotion','Notes','Confidence','Screenshots'];
+    const head = ['Account','Type','Phase','Date','Symbol','Direction','Entry','Exit','Size','PnL','R','Strategy','Emotion','Notes','Confidence','Screenshots','Plan','Plan reason'];
     const lines = [head.map(h => csvCell(h)).join(',')];
     const sorted = trades.slice().sort((a,b) => a.date.localeCompare(b.date) || a.createdAt - b.createdAt);
     sorted.forEach(x => {
@@ -2524,8 +2699,9 @@
         csvCell(acc.name, true), csvCell(acc.isBacktest ? 'Backtest' : 'Live'), csvCell(phase),
         csvCell(x.date), csvCell(x.symbol, true), csvCell(x.direction),
         csvCell(x.entry), csvCell(x.exit), csvCell(x.size), csvCell(x.pnl), csvCell(x.r),
-        csvCell(x.strategy, true), csvCell(x.emotion, true), csvCell(x.notes, true),
-        csvCell(({1:'Low', 2:'Medium', 3:'High'})[x.confidence] || ''), csvCell(Array.isArray(x.images) ? x.images.length : 0)
+        csvCell(tradeStrategyName(x), true), csvCell(x.emotion, true), csvCell(x.notes, true),
+        csvCell(({1:'Low', 2:'Medium', 3:'High'})[x.confidence] || ''), csvCell(Array.isArray(x.images) ? x.images.length : 0),
+        csvCell((readPlan(x) || {}).status || ''), csvCell((readPlan(x) || {}).reason || '', true)
       ].join(','));
     });
     return '\uFEFF' + lines.join('\r\n');
@@ -4276,7 +4452,7 @@
     st: () => ({ accounts, trades, strategies, indicators, checkins }),
     setTrades: v => { trades = v; }, setStrategies: v => { strategies = v; }, setIndicators: v => { indicators = v; }, saveIndicators,
     saveTrades, saveStrategies, saveAccounts, cloudSync, imgPut, imgGet, imgDel, imgGetLocal,
-    feedState: () => feed, session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
+    buildBackup, planQuadrant, readPlan, cleanRules, setCurrent: id => { currentAccountId = id; }, feedState: () => feed, session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
   });
   (async function init(){
     await loadAll();
