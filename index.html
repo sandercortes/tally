@@ -541,7 +541,69 @@
   .pc-add span { font-size: 10.5px; margin-top: 2px; }
   .pc-add:hover { border-color: var(--amber-dim); color: var(--amber); }
   @media (max-width: 560px) { .feed-tab { padding: 9px 9px 11px; font-size: 13.5px; } .feed-bar-actions .btn { padding: 6px 11px; font-size: 12.5px; } .media-track img { max-height: 70vh; } .media, .media-track img { border-radius: 0; } .media { margin: 0 -12px; border-radius: 0; } }
+  @media (max-width: 560px) { .section-nav { overflow-x: auto; scrollbar-width: none; } .section-nav::-webkit-scrollbar { display: none; } .tab-btn { margin-right: 12px; white-space: nowrap; flex: 0 0 auto; } }
   @media (max-width: 380px) { .feed-mode { padding: 5px 11px; font-size: 13px; } .feed-top { gap: 6px; } .follow-mini { padding: 3px 9px; font-size: 11.5px; } .section-nav { padding-left: 14px; padding-right: 14px; } .tab-btn { margin-right: 10px; font-size: 13px; white-space: nowrap; } .section-nav { overflow-x: auto; scrollbar-width: none; } .section-nav::-webkit-scrollbar { display: none; } .feed-bar { gap: 4px; } .feed-tab { padding: 9px 6px 11px; font-size: 13px; } .feed-tab.active::after { left: 6px; right: 6px; } .feed-bar-actions .btn { padding: 6px 9px; font-size: 12px; } }
+
+  /* ---- Home ---- */
+  .home { max-width: 1180px; margin: 0 auto; padding-bottom: 40px; min-width: 0; }
+  .home * { min-width: 0; }
+  :where(.home) button { font: inherit; color: inherit; text-align: left; cursor: pointer; }
+  .home-hero { display: flex; align-items: center; gap: 16px; padding: 18px 4px 22px; }
+  .home-ava { flex: 0 0 auto; background: none; border: 0; padding: 0; border-radius: 50%; line-height: 0; }
+  .home-ava .avatar { border: 1px solid var(--card-border); }
+  .home-ava:hover .avatar, .home-ava:focus-visible .avatar { border-color: var(--amber-dim); }
+  .home-def { background: var(--bg-alt) !important; color: var(--text-dim) !important; }
+  .home-id { flex: 1 1 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+  .home-greet { font-size: 13px; color: var(--text-mid); letter-spacing: .02em; }
+  .home-nameline { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; max-width: 100%; }
+  .home-name { background: none; border: 0; padding: 0; font-size: 26px; font-weight: 600; letter-spacing: -.01em; color: var(--text); overflow-wrap: anywhere; line-height: 1.2; }
+  .home-name:hover { color: var(--amber); }
+  .home-un { font-size: 13px; color: var(--text-dim); overflow-wrap: anywhere; }
+  .home-quote { font-size: 14px; color: var(--text-mid); font-style: italic; line-height: 1.45; overflow-wrap: anywhere; }
+  .home-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .home-chip { font-size: 11.5px; padding: 2px 9px; border-radius: 20px; border: 1px solid var(--card-border); color: var(--text-mid); background: var(--bg-alt); }
+  .home-link { background: none; border: 0; padding: 0; margin-top: 4px; font-size: 12.5px; color: var(--amber-dim); }
+  .home-link:hover { color: var(--amber); text-decoration: underline; }
+  .home-sec { margin-bottom: 26px; }
+  .home-h { margin: 0 0 10px; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--text-dim); }
+  .home-h-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .home-quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .home-card { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; transition: border-color .15s, background .15s; }
+  .home-card:hover, .home-card:focus-visible, .home-stat:hover, .home-stat:focus-visible, .home-item:hover, .home-item:focus-visible { border-color: var(--amber-dim); background: #1e1f24; outline: none; }
+  .home-ico { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: var(--amber-soft); color: var(--amber); }
+  .home-ico.sm { width: 32px; height: 32px; border-radius: 8px; }
+  .home-ico.sm svg { width: 18px; height: 18px; }
+  .home-card-t, .home-item-t { display: flex; flex-direction: column; gap: 2px; }
+  .home-card-t b, .home-item-t b { font-size: 14.5px; font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+  .home-card-t small, .home-item-t small { font-size: 12px; color: var(--text-mid); line-height: 1.35; }
+  .home-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .home-stat { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; transition: border-color .15s, background .15s; }
+  .home-num { font-size: 26px; font-weight: 600; line-height: 1.15; color: var(--text); font-variant-numeric: tabular-nums; }
+  .home-lbl { font-size: 12.5px; color: var(--text-mid); }
+  .home-sub { font-size: 11.5px; color: var(--text-dim); }
+  .home-list { display: flex; flex-direction: column; gap: 8px; }
+  .home-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; transition: border-color .15s, background .15s; width: 100%; }
+  .sk-tile { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 16px; }
+  .home-empty { text-align: center; padding: 26px 16px; background: var(--card); border: 1px dashed var(--card-border); border-radius: 12px; color: var(--text-mid); }
+  .home-empty p { margin: 0 auto 14px; max-width: 420px; font-size: 13.5px; line-height: 1.55; }
+  .home-quoteCard { padding: 14px 16px; border-left: 2px solid var(--amber-dim); background: var(--bg-alt); border-radius: 0 10px 10px 0; }
+  .home-qh { font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+  .home-quoteCard p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--text-mid); font-style: italic; overflow-wrap: anywhere; }
+  @media (max-width: 900px) { .home-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) {
+    .home-hero { gap: 12px; padding: 12px 2px 18px; }
+    .home-name { font-size: 22px; }
+    .home-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .home-quick { gap: 10px; }
+    .home-card { padding: 12px; gap: 10px; }
+    .home-ico { width: 34px; height: 34px; }
+    .home-num { font-size: 22px; }
+  }
+  @media (max-width: 360px) {
+    .home-ava .avatar { width: 52px !important; height: 52px !important; font-size: 22px !important; }
+    .home-card { flex-direction: column; align-items: flex-start; }
+    .home-stat { padding: 12px; }
+  }
   @media (max-width: 340px) { .feed-tab { padding: 9px 4px 11px; font-size: 12.5px; } .feed-tab.active::after { left: 4px; right: 4px; } .feed-bar-actions .btn { padding: 6px 8px; } }
   @media (prefers-reduced-motion: reduce) { .post, .sheet, .sheet-backdrop, .heart-pop.go, .ig-act.like.on svg { animation: none; } }
 </style>
@@ -587,7 +649,8 @@
     </div>
   </div>
   <div class="section-nav">
-    <button class="tab-btn active" data-section="journal" data-i18n="nav_journal">Journal</button>
+    <button class="tab-btn active" data-section="home" data-i18n="nav_home">Home</button>
+    <button class="tab-btn" data-section="journal" data-i18n="nav_journal">Journal</button>
     <button class="tab-btn" data-section="strategies" data-i18n="nav_strategies">Strategies</button>
     <button class="tab-btn" data-section="indicators" data-i18n="nav_indicators">Indicators</button>
     <button class="tab-btn" data-section="community" data-i18n="nav_community">Community</button>
@@ -621,6 +684,35 @@
   // ---------- i18n ----------
   const T = {
     brand_sub: {en:'prop trading journal', es:'diario de trading prop', nl:'prop trading journal'},
+    nav_home: {en:'Home', es:'Inicio', nl:'Home'},
+    home_morning: {en:'Good morning', es:'Buenos días', nl:'Goedemorgen'},
+    home_afternoon: {en:'Good afternoon', es:'Buenas tardes', nl:'Goedemiddag'},
+    home_evening: {en:'Good evening', es:'Buenas noches', nl:'Goedenavond'},
+    home_open_profile: {en:'Open your profile', es:'Abrir tu perfil', nl:'Open je profiel'},
+    home_profile_link: {en:'View and edit profile', es:'Ver y editar perfil', nl:'Profiel bekijken en bewerken'},
+    home_login_link: {en:'Log in to set up your profile', es:'Inicia sesión para crear tu perfil', nl:'Log in om je profiel in te stellen'},
+    home_quick: {en:'Quick access', es:'Acceso rápido', nl:'Snel naar'},
+    home_q_journal: {en:'Your trading history', es:'Tu historial de trading', nl:'Je tradinggeschiedenis'},
+    home_q_strategies: {en:'Your trading setups', es:'Tus setups de trading', nl:'Jouw trading setups'},
+    home_q_indicators: {en:'Your trading tools', es:'Tus herramientas de trading', nl:'Jouw tradingtools'},
+    home_q_community: {en:'Discover other traders', es:'Descubre a otros traders', nl:'Ontdek andere traders'},
+    home_overview: {en:'Your overview', es:'Tu resumen', nl:'Jouw overzicht'},
+    home_s_entries: {en:'Journal entries', es:'Entradas del diario', nl:'Journal entries'},
+    home_s_all_accounts: {en:'all accounts', es:'todas las cuentas', nl:'alle accounts'},
+    home_s_week: {en:'Entries this week', es:'Entradas esta semana', nl:'Entries deze week'},
+    home_s_days: {en:'Active days this week', es:'Días activos esta semana', nl:'Actieve dagen deze week'},
+    home_s_of7: {en:'out of 7', es:'de 7', nl:'van 7'},
+    home_s_posts: {en:'Community posts', es:'Publicaciones', nl:'Community posts'},
+    home_s_following: {en:'following {n}', es:'siguiendo {n}', nl:'volgt {n}'},
+    home_stats_empty: {en:'Your overview appears here as soon as you log your first entry.', es:'Tu resumen aparecerá aquí en cuanto registres tu primera entrada.', nl:'Je overzicht verschijnt hier zodra je je eerste entry logt.'},
+    home_first_entry: {en:'Create your first journal entry', es:'Crea tu primera entrada', nl:'Maak je eerste journal entry'},
+    home_activity: {en:'Recent activity', es:'Actividad reciente', nl:'Recente activiteit'},
+    home_view_all: {en:'View all', es:'Ver todo', nl:'Bekijk alles'},
+    home_act_empty: {en:'Nothing here yet. Your latest entries, strategies and indicators will show up here.', es:'Aún no hay nada. Tus últimas entradas, estrategias e indicadores aparecerán aquí.', nl:'Nog niets hier. Je laatste entries, strategieën en indicatoren verschijnen hier.'},
+    home_entry: {en:'Entry', es:'Entrada', nl:'Entry'},
+    home_k_strategy: {en:'Strategy', es:'Estrategia', nl:'Strategie'},
+    home_k_indicator: {en:'Indicator', es:'Indicador', nl:'Indicator'},
+    home_daily: {en:'Daily motivation', es:'Motivación del día', nl:'Dagelijkse motivatie'},
     nav_journal: {en:'Journal', es:'Diario', nl:'Journaling'},
     nav_strategies: {en:'Strategies', es:'Estrategias', nl:'Strategieën'},
     nav_indicators: {en:'Indicators', es:'Indicadores', nl:'Indicators'},
@@ -1034,7 +1126,7 @@
   let indicators = [];
   let checkins = [];
   let currentAccountId = null;
-  let currentSection = 'journal';
+  let currentSection = 'home';
   let calMonth = new Date();
   calMonth.setDate(1);
   let filters = { symbol: '', direction: 'all', result: 'all', strategy: 'all' };
@@ -1207,10 +1299,12 @@
     document.documentElement.lang = lang;
     $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.section === currentSection));
     $('#fabLog').classList.toggle('fab-hidden', currentSection !== 'journal');
+    try { const nv = $('.section-nav'), ab = $('.tab-btn.active'); if (nv && ab && nv.scrollWidth > nv.clientWidth) nv.scrollLeft = Math.max(0, ab.offsetLeft - 14); } catch(e){}
     $$('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
     if (currentSection === 'journal') renderJournal();
     else if (currentSection === 'strategies') renderStrategies();
     else if (currentSection === 'community') renderCommunity();
+    else if (currentSection === 'home') renderHome();
     else renderIndicators();
   }
 
@@ -2666,7 +2760,7 @@
     if (b){ if (cloudSession) b.dataset.sync = cloudStatus; else delete b.dataset.sync; }
     const el = $('#acctStatus'); if (el) el.textContent = cloudStatusText();
   }
-  function setCloudStatus(s){ cloudStatus = s; updateSyncUi(); }
+  function setCloudStatus(s){ const was = cloudStatus; cloudStatus = s; updateSyncUi(); if (s === 'idle' || s === 'offline' || s === 'error'){ if (!home.synced){ home.synced = true; if (was === 'syncing') { try { homeRedraw(); } catch(e){} } } } }
 
   // ---------- HTTP ----------
   function httpErr(r){ const e = new Error('HTTP ' + r.status); e.status = r.status; return e; }
@@ -3167,7 +3261,7 @@
     st.loading = false;
     if (here()) drawFeed();
   }
-  function feedReset(){ try { feed.follow = null; feed.followBusy = {}; feed.liked = {}; feed.comments = {}; feedInvalidate(); } catch(e){} }   // another account may sign in next
+  function feedReset(){ try { homeReset(); home.synced = false; if (currentSection === 'home') setTimeout(() => { try { homeRedraw(); } catch(e){} }, 0); feed.follow = null; feed.followBusy = {}; feed.liked = {}; feed.comments = {}; feedInvalidate(); } catch(e){} }   // another account may sign in next
   function feedInvalidate(){ ALL_KEYS.forEach(k => { const st = feed.s[k]; st.loaded = false; st.posts = []; st.more = false; st.token++; st.loading = false; st.offset = 0; st.last = null; }); }
   function feedRemovePost(id){ ALL_KEYS.forEach(k => { feed.s[k].posts = feed.s[k].posts.filter(x => x.id !== id); }); }
   const findPost = id => { for (const k of ALL_KEYS){ const p = feed.s[k].posts.find(x => x.id === id); if (p) return p; } return null; };
@@ -3573,7 +3667,7 @@
       const done = () => {
         feed.pin = attempt.id; attempt = null; close(); showToast(t('pc_posted'));
         feed.kind = kind; stSet('tally:feedcat', kind); feed.mode = 'foryou'; stSet('tally:feedmode', 'foryou'); feed.s[sKey('foryou', kind)].loaded = false;
-        currentSection = 'community'; render(); window.scrollTo({ top: 0 });
+        setSection('community'); 
       };
       try {
         for (let i = paths.length; i < images.length; i++) paths.push(await uploadPostImage(images[i].dataUrl));
@@ -3693,7 +3787,12 @@
     if (feed.view !== 'profile') return;
     feed.view = 'feed'; if (currentSection === 'community') render();
   }
-  window.addEventListener('popstate', () => { if (feed.view === 'profile') closeProfile(); });
+  window.addEventListener('popstate', ev => {
+    const s = ev.state || {};
+    if (feed.view === 'profile' && !s.tallyProfile){ feed.view = 'feed'; if (s.tallySec && s.tallySec !== currentSection){ currentSection = s.tallySec; render(); } else if (currentSection === 'community') render(); return; }
+    const sec = s.tallyProfile ? 'community' : s.tallySec;
+    if (sec && sec !== currentSection){ currentSection = sec; render(); window.scrollTo({ top: 0 }); }
+  });
   function renderProfilePage(){
     const main = $('#main');
     main.innerHTML = `
@@ -3814,7 +3913,7 @@
         if (!r.ok || !Array.isArray(r.data) || !r.data[0]) throw httpErr(r);
         ok = true; const row = r.data[0];
         if ('avatar_path' in body && cur.avatar_path && cur.avatar_path !== body.avatar_path) removePostImages([cur.avatar_path]);   // old photo no longer needed
-        feed.prof[me] = Object.assign({}, feed.prof[me], { id: me, username: row.username, display_name: row.display_name, avatar_path: row.avatar_path || null, at: Date.now() });
+        feed.prof[me] = Object.assign({}, feed.prof[me], { id: me, username: row.username, display_name: row.display_name, avatar_path: row.avatar_path || null, quote: row.quote || null, markets: row.markets || null, trading_style: row.trading_style || null, at: Date.now() });
         if (row.avatar_path) await signPaths([row.avatar_path]);
         if (cloudProfile) cloudProfile.display_name = row.display_name;
         if (feed.profileData && feed.profileData.profile && feed.profileId === me) feed.profileData.profile = Object.assign({}, feed.profileData.profile, row);
@@ -3996,9 +4095,182 @@
     if (!accounts.length){ openAccountModal(); return; }
     openAccountModal(currentAccountId);
   };
+  // ================= HOME =================
+  // Personal start page. Everything shown here is read from data the app already holds (local journal, strategies, indicators and the profile cache).
+  // The only network calls are the own profile row and two cheap count queries; each is optional and fails on its own.
+  const HOME_QUOTES = [
+    { en: 'Discipline is deciding in advance, then keeping your word to yourself.', es: 'La disciplina es decidir de antemano y cumplir tu palabra contigo mismo.', nl: 'Discipline is vooraf beslissen en daarna woord houden tegenover jezelf.' },
+    { en: 'Patience is a position too.', es: 'La paciencia también es una posición.', nl: 'Geduld is ook een positie.' },
+    { en: 'Protect the account first; everything else can wait.', es: 'Protege primero la cuenta; lo demás puede esperar.', nl: 'Bescherm eerst het account; de rest kan wachten.' },
+    { en: 'One clean trade beats three rushed ones.', es: 'Una operación limpia vale más que tres apresuradas.', nl: 'Eén schone trade is beter dan drie gehaaste.' },
+    { en: 'Consistency is built on ordinary days.', es: 'La constancia se construye en los días normales.', nl: 'Consistentie wordt gebouwd op gewone dagen.' },
+    { en: 'Risk what your plan allows, nothing more.', es: 'Arriesga lo que permite tu plan, nada más.', nl: 'Riskeer wat je plan toestaat, niet meer.' },
+    { en: 'A missed setup costs nothing. A forced one often does.', es: 'Perder un setup no cuesta nada. Forzar uno suele costar.', nl: 'Een gemiste setup kost niets. Een geforceerde vaak wel.' },
+    { en: 'Follow the process and let the results arrive in their own time.', es: 'Sigue el proceso y deja que los resultados lleguen a su ritmo.', nl: 'Volg het proces en laat de resultaten in hun eigen tijd komen.' },
+    { en: 'Calm decisions come from rules written on calm days.', es: 'Las decisiones tranquilas nacen de reglas escritas en días tranquilos.', nl: 'Rustige beslissingen komen uit regels die op rustige dagen zijn geschreven.' },
+    { en: 'Review honestly, and the next trade starts smarter.', es: 'Revisa con honestidad y la próxima operación empezará más sabia.', nl: 'Evalueer eerlijk, dan begint de volgende trade slimmer.' },
+    { en: 'When unsure, size down. Position size is part of the strategy.', es: 'Si dudas, reduce el tamaño. El tamaño forma parte de la estrategia.', nl: 'Twijfel je, verklein dan je positie. Positiegrootte hoort bij de strategie.' },
+    { en: 'A loss that followed the plan is still a good trade.', es: 'Una pérdida que siguió el plan sigue siendo una buena operación.', nl: 'Een verlies dat het plan volgde, is nog steeds een goede trade.' },
+    { en: 'Small habits repeated daily outlast bursts of motivation.', es: 'Los pequeños hábitos diarios duran más que los impulsos de motivación.', nl: 'Kleine dagelijkse gewoontes houden langer stand dan uitbarstingen van motivatie.' },
+    { en: 'Wait for your setup. The market always offers another.', es: 'Espera tu setup. El mercado siempre ofrece otro.', nl: 'Wacht op je setup. De markt biedt altijd weer een nieuwe.' },
+    { en: 'Write it down: what you saw, what you did, what you felt.', es: 'Anótalo: lo que viste, lo que hiciste, lo que sentiste.', nl: 'Schrijf het op: wat je zag, wat je deed, wat je voelde.' },
+    { en: 'Control the risk and the rest becomes easier to accept.', es: 'Controla el riesgo y lo demás será más fácil de aceptar.', nl: 'Beheers het risico en de rest is makkelijker te accepteren.' },
+    { en: 'Slow is smooth, and smooth is steady.', es: 'Lento es suave, y suave es constante.', nl: 'Langzaam is soepel, en soepel is stabiel.' },
+    { en: 'Your edge is the routine you actually follow.', es: 'Tu ventaja es la rutina que realmente sigues.', nl: 'Je voorsprong is de routine die je ook echt volgt.' },
+    { en: 'Stop when the plan says stop.', es: 'Para cuando el plan diga que pares.', nl: 'Stop wanneer het plan zegt dat je moet stoppen.' },
+    { en: 'Boring execution, repeated, is a quiet kind of skill.', es: 'La ejecución aburrida, repetida, es una forma silenciosa de habilidad.', nl: 'Saaie uitvoering, telkens herhaald, is een stille vorm van vakmanschap.' },
+    { en: 'Do not chase. Let the next setup come to you.', es: 'No persigas. Deja que el siguiente setup llegue a ti.', nl: 'Ga niet achter de markt aan. Laat de volgende setup naar je toe komen.' },
+    { en: 'Progress is measured in decisions, not in a single day’s outcome.', es: 'El progreso se mide en decisiones, no en el resultado de un solo día.', nl: 'Voortgang meet je in beslissingen, niet in de uitkomst van één dag.' }
+  ];
+  const dayNumber = d => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);   // local calendar day -> integer; same all day, same on every device
+  const dailyQuote = d => { d = d || new Date(); const n = HOME_QUOTES.length; const q = HOME_QUOTES[((dayNumber(d) % n) + n) % n]; return q[lang] || q.en; };
+  const greetKey = d => { const h = (d || new Date()).getHours(); return h >= 5 && h < 12 ? 'home_morning' : h >= 12 && h < 18 ? 'home_afternoon' : 'home_evening'; };
+  const home = { uid: null, prof: 'idle', profAt: 0, comm: 'idle', commAt: 0, posts: null, following: null, synced: false, tokP: 0, tokC: 0 };
+  const homeReset = () => { home.uid = null; home.prof = 'idle'; home.profAt = 0; home.comm = 'idle'; home.commAt = 0; home.posts = null; home.following = null; home.tokP++; home.tokC++; };
+  const homeRedraw = () => { if (currentSection === 'home' && !$('.modal-backdrop')) renderHome(); };
+  async function homeLoadProfile(){
+    if (!cloudSession) return;
+    const me = cloudSession.user_id, tok = ++home.tokP;
+    if (home.uid !== me){ homeReset(); home.uid = me; home.tokP = tok; }
+    home.prof = 'loading';
+    try {
+      let r = await cloudReq('GET', '/rest/v1/profiles?select=id,username,display_name,avatar_path,quote,markets,trading_style&id=eq.' + encodeURIComponent(me));
+      if (!r.ok && r.status === 400) r = await cloudReq('GET', '/rest/v1/profiles?select=id,username,display_name&id=eq.' + encodeURIComponent(me));   // before the 2.1 migration
+      if (!r.ok || !Array.isArray(r.data) || !r.data[0]) throw httpErr(r);
+      if (tok !== home.tokP || !cloudSession || cloudSession.user_id !== me) return;
+      feed.prof[me] = Object.assign({}, feed.prof[me], r.data[0], { at: Date.now() });
+      if (r.data[0].avatar_path) await signPaths([r.data[0].avatar_path]);
+      if (tok !== home.tokP) return;
+      home.prof = 'ok';
+    } catch(e){ if (tok === home.tokP) home.prof = 'err'; }
+    if (tok === home.tokP) home.profAt = Date.now();
+    if (tok === home.tokP) homeRedraw();
+  }
+  async function homeLoadCounts(){
+    if (!cloudSession) return;
+    const me = cloudSession.user_id, tok = ++home.tokC;
+    home.comm = 'loading';
+    const cnt = async path => {
+      const r = await cloudReq('GET', path, { headers: { Prefer: 'count=exact' } });
+      if (!r.ok) throw httpErr(r);
+      const m = /\/(\d+)$/.exec((r.res.headers.get('content-range') || '')); if (!m) throw new Error('count');
+      return parseInt(m[1], 10);
+    };
+    const [p, f] = await Promise.allSettled([cnt('/rest/v1/posts?select=id&author_id=eq.' + encodeURIComponent(me) + '&limit=1'), cnt('/rest/v1/follows?select=followed_id&follower_id=eq.' + encodeURIComponent(me) + '&limit=1')]);
+    if (tok !== home.tokC || !cloudSession || cloudSession.user_id !== me) return;
+    home.posts = p.status === 'fulfilled' ? p.value : null; home.following = f.status === 'fulfilled' ? f.value : null;
+    home.comm = p.status === 'fulfilled' ? 'ok' : 'err'; home.commAt = Date.now();
+    homeRedraw();
+  }
+  function homeRefresh(){   // called whenever Home is entered / the account changes
+    if (!cloudSession) return;
+    if (home.uid !== cloudSession.user_id){ homeReset(); home.uid = cloudSession.user_id; }
+    if (home.prof !== 'loading' && Date.now() - home.profAt > 30000) homeLoadProfile();
+    if (home.comm !== 'loading' && Date.now() - home.commAt > 30000) homeLoadCounts();
+  }
+  const HOME_ICON = {
+    journal: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11M9 8h6"/></svg>',
+    strategies: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"/></svg>',
+    indicators: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5h16"/><path d="M7 16v-5M12 16V7M17 16v-3"/></svg>',
+    community: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3.2"/><path d="M3 19.5c.4-3.3 3-5.2 6-5.2s5.6 1.9 6 5.2"/><path d="M16 5.6a3.1 3.1 0 0 1 0 5.8M18 14.6c1.7.6 2.8 2.2 3 4.4"/></svg>',
+    user: '<svg viewBox="0 0 24 24" width="60%" height="60%" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.5 20c.5-4 3.6-6 7.5-6s7 2 7.5 6"/></svg>'
+  };
+  function setSection(sec, opts){
+    opts = opts || {};
+    if (sec === 'community' && opts.fresh) feed.view = 'feed';
+    if (sec !== currentSection){ try { history.pushState({ tallySec: sec }, ''); } catch(e){} }
+    currentSection = sec; render(); window.scrollTo({ top: 0 });
+  }
+  function homeHeader(d){
+    const me = cloudSession && cloudSession.user_id, p = (me && feed.prof[me]) || {}, cp = cloudProfile || {};
+    const un = p.username || cp.username || '', dn = (p.display_name || cp.display_name || '').trim(), name = dn || un;
+    const loadingName = !!cloudSession && !name && home.prof !== 'err';
+    const quote = (p.quote || '').trim(), style = (p.trading_style || '').trim(), mk = csvList(p.markets || '').slice(0, 4);
+    const ava = me ? avatarHtml(name || un || '?', 64, me) : `<span class="avatar home-def" style="width:64px;height:64px;">${HOME_ICON.user}</span>`;
+    const chips = mk.concat(style ? [style] : []).map(x => `<span class="home-chip">${escapeHtml(x)}</span>`).join('');
+    return `<section class="home-hero" id="homeHero">
+      <button class="home-ava" id="homeAva" aria-label="${escapeHtml(t(me ? 'home_open_profile' : 'acct_login'))}">${ava}</button>
+      <div class="home-id">
+        <div class="home-greet">${t(greetKey(d))}</div>
+        ${loadingName ? '<div class="sk-line" style="width:140px;height:20px;margin:6px 0 4px"></div>' : name ? `<div class="home-nameline"><button class="home-name" id="homeName">${escapeHtml(name)}</button>${un ? `<span class="home-un">@${escapeHtml(un)}</span>` : ''}</div>` : ''}
+        ${quote ? `<div class="home-quote">${escapeHtml(quote)}</div>` : ''}
+        ${chips ? `<div class="home-chips">${chips}</div>` : ''}
+        ${me ? `<button class="home-link" id="homeProfile">${t('home_profile_link')}</button>` : `<button class="home-link" id="homeLogin">${t('home_login_link')}</button>`}
+      </div>
+    </section>`;
+  }
+  function homeQuick(){
+    const items = [['journal', 'nav_journal', 'home_q_journal'], ['strategies', 'nav_strategies', 'home_q_strategies'], ['indicators', 'nav_indicators', 'home_q_indicators'], ['community', 'nav_community', 'home_q_community']];
+    return `<section class="home-sec"><h2 class="home-h">${t('home_quick')}</h2><div class="home-quick">${items.map(([k, a, b]) =>
+      `<button class="home-card" data-go="${k}"><span class="home-ico">${HOME_ICON[k]}</span><span class="home-card-t"><b>${t(a)}</b><small>${t(b)}</small></span></button>`).join('')}</div></section>`;
+  }
+  function homeStats(){
+    const wk = getWeekRange(), inWeek = trades.filter(x => x && x.date >= wk.start && x.date <= wk.end);
+    const days = new Set(inWeek.map(x => x.date)).size;
+    const waiting = !!cloudSession && !home.synced && !trades.length && !strategies.length && !indicators.length;
+    const commOk = home.comm === 'ok', commWait = !!cloudSession && (home.comm === 'idle' || home.comm === 'loading');
+    const empty = !waiting && !trades.length && !strategies.length && !indicators.length && !(commOk && home.posts > 0);
+    let body;
+    if (waiting) body = `<div class="home-stats">${[1, 2, 3, 4].map(() => '<div class="home-stat sk-tile"><div class="sk-line" style="width:40%;height:22px"></div><div class="sk-line" style="width:70%;margin-top:10px"></div></div>').join('')}</div>`;
+    else if (empty) body = `<div class="home-empty"><p>${t('home_stats_empty')}</p><button class="btn btn-primary" id="homeFirst">${t('home_first_entry')}</button></div>`;
+    else {
+      const tiles = [
+        ['journal', trades.length, t('home_s_entries'), accounts.length > 1 ? t('home_s_all_accounts') : ''],
+        ['journal', inWeek.length, t('home_s_week'), ''],
+        ['journal', days, t('home_s_days'), t('home_s_of7')],
+        ['strategies', strategies.length, t('nav_strategies'), ''],
+        ['indicators', indicators.length, t('nav_indicators'), '']
+      ];
+      if (cloudSession){
+        const v = commOk ? String(home.posts) : commWait ? null : '–';
+        tiles.push(['community', v, t('home_s_posts'), commOk && home.following != null ? t('home_s_following', { n: home.following }) : '']);
+      }
+      body = `<div class="home-stats">${tiles.map(([go, v, l, s]) => `<button class="home-stat" data-go="${go}">${v === null ? '<div class="sk-line" style="width:36%;height:22px"></div>' : `<span class="home-num">${v}</span>`}<span class="home-lbl">${escapeHtml(l)}</span>${s ? `<span class="home-sub">${escapeHtml(s)}</span>` : ''}</button>`).join('')}</div>`;
+    }
+    return `<section class="home-sec"><h2 class="home-h">${t('home_overview')}</h2>${body}</section>`;
+  }
+  function homeActivity(){
+    const items = [];
+    trades.forEach(x => { if (x) items.push({ k: 'journal', id: x.id, ts: +x.createdAt || 0, title: (x.symbol || '').trim() || t('home_entry'), meta: t('nav_journal') }); });
+    strategies.forEach(x => { if (x) items.push({ k: 'strategies', id: x.id, ts: +x.createdAt || 0, title: (x.title || '').trim() || t('nav_strategies'), meta: t('home_k_strategy') }); });
+    indicators.forEach(x => { if (x) items.push({ k: 'indicators', id: x.id, ts: +x.createdAt || 0, title: (x.name || '').trim() || t('nav_indicators'), meta: t('home_k_indicator') }); });
+    items.sort((a, b) => b.ts - a.ts);
+    const top = items.slice(0, 4);
+    const waiting = !!cloudSession && !home.synced && !items.length;
+    let body;
+    if (waiting) body = '<div class="home-list">' + [1, 2].map(() => '<div class="home-item sk-tile"><div class="sk-line" style="width:50%"></div></div>').join('') + '</div>';
+    else if (!top.length) body = `<div class="home-empty"><p>${t('home_act_empty')}</p><button class="btn btn-primary" id="homeFirst2">${t('home_first_entry')}</button></div>`;
+    else body = `<div class="home-list">${top.map(i => `<button class="home-item" data-act="${i.k}" data-id="${escapeHtml(String(i.id))}"><span class="home-ico sm">${HOME_ICON[i.k]}</span><span class="home-item-t"><b>${escapeHtml(i.title)}</b><small>${escapeHtml(i.meta)}${i.ts > 0 ? ' · ' + escapeHtml(timeAgo(new Date(i.ts).toISOString())) : ''}</small></span></button>`).join('')}</div>`;
+    return `<section class="home-sec"><div class="home-h-row"><h2 class="home-h">${t('home_activity')}</h2>${top.length ? `<button class="home-link" id="homeAll">${t('home_view_all')}</button>` : ''}</div>${body}</section>`;
+  }
+  function homeQuote(d){
+    return `<section class="home-quoteCard" id="homeDaily"><div class="home-qh">${t('home_daily')}</div><p>${escapeHtml(dailyQuote(d))}</p></section>`;
+  }
+  function renderHome(){
+    const main = $('#main'), d = new Date();
+    const safe = fn => { try { return fn(d); } catch(e){ return ''; } };
+    main.innerHTML = `<div class="home">${safe(homeHeader)}${safe(homeQuick)}${safe(homeStats)}${safe(homeActivity)}${safe(homeQuote)}</div>`;
+    const me = cloudSession && cloudSession.user_id;
+    const goProfile = () => { if (me) openProfile(me); else openAuthGate('login'); };
+    ['homeAva', 'homeName', 'homeProfile'].forEach(id => { const el = $('#' + id); if (el) el.onclick = goProfile; });
+    const lg = $('#homeLogin'); if (lg) lg.onclick = () => openAuthGate('login');
+    $$('[data-go]', main).forEach(b => b.onclick = () => setSection(b.dataset.go, { fresh: true }));
+    ['homeFirst', 'homeFirst2'].forEach(id => { const el = $('#' + id); if (el) el.onclick = () => $('#newTradeBtn').onclick(); });
+    const all = $('#homeAll'); if (all) all.onclick = () => setSection('journal');
+    $$('[data-act]', main).forEach(b => b.onclick = () => {
+      const k = b.dataset.act, id = b.dataset.id;
+      if (k === 'journal'){
+        const x = trades.find(v => v.id === id);
+        if (x && x.accountId && x.accountId !== currentAccountId && accounts.find(a => a.id === x.accountId)){ currentAccountId = x.accountId; saveCurrent(); }
+        setSection('journal'); if (x) openTradeModal(id);
+      } else if (k === 'strategies'){ setSection('strategies'); openStrategyModal(id); }
+      else { setSection('indicators'); openIndicatorModal(id); }
+    });
+    homeRefresh();
+  }
   $('#settingsBtn').onclick = () => openSettingsModal();
   $('#fabLog').onclick = () => $('#newTradeBtn').onclick();
-  $$('.tab-btn').forEach(b => b.addEventListener('click', () => { if (b.dataset.section === 'community' && currentSection === 'community') feed.view = 'feed'; currentSection = b.dataset.section; render(); }));
+  $$('.tab-btn').forEach(b => b.addEventListener('click', () => { if (b.dataset.section === 'community' && currentSection === 'community') feed.view = 'feed'; setSection(b.dataset.section); }));
 
   if (window.__TALLY_TEST__) Object.assign(window.__TALLY_TEST__, {
     st: () => ({ accounts, trades, strategies, indicators, checkins }),
@@ -4011,6 +4283,7 @@
     if (accounts.length && !currentAccountId) currentAccountId = accounts[0].id;
     await cloudLoadState();
     { const fc = await stGet('tally:feedcat'); if (FEED_KINDS.indexOf(fc) >= 0) feed.kind = fc; const fm = await stGet('tally:feedmode'); if (FEED_MODES.indexOf(fm) >= 0) feed.mode = fm; }
+    try { history.replaceState({ tallySec: 'home' }, ''); } catch(e){}
     render();
     updateSyncUi();
     cloudStart();
