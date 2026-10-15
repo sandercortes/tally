@@ -4200,7 +4200,7 @@
     </section>`;
   }
   function homeQuick(){
-    const items = [['journal', 'nav_journal', 'home_q_journal'], ['strategies', 'nav_strategies', 'home_q_strategies'], ['indicators', 'nav_indicators', 'home_q_indicators'], ['community', 'nav_community', 'home_q_community']];
+    const items = [['community', 'nav_community', 'home_q_community'], ['journal', 'nav_journal', 'home_q_journal'], ['strategies', 'nav_strategies', 'home_q_strategies'], ['indicators', 'nav_indicators', 'home_q_indicators']];
     return `<section class="home-sec"><h2 class="home-h">${t('home_quick')}</h2><div class="home-quick">${items.map(([k, a, b]) =>
       `<button class="home-card" data-go="${k}"><span class="home-ico">${HOME_ICON[k]}</span><span class="home-card-t"><b>${t(a)}</b><small>${t(b)}</small></span></button>`).join('')}</div></section>`;
   }
