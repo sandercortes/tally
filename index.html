@@ -624,6 +624,108 @@
     .home-card { flex-direction: column; align-items: flex-start; }
     .home-stat { padding: 12px; }
   }
+  /* ---- Weekly review (mobile first; one markup, CSS decides the layout) ---- */
+  .wr-chip { display: inline-block; font-size: 12px; line-height: 1.3; padding: 2px 9px; border-radius: 20px; border: 1px solid var(--card-border); background: var(--bg-alt); color: var(--text-mid); }
+  .wr-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .wr-card-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+  .wr-card-id { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .wr-card-id b { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+  .wr-acc { font-size: 13px; color: var(--text-mid); overflow-wrap: anywhere; }
+  .wr-card-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+  .wr-card-side { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .wr-obs { margin: 0; font-size: 14px; line-height: 1.5; color: var(--text-mid); overflow-wrap: anywhere; }
+  #wrCardSec .btn, .wr .btn { min-height: 44px; }
+  .wr-acc .tag-eval, .wr-acc .tag-funded { font-size: 12px; padding: 2px 8px; }
+  .wr-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .wr-tile { display: flex; flex-direction: column; gap: 3px; padding: 12px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; }
+  .wr-card .wr-tile { background: var(--bg-alt); }
+  .wr-tile.wide { grid-column: 1 / -1; }
+  .wr-num { font-size: 22px; font-weight: 600; line-height: 1.15; color: var(--text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .wr-lbl { font-size: 12.5px; color: var(--text-mid); overflow-wrap: anywhere; }
+  .wr-sub { font-size: 12px; color: var(--text-dim); line-height: 1.35; overflow-wrap: anywhere; }
+  .wr-trio-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .wr-trio-row span { display: flex; flex-direction: column; gap: 2px; }
+  .wr-trio-row small { font-size: 12px; color: var(--text-dim); overflow-wrap: anywhere; }
+  .wr-top { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 4px 0 12px; }
+  .wr-period { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; }
+  .wr-period b { font-size: 16px; font-weight: 600; overflow-wrap: anywhere; line-height: 1.25; }
+  .wr-nav { display: flex; gap: 6px; }
+  .wr-btn { width: 44px; height: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; color: var(--text); }
+  .wr-btn:hover:not(:disabled), .wr-btn:focus-visible { border-color: var(--amber-dim); outline: none; }
+  .wr-btn:disabled { opacity: .35; cursor: default; }
+  .wr-selrow { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .wr-sel { margin: 0; display: flex; flex-direction: column; gap: 5px; }
+  .wr-sel span { font-size: 12px; color: var(--text-mid); }
+  .wr-select { min-height: 44px; font-size: 14px; text-overflow: ellipsis; }
+  .wr-seg { display: flex; gap: 6px; }
+  .wr-segb { flex: 1 1 0; min-height: 44px; padding: 6px 10px; border-radius: 10px; border: 1px solid var(--card-border); background: var(--card); color: var(--text-mid); font-size: 14px; text-align: center !important; }
+  .wr-segb.on { border-color: var(--amber-dim); color: var(--amber); background: var(--amber-soft); }
+  .wr-segn { font-size: 12px; opacity: .8; }
+  .wr-sec { margin-bottom: 22px; min-width: 0; }
+  .wr-cols { column-count: 1; column-gap: 16px; }
+  .wr-cols .wr-sec { break-inside: avoid; }
+  .wr-panel { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 16px; }
+  .wr-note, .wr-foot { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--text-dim); overflow-wrap: anywhere; }
+  .wr-plain { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: var(--text-mid); overflow-wrap: anywhere; }
+  .wr-panel > .wr-plain:last-child { margin-bottom: 0; }
+  .wr-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 8px 0; border-bottom: 1px solid var(--hairline); align-items: baseline; }
+  .wr-row:last-of-type { border-bottom: 0; }
+  .wr-row.slim { padding: 5px 0; }
+  .wr-row-l { font-size: 14px; color: var(--text); overflow-wrap: anywhere; line-height: 1.35; }
+  .wr-row-n { font-size: 15px; font-variant-numeric: tabular-nums; }
+  .wr-row .wr-bar { grid-column: 1 / -1; }
+  .wr-bar { height: 6px; border-radius: 4px; background: var(--bg-alt); overflow: hidden; }
+  .wr-bar > span { display: block; height: 100%; background: var(--amber-dim); border-radius: 4px; }
+  .wr-rule { padding: 10px 0; border-bottom: 1px solid var(--hairline); display: flex; flex-direction: column; gap: 6px; }
+  .wr-rule:first-child { padding-top: 2px; }
+  .wr-rule-t { font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+  .wr-rule-m { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: var(--text-mid); align-items: center; }
+  .wr-tagp { font-size: 12px; padding: 1px 8px; border-radius: 20px; border: 1px solid var(--card-border); background: var(--bg-alt); color: var(--text-mid); }
+  .wr-reasons { padding-top: 12px; }
+  .wr-cmp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 12px; padding: 9px 0; border-bottom: 1px solid var(--hairline); }
+  .wr-cmp:last-of-type { border-bottom: 0; }
+  .wr-cmp-l { grid-column: 1 / -1; font-size: 12.5px; color: var(--text-mid); }
+  .wr-cmp-a, .wr-cmp-b { display: flex; flex-direction: column; font-size: 15px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .wr-cmp small { font-size: 12px; color: var(--text-dim); }
+  .wr-chk-sum { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--text-mid); margin-bottom: 10px; }
+  .wr-days { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 8px; }
+  .wr-day { display: flex; justify-content: space-between; gap: 8px; padding: 9px 11px; background: var(--bg-alt); border: 1px solid var(--card-border); border-radius: 10px; }
+  .wr-day-l, .wr-day-r { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .wr-day-r { align-items: flex-end; text-align: right; }
+  .wr-day b { font-size: 13.5px; font-weight: 600; overflow-wrap: anywhere; }
+  .wr-day small { font-size: 12px; color: var(--text-dim); overflow-wrap: anywhere; }
+  .wr-score { font-size: 13.5px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .wr-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .wr-actions .btn, .wr-chosen .btn { min-height: 44px; }
+  .wr-panel label { margin-top: 4px; font-size: 12.5px; }
+  .wr-panel input { min-height: 44px; font-size: 14px; font-family: 'Space Grotesk', sans-serif; }
+  .wr-chosen { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .wr-chosen-t { font-size: 16px; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+  @media (max-width: 560px) { .wr-tiles.c4 > .wr-tile:last-child { grid-column: 1 / -1; } }
+  @media (min-width: 561px) {
+    .wr-tiles.c4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .wr-tiles.c4 .wr-tile.wide.first { grid-column: auto; order: 4; }
+    .wr-tiles.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .wr-tiles.c3 .wr-tile.wide { grid-column: auto; }
+    .wr-tiles.c3 .wr-tile.pf { grid-column: span 2; }
+    .wr-top { grid-template-columns: 44px auto auto; justify-content: start; gap: 12px; }
+    .wr-period { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
+    .wr-card .wr-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .wr-card .wr-tile.wide { grid-column: auto; }
+    .wr-selrow { flex-direction: row; align-items: flex-end; }
+    .wr-sel { flex: 1 1 0; max-width: 420px; }
+    .wr-seg { flex: 0 1 320px; }
+    .wr-card { padding: 18px 20px; }
+  }
+  @media (min-width: 900px) {
+    .wr-cols { column-count: 2; }
+    .wr-card-body { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px; }
+    .wr-days { grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+  }
+  @media (max-width: 360px) {
+    .wr-trio-row { gap: 4px; }
+    .wr-card { padding: 14px; }
+  }
   @media (max-width: 340px) { .feed-tab { padding: 9px 4px 11px; font-size: 12.5px; } .feed-tab.active::after { left: 4px; right: 4px; } .feed-bar-actions .btn { padding: 6px 8px; } }
   @media (prefers-reduced-motion: reduce) { .post, .sheet, .sheet-backdrop, .heart-pop.go, .ig-act.like.on svg { animation: none; } }
 </style>
@@ -733,6 +835,99 @@
     home_k_strategy: {en:'Strategy', es:'Estrategia', nl:'Strategie'},
     home_k_indicator: {en:'Indicator', es:'Indicador', nl:'Indicator'},
     home_daily: {en:'Daily motivation', es:'Motivación del día', nl:'Dagelijkse motivatie'},
+    wr_card_h: {en:'Your week', es:'Tu semana', nl:'Jouw week'},
+    wr_card_cur: {en:'This week so far', es:'Esta semana hasta hoy', nl:'Deze week t/m vandaag'},
+    wr_card_prev: {en:'Last week', es:'La semana pasada', nl:'Vorige week'},
+    wr_card_empty: {en:'No trades logged this week or last week.', es:'No hay operaciones registradas esta semana ni la anterior.', nl:'Geen trades gelogd in deze of de vorige week.'},
+    wr_card_grow: {en:'Your weekly overview grows with your journal. Log more trades to see your first insights.', es:'Tu resumen semanal crece con tu diario. Registra más operaciones para ver tus primeras conclusiones.', nl:'Je weekoverzicht groeit mee met je journal. Registreer meer trades om je eerste inzichten te zien.'},
+    wr_card_checklist: {en:'{a} of {n} trades with checklist', es:'{a} de {n} operaciones con checklist', nl:'{a} van {n} trades met checklist'},
+    wr_open: {en:'View your weekly review', es:'Ver tu revisión semanal', nl:'Bekijk je weekreview'},
+    wr_log: {en:'Log a trade', es:'Registrar una operación', nl:'Log een trade'},
+    wr_back: {en:'Back to Home', es:'Volver a Inicio', nl:'Terug naar Home'},
+    wr_prev: {en:'Previous week', es:'Semana anterior', nl:'Vorige week'},
+    wr_next: {en:'Next week', es:'Semana siguiente', nl:'Volgende week'},
+    wr_period_current: {en:'Current week, day {d} of 7', es:'Semana actual, día {d} de 7', nl:'Huidige week, dag {d} van 7'},
+    wr_period_done: {en:'Completed week', es:'Semana completada', nl:'Afgeronde week'},
+    wr_account: {en:'Account', es:'Cuenta', nl:'Account'},
+    wr_phase: {en:'Phase', es:'Fase', nl:'Fase'},
+    wr_dq: {en:'{n} trades without a valid date are left out of the weekly figures.', es:'{n} operaciones sin fecha válida no se incluyen en las cifras semanales.', nl:'{n} trades zonder geldige datum zijn niet meegeteld in de weekcijfers.'},
+    wr_dq_1: {en:'1 trade without a valid date is left out of the weekly figures.', es:'1 operación sin fecha válida no se incluye en las cifras semanales.', nl:'1 trade zonder geldige datum is niet meegeteld in de weekcijfers.'},
+    wr_empty: {en:'No trades in this week.', es:'No hay operaciones en esta semana.', nl:'Geen trades in deze week.'},
+    wr_a_h: {en:'Week overview', es:'Resumen de la semana', nl:'Weekoverzicht'},
+    wr_trades: {en:'Trades', es:'Operaciones', nl:'Trades'},
+    wr_days: {en:'Active days', es:'Días activos', nl:'Actieve dagen'},
+    wr_answered: {en:'Checklists answered', es:'Checklists respondidas', nl:'Beantwoorde checklists'},
+    wr_answered_of: {en:'of {n} trades', es:'de {n} operaciones', nl:'van {n} trades'},
+    wr_unanswered_note: {en:'{n} trades have no answered checklist. They are not counted as deviations.', es:'{n} operaciones no tienen checklist respondida. No se cuentan como desvíos.', nl:'{n} trades hebben geen beantwoorde checklist. Ze tellen niet als afwijking.'},
+    wr_unanswered_note_1: {en:'1 trade has no answered checklist. It is not counted as a deviation.', es:'1 operación no tiene checklist respondida. No se cuenta como desvío.', nl:'1 trade heeft geen beantwoorde checklist. Die telt niet als afwijking.'},
+    wr_compliance: {en:'Plan adherence', es:'Cumplimiento del plan', nl:'Naleving van het plan'},
+    wr_comp_sub: {en:'{f} of {a} answered trades', es:'{f} de {a} operaciones respondidas', nl:'{f} van {a} beantwoorde trades'},
+    wr_comp_few: {en:'Not enough data yet', es:'Aún pocos datos', nl:'Nog te weinig data'},
+    wr_comp_few_sub: {en:'{a} of {m} answered', es:'{a} de {m} respondidas', nl:'{a} van {m} beantwoord'},
+    wr_b_h: {en:'Financial overview', es:'Resumen financiero', nl:'Financieel overzicht'},
+    wr_pnl: {en:'P&L', es:'P&L', nl:'PnL'},
+    wr_noresult: {en:'{n} without result', es:'{n} sin resultado', nl:'{n} zonder resultaat'},
+    wr_results: {en:'Results', es:'Resultados', nl:'Resultaten'},
+    wr_wins: {en:'Wins', es:'Ganadoras', nl:'Winst'},
+    wr_losses: {en:'Losses', es:'Perdedoras', nl:'Verlies'},
+    wr_be: {en:'Break-even', es:'Break-even', nl:'Break-even'},
+    wr_winrate: {en:'Win rate', es:'Tasa de acierto', nl:'Winrate'},
+    wr_winrate_sub: {en:'{w} of {n} trades with a result', es:'{w} de {n} operaciones con resultado', nl:'{w} van {n} trades met resultaat'},
+    wr_avgr: {en:'Average R', es:'R medio', nl:'Gemiddelde R'},
+    wr_avgr_sub: {en:'over {k} of {n} trades', es:'sobre {k} de {n} operaciones', nl:'over {k} van {n} trades'},
+    wr_avgr_none: {en:'No R values recorded', es:'Sin valores R registrados', nl:'Geen R-waarden geregistreerd'},
+    wr_pf: {en:'Profit factor', es:'Factor de beneficio', nl:'Profit factor'},
+    wr_pf_sub: {en:'over {n} trades with a result', es:'sobre {n} operaciones con resultado', nl:'over {n} trades met resultaat'},
+    wr_pf_few: {en:'Shown from {m} trades with a result and at least one loss', es:'Se muestra desde {m} operaciones con resultado y al menos una pérdida', nl:'Zichtbaar vanaf {m} trades met resultaat en minstens één verlies'},
+    wr_c_h: {en:'Plan × result', es:'Plan × resultado', nl:'Plan × resultaat'},
+    wr_g_fw: {en:'Plan followed · win', es:'Plan seguido · ganancia', nl:'Plan gevolgd · winst'},
+    wr_g_fl: {en:'Plan followed · loss', es:'Plan seguido · pérdida', nl:'Plan gevolgd · verlies'},
+    wr_g_dw: {en:'Deviated · win', es:'Desviado · ganancia', nl:'Afgeweken · winst'},
+    wr_g_dl: {en:'Deviated · loss', es:'Desviado · pérdida', nl:'Afgeweken · verlies'},
+    wr_g_be: {en:'Break-even', es:'Break-even', nl:'Break-even'},
+    wr_g_nr: {en:'Checklist answered, no valid result', es:'Checklist respondida, sin resultado válido', nl:'Checklist beantwoord, geen geldig resultaat'},
+    wr_g_un: {en:'No checklist answered', es:'Sin checklist respondida', nl:'Geen checklist beantwoord'},
+    wr_c_note: {en:'Every trade is counted once: together {n} trades.', es:'Cada operación se cuenta una vez: en total {n} operaciones.', nl:'Elke trade telt één keer: samen {n} trades.'},
+    wr_d_h: {en:'Most often broken rules', es:'Reglas más incumplidas', nl:'Vaakst gebroken regels'},
+    wr_rules_none: {en:'No rule was recorded as broken this week.', es:'Ninguna regla se registró como incumplida esta semana.', nl:'Er is deze week geen regel als gebroken geregistreerd.'},
+    wr_rule_line: {en:'Broken {v}× · judged in {j} trades', es:'Incumplida {v}× · evaluada en {j} operaciones', nl:'{v}× gebroken · beoordeeld in {j} trades'},
+    wr_rule_pattern: {en:'Recurring pattern', es:'Patrón recurrente', nl:'Terugkerend patroon'},
+    wr_rule_few: {en:'Too few observations yet', es:'Aún pocas observaciones', nl:'Nog te weinig waarnemingen'},
+    wr_reasons_h: {en:'Reasons for deviating', es:'Motivos de desvío', nl:'Redenen voor afwijking'},
+    wr_e_h: {en:'Compared with last week', es:'Comparado con la semana pasada', nl:'Vergeleken met vorige week'},
+    wr_cmp_this: {en:'This week', es:'Esta semana', nl:'Deze week'},
+    wr_cmp_prev: {en:'Last week', es:'Semana pasada', nl:'Vorige week'},
+    wr_cmp_none: {en:'There are no trades in the previous week to compare with.', es:'No hay operaciones en la semana anterior para comparar.', nl:'Er zijn geen trades in de vorige week om mee te vergelijken.'},
+    wr_cmp_running: {en:'This week is still in progress, so this is not a comparison of full weeks.', es:'Esta semana aún no ha terminado, así que no es una comparación de semanas completas.', nl:'Deze week loopt nog, dus dit is geen vergelijking van volledige weken.'},
+    wr_cmp_small: {en:'Small sample', es:'Muestra pequeña', nl:'Kleine steekproef'},
+    wr_cmp_comp_skip: {en:'Adherence is compared only when both weeks have at least {m} answered checklists.', es:'El cumplimiento solo se compara si ambas semanas tienen al menos {m} checklists respondidas.', nl:'Naleving wordt alleen vergeleken als beide weken minstens {m} beantwoorde checklists hebben.'},
+    wr_f_h: {en:'Check-ins', es:'Check-ins', nl:'Check-ins'},
+    wr_chk_bt: {en:'Check-ins are not used for backtest accounts.', es:'Los check-ins no se usan en cuentas de backtest.', nl:'Check-ins worden niet gebruikt voor backtest-accounts.'},
+    wr_chk_none: {en:'No check-ins in this week.', es:'No hay check-ins en esta semana.', nl:'Geen check-ins in deze week.'},
+    wr_chk_filled: {en:'{n} completed', es:'{n} completados', nl:'{n} ingevuld'},
+    wr_chk_skipped: {en:'{n} skipped', es:'{n} omitidos', nl:'{n} overgeslagen'},
+    wr_chk_avg: {en:'Average score {avg} (based on {n})', es:'Puntuación media {avg} (sobre {n})', nl:'Gemiddelde score {avg} (op basis van {n})'},
+    wr_chk_skip_lbl: {en:'Skipped', es:'Omitido', nl:'Overgeslagen'},
+    wr_chk_no: {en:'No check-in', es:'Sin check-in', nl:'Geen check-in'},
+    wr_trade_1: {en:'1 trade', es:'1 operación', nl:'1 trade'},
+    wr_trades_n: {en:'{n} trades', es:'{n} operaciones', nl:'{n} trades'},
+    wr_g_h: {en:'Focus for next week', es:'Enfoque para la próxima semana', nl:'Aandachtspunt voor volgende week'},
+    wr_f_rule: {en:'Suggestion: the rule "{rule}" was recorded as broken {v}× in {j} judged trades. You could pay extra attention to it next week.', es:'Sugerencia: la regla "{rule}" se registró como incumplida {v}× en {j} operaciones evaluadas. Podrías prestarle más atención la próxima semana.', nl:'Suggestie: de regel "{rule}" is {v}× als gebroken geregistreerd in {j} beoordeelde trades. Je kunt er volgende week extra op letten.'},
+    wr_f_reason: {en:'Suggestion: the reason "{reason}" came up {n}× when you deviated from your plan. You could keep an eye on it next week.', es:'Sugerencia: el motivo "{reason}" apareció {n}× al desviarte del plan. Podrías vigilarlo la próxima semana.', nl:'Suggestie: de reden "{reason}" kwam {n}× voor bij afwijkingen van je plan. Je kunt er volgende week op letten.'},
+    wr_f_check: {en:'Suggestion: fewer than half of your trades have an answered checklist ({a} of {n}). You could try filling it in more often.', es:'Sugerencia: menos de la mitad de tus operaciones tiene checklist respondida ({a} de {n}). Podrías intentar rellenarla más a menudo.', nl:'Suggestie: minder dan de helft van je trades heeft een beantwoorde checklist ({a} van {n}). Je kunt proberen hem vaker in te vullen.'},
+    wr_f_check_short: {en:'Fill in the checklist more often', es:'Rellenar el checklist más a menudo', nl:'Checklist vaker invullen'},
+    wr_f_none: {en:'There is not enough evidence yet for a specific focus point.', es:'Aún no hay base suficiente para un punto de enfoque concreto.', nl:'Er is nog onvoldoende onderbouwing voor een specifiek aandachtspunt.'},
+    wr_f_use: {en:'Use this suggestion', es:'Usar esta sugerencia', nl:'Gebruik deze suggestie'},
+    wr_f_own: {en:'Write your own', es:'Escribe el tuyo', nl:'Schrijf je eigen'},
+    wr_f_ph: {en:'Your focus (max 80 characters)', es:'Tu enfoque (máx. 80 caracteres)', nl:'Jouw aandachtspunt (max. 80 tekens)'},
+    wr_f_set: {en:'Set focus', es:'Fijar enfoque', nl:'Zet als focus'},
+    wr_f_chosen: {en:'Your focus for next week', es:'Tu enfoque para la próxima semana', nl:'Jouw focus voor volgende week'},
+    wr_f_note: {en:'Not saved yet: this focus is only kept while this page is open.', es:'Aún no se guarda: este enfoque solo se mantiene mientras esta página está abierta.', nl:'Nog niet opgeslagen: deze focus blijft alleen bewaard zolang deze pagina open is.'},
+    wr_f_change: {en:'Change', es:'Cambiar', nl:'Wijzigen'},
+    wr_obs_rule: {en:'The rule "{rule}" was recorded as broken {v}× this week.', es:'La regla "{rule}" se registró como incumplida {v}× esta semana.', nl:'De regel "{rule}" is deze week {v}× als gebroken geregistreerd.'},
+    wr_obs_reason: {en:'"{reason}" was given {n}× as a reason for deviating.', es:'"{reason}" se indicó {n}× como motivo de desvío.', nl:'"{reason}" is {n}× genoemd als reden voor afwijking.'},
+    wr_obs_days: {en:'You traded on {d} different days.', es:'Operaste en {d} días distintos.', nl:'Je handelde op {d} verschillende dagen.'},
+    wr_obs_day1: {en:'You traded on 1 day.', es:'Operaste en 1 día.', nl:'Je handelde op 1 dag.'},
     plan_followed: {en:'Plan followed', es:'Plan seguido', nl:'Plan gevolgd'},
     plan_deviated: {en:'Deviated', es:'Desviado', nl:'Afgeweken'},
     plan_skip: {en:'Skip', es:'Omitir', nl:'Overslaan'},
@@ -3965,6 +4160,8 @@
   }
   window.addEventListener('popstate', ev => {
     const s = ev.state || {};
+    if (review.on && !s.tallyReview){ review.on = false; if (s.tallySec) currentSection = s.tallySec; render(); window.scrollTo({ top: 0 }); return; }
+    if (!review.on && s.tallyReview && accounts.find(a => a && a.id === currentAccountId)){ const d = wrDefault(accounts.find(a => a && a.id === currentAccountId)); review.on = true; review.accId = currentAccountId; review.weekStart = d.weekStart; review.phase = d.phase; review.own = false; review.draft = ''; currentSection = 'home'; render(); return; }
     if (feed.view === 'profile' && !s.tallyProfile){ feed.view = 'feed'; if (s.tallySec && s.tallySec !== currentSection){ currentSection = s.tallySec; render(); } else if (currentSection === 'community') render(); return; }
     const sec = s.tallyProfile ? 'community' : s.tallySec;
     if (sec && sec !== currentSection){ currentSection = sec; render(); window.scrollTo({ top: 0 }); }
@@ -4303,7 +4500,7 @@
   const greetKey = d => { const h = (d || new Date()).getHours(); return h >= 5 && h < 12 ? 'home_morning' : h >= 12 && h < 18 ? 'home_afternoon' : 'home_evening'; };
   const home = { uid: null, prof: 'idle', profAt: 0, comm: 'idle', commAt: 0, posts: null, following: null, synced: false, tokP: 0, tokC: 0 };
   const homeReset = () => { home.uid = null; home.prof = 'idle'; home.profAt = 0; home.comm = 'idle'; home.commAt = 0; home.posts = null; home.following = null; home.tokP++; home.tokC++; };
-  const homeRedraw = () => { if (currentSection === 'home' && !$('.modal-backdrop')) renderHome(); };
+  const homeRedraw = () => { if (currentSection === 'home' && !review.on && !$('.modal-backdrop')) renderHome(); };
   async function homeLoadProfile(){
     if (!cloudSession) return;
     const me = cloudSession.user_id, tok = ++home.tokP;
@@ -4354,6 +4551,7 @@
   function setSection(sec, opts){
     opts = opts || {};
     if (sec === 'community' && opts.fresh) feed.view = 'feed';
+    if (review.on){ review.on = false; try { if (history.state && history.state.tallyReview) history.replaceState({ tallySec: currentSection }, ''); } catch(e){} }
     if (sec !== currentSection){ try { history.pushState({ tallySec: sec }, ''); } catch(e){} }
     currentSection = sec; render(); window.scrollTo({ top: 0 });
   }
@@ -4423,9 +4621,10 @@
     return `<section class="home-quoteCard" id="homeDaily"><div class="home-qh">${t('home_daily')}</div><p>${escapeHtml(dailyQuote(d))}</p></section>`;
   }
   function renderHome(){
+    if (review.on) return renderReview();
     const main = $('#main'), d = new Date();
     const safe = fn => { try { return fn(d); } catch(e){ return ''; } };
-    main.innerHTML = `<div class="home">${safe(homeHeader)}${safe(homeQuick)}${safe(homeStats)}${safe(homeActivity)}${safe(homeQuote)}</div>`;
+    main.innerHTML = `<div class="home">${safe(homeHeader)}${safe(homeQuick)}${safe(homeStats)}${safe(homeWeek)}${safe(homeActivity)}${safe(homeQuote)}</div>`;
     const me = cloudSession && cloudSession.user_id;
     const goProfile = () => { if (me) openProfile(me); else openAuthGate('login'); };
     ['homeAva', 'homeName', 'homeProfile'].forEach(id => { const el = $('#' + id); if (el) el.onclick = goProfile; });
@@ -4433,6 +4632,8 @@
     $$('[data-go]', main).forEach(b => b.onclick = () => setSection(b.dataset.go, { fresh: true }));
     ['homeFirst', 'homeFirst2'].forEach(id => { const el = $('#' + id); if (el) el.onclick = () => $('#newTradeBtn').onclick(); });
     const all = $('#homeAll'); if (all) all.onclick = () => setSection('journal');
+    const wo = $('#wrOpen'); if (wo) wo.onclick = () => openReview({});
+    const wl = $('#wrCardLog'); if (wl) wl.onclick = () => $('#newTradeBtn').onclick();
     $$('[data-act]', main).forEach(b => b.onclick = () => {
       const k = b.dataset.act, id = b.dataset.id;
       if (k === 'journal'){
@@ -4444,6 +4645,297 @@
     });
     homeRefresh();
   }
+  // ================= WEEKLY REVIEW =================
+  // Fully derived from records the app already holds (trades incl. their plan snapshot, accounts, check-ins). Nothing here is stored, synced or shared.
+  // One calculation (summarizeWeek) feeds both the Home week card and the full review; CSS alone decides the layout per screen width.
+  const WR_MIN_ANSWERED = 5, WR_MIN_PF = 10, WR_MAX_RULES = 5, WR_FOCUS_MAX = 80, WR_SMALL = 5;
+  const review = { on: false, accId: null, weekStart: null, phase: null, focus: {}, draft: '', own: false };
+  const wrPad = n => String(n).padStart(2, '0');
+  function wrIsoOk(s){   // a real calendar date written YYYY-MM-DD
+    if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    const p = s.split('-').map(Number), d = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+    return d.getUTCFullYear() === p[0] && d.getUTCMonth() === p[1] - 1 && d.getUTCDate() === p[2];
+  }
+  const wrUtc = s => { const p = s.split('-').map(Number); return Date.UTC(p[0], p[1] - 1, p[2]); };
+  const wrIso = ms => { const d = new Date(ms); return d.getUTCFullYear() + '-' + wrPad(d.getUTCMonth() + 1) + '-' + wrPad(d.getUTCDate()); };
+  const wrAddDays = (s, n) => wrIso(wrUtc(s) + n * 864e5);   // pure calendar arithmetic in UTC: no local timezone / DST involved
+  const wrWeekStart = s => wrAddDays(s, -((new Date(wrUtc(s)).getUTCDay() + 6) % 7));   // Monday of the week containing s
+  function wrNum(v){   // numeric or null; a missing value is never 0
+    if (v === null || v === undefined || typeof v === 'boolean') return null;
+    if (typeof v === 'string'){ if (!v.trim()) return null; } else if (typeof v !== 'number') return null;
+    const n = Number(v); return isFinite(n) ? n : null;
+  }
+  const wrSplit = acc => !!(acc && !acc.isBacktest && acc.phaseStartAt);
+  // same rule as the Journal (computeStats): eval = created before phaseStartAt, funded = after
+  const wrPhaseOf = (acc, x) => wrSplit(acc) ? (x.createdAt < acc.phaseStartAt ? 'eval' : 'funded') : null;
+  function wrCore(acc, weekStart, phase){
+    const weekEnd = wrAddDays(weekStart, 6);
+    const sel = trades.filter(x => x && typeof x === 'object' && x.accountId === acc.id && (phase === null || wrPhaseOf(acc, x) === phase));
+    let invalid = 0; const valid = [];
+    sel.forEach(x => { if (wrIsoOk(x.date)) valid.push(x); else invalid++; });
+    const tr = valid.filter(x => x.date >= weekStart && x.date <= weekEnd);
+    const rows = tr.map(x => ({ x, p: readPlan(x), pnl: wrNum(x.pnl), r: wrNum(x.r) }));
+    const n = rows.length, answered = rows.filter(v => v.p).length, followed = rows.filter(v => v.p && v.p.status === 'followed').length;
+    const withRes = rows.filter(v => v.pnl !== null), wins = withRes.filter(v => v.pnl > 0), losses = withRes.filter(v => v.pnl < 0);
+    const grossWin = wins.reduce((s, v) => s + v.pnl, 0), grossLoss = Math.abs(losses.reduce((s, v) => s + v.pnl, 0));
+    const rVals = rows.filter(v => v.r !== null);
+    const g = { fw: 0, fl: 0, dw: 0, dl: 0, be: 0, un: 0, nr: 0 };
+    rows.forEach(v => {
+      if (!v.p) g.un++; else if (v.pnl === null) g.nr++; else if (v.pnl === 0) g.be++;
+      else g[(v.p.status === 'followed' ? 'f' : 'd') + (v.pnl > 0 ? 'w' : 'l')]++;
+    });
+    const rl = {}, rs = {};
+    rows.forEach(v => {
+      if (!v.p) return;
+      const seen = {}, key = v.x.date + '|' + String(+v.x.createdAt || 0).padStart(16, '0');
+      v.p.rules.forEach(r => {
+        if (!r.id || seen[r.id]) return; seen[r.id] = 1;
+        const e = rl[r.id] || (rl[r.id] = { id: r.id, text: r.text, viol: 0, judged: 0, key: '' });
+        e.judged++; if (!r.ok) e.viol++;
+        if (key >= e.key){ e.key = key; e.text = r.text; }   // historical wording of the newest trade that judged this rule id
+      });
+      if (v.p.status === 'deviated' && PLAN_REASONS.some(a => a[0] === v.p.reasonKey)) rs[v.p.reasonKey] = (rs[v.p.reasonKey] || 0) + 1;
+    });
+    const ruleList = Object.keys(rl).map(k => rl[k]).filter(e => e.viol >= 1).sort((a, b) => b.viol - a.viol || b.judged - a.judged || a.text.localeCompare(b.text)).slice(0, WR_MAX_RULES)
+      .map(e => ({ id: e.id, text: e.text, viol: e.viol, judged: e.judged, pattern: e.viol >= 2 && e.judged >= 3 }));
+    const reasonList = Object.keys(rs).map(k => ({ key: k, n: rs[k] })).sort((a, b) => b.n - a.n || (a.key < b.key ? -1 : 1));
+    const days = {}; tr.forEach(x => { days[x.date] = (days[x.date] || 0) + 1; });
+    let ck = null;
+    if (!acc.isBacktest){
+      const byDate = {};
+      checkins.forEach(c => { if (c && c.accountId === acc.id && wrIsoOk(c.date) && c.date >= weekStart && c.date <= weekEnd && (phase === null || wrPhaseOf(acc, c) === phase) && !byDate[c.date]) byDate[c.date] = c; });
+      const dates = Object.keys(Object.assign({}, byDate, days)).sort();
+      const list = dates.map(d => {
+        const c = byDate[d], dayRows = rows.filter(v => v.x.date === d);
+        const score = c && typeof c.score === 'number' && isFinite(c.score) ? c.score : null;
+        const pnl = dayRows.length && dayRows.every(v => v.pnl !== null) ? dayRows.reduce((s, v) => s + v.pnl, 0) : null;
+        return { date: d, score, skipped: !!(c && c.skipped === true && score === null), has: !!c, trades: dayRows.length, pnl };
+      });
+      const scored = list.filter(d => d.score !== null);
+      ck = { list, scored: scored.length, skipped: list.filter(d => d.skipped).length, avg: scored.length ? scored.reduce((s, d) => s + d.score, 0) / scored.length : null, any: Object.keys(byDate).length > 0 };
+    }
+    return {
+      accId: acc.id, weekStart, weekEnd, phase, nTrades: n, activeDays: Object.keys(days).length, invalid,
+      answered, followed, deviated: answered - followed, unanswered: n - answered,
+      complianceShown: answered >= WR_MIN_ANSWERED, compliancePct: answered >= WR_MIN_ANSWERED ? Math.round(followed / answered * 100) : null,
+      nRes: withRes.length, wins: wins.length, losses: losses.length, be: withRes.length - wins.length - losses.length, noRes: n - withRes.length,
+      pnl: withRes.length ? withRes.reduce((s, v) => s + v.pnl, 0) : null,
+      winRate: withRes.length ? wins.length / withRes.length * 100 : null,
+      pf: withRes.length >= WR_MIN_PF && losses.length >= 1 ? grossWin / grossLoss : null,
+      rN: rVals.length, avgR: rVals.length ? rVals.reduce((s, v) => s + v.r, 0) / rVals.length : null,
+      groups: g, rules: ruleList, reasons: reasonList, checkins: ck
+    };
+  }
+  function wrFocus(c){   // transparent suggestion: first rule that applies, never a command
+    const r = c.rules.filter(e => e.pattern)[0];
+    if (r) return { kind: 'rule', ruleId: r.id, text: r.text, viol: r.viol, judged: r.judged };
+    const q = c.reasons.filter(e => e.n >= 2)[0];
+    if (q) return { kind: 'reason', key: q.key, n: q.n };
+    if (c.nTrades >= WR_SMALL && c.answered * 2 < c.nTrades) return { kind: 'checklist', answered: c.answered, n: c.nTrades };
+    return { kind: 'none' };
+  }
+  function summarizeWeek(accId, weekStart, phase){
+    const acc = accounts.find(a => a && a.id === accId); if (!acc) return null;
+    if (!wrIsoOk(weekStart)) return null;
+    weekStart = wrWeekStart(weekStart);
+    if (!wrSplit(acc)) phase = null; else if (phase !== 'eval' && phase !== 'funded') phase = 'funded';
+    const s = wrCore(acc, weekStart, phase), today = todayISO(), cur = wrWeekStart(today);
+    s.prev = wrCore(acc, wrAddDays(weekStart, -7), phase);
+    s.isCurrent = weekStart === cur; s.isFuture = weekStart > cur;
+    s.dayOfWeek = s.isCurrent ? Math.round((wrUtc(today) - wrUtc(weekStart)) / 864e5) + 1 : 0;
+    s.focus = wrFocus(s);
+    const dates = trades.filter(x => x && typeof x === 'object' && x.accountId === acc.id && (phase === null || wrPhaseOf(acc, x) === phase) && wrIsoOk(x.date)).map(x => x.date).sort();
+    s.earliestWeek = dates.length ? wrWeekStart(dates[0]) : null;
+    s.canPrev = !!s.earliestWeek && weekStart > s.earliestWeek; s.canNext = weekStart < cur;
+    s.phaseCounts = wrSplit(acc) ? { eval: wrCore(acc, weekStart, 'eval').nTrades, funded: wrCore(acc, weekStart, 'funded').nTrades } : null;
+    return s;
+  }
+  // which week/phase to show first: this week, or last week when this one is still empty; the same choice feeds Home and the review
+  function wrDefault(acc){
+    const cur = wrWeekStart(todayISO()), prev = wrAddDays(cur, -7);
+    const cnt = ws => wrCore(acc, ws, null).nTrades;
+    const weekStart = cnt(cur) > 0 || cnt(prev) === 0 ? cur : prev;
+    let phase = null;
+    if (wrSplit(acc)){ const f = wrCore(acc, weekStart, 'funded').nTrades, e = wrCore(acc, weekStart, 'eval').nTrades; phase = f > 0 || e === 0 ? 'funded' : 'eval'; }
+    return { weekStart, phase, empty: cnt(cur) === 0 && cnt(prev) === 0 };
+  }
+  const wrLoc = () => lang === 'nl' ? 'nl-NL' : lang === 'es' ? 'es-ES' : 'en-GB';
+  const wrFmtDate = (iso, o) => { const p = iso.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2], 12).toLocaleDateString(wrLoc(), o); };
+  function wrPeriod(ws){
+    const we = wrAddDays(ws, 6), sameYear = ws.slice(0, 4) === we.slice(0, 4);
+    if (ws.slice(0, 7) === we.slice(0, 7)) return wrFmtDate(ws, { day: 'numeric' }) + '–' + wrFmtDate(we, { day: 'numeric', month: 'short', year: 'numeric' });
+    return wrFmtDate(ws, sameYear ? { day: 'numeric', month: 'short' } : { day: 'numeric', month: 'short', year: 'numeric' }) + ' – ' + wrFmtDate(we, { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  const wrMoney = (n, acc) => (n > 0 ? '+' : '') + fmtMoney(n, acc.currency || '$');
+  const wrReasonLabel = k => { const r = PLAN_REASONS.filter(a => a[0] === k)[0]; return r ? t(r[1]) : ''; };
+  const wrPhaseTag = (acc, phase) => !phase ? '' : `<span class="${phase === 'eval' ? 'tag-eval' : 'tag-funded'}">${t(phase === 'eval' ? 'eval_tag' : 'funded_tag')}</span>`;
+  const wrTile = (lbl, num, sub, cls) => `<div class="wr-tile ${cls || ''}"><span class="wr-lbl">${escapeHtml(lbl)}</span><span class="wr-num">${num}</span>${sub ? `<span class="wr-sub">${escapeHtml(sub)}</span>` : ''}</div>`;
+  const wrTilesCore = (s, acc) => ({
+    trades: wrTile(t('wr_trades'), s.nTrades, ''),
+    days: wrTile(t('wr_days'), s.activeDays, t('home_s_of7')),
+    answered: wrTile(t('wr_answered'), s.answered, t('wr_answered_of', { n: s.nTrades })),
+    compliance: s.complianceShown
+      ? wrTile(t('wr_compliance'), s.compliancePct + '%', t('wr_comp_sub', { f: s.followed, a: s.answered }), 'wide')
+      : wrTile(t('wr_compliance'), '–', t('wr_comp_few') + ' · ' + t('wr_comp_few_sub', { a: s.answered, m: WR_MIN_ANSWERED }), 'wide')
+  });
+  function wrObservation(s){
+    const f = s.focus;
+    if (f.kind === 'rule') return t('wr_obs_rule', { rule: escapeHtml(f.text), v: f.viol });
+    if (f.kind === 'reason') return t('wr_obs_reason', { reason: escapeHtml(wrReasonLabel(f.key)), n: f.n });
+    if (s.nTrades >= 3) return s.activeDays === 1 ? t('wr_obs_day1') : t('wr_obs_days', { d: s.activeDays });
+    return t('wr_card_grow');
+  }
+  function homeWeek(){
+    const acc = accounts.find(a => a && a.id === currentAccountId);
+    if (!acc || !trades.length) return '';
+    const d = wrDefault(acc);
+    const head = `<h2 class="home-h">${t('wr_card_h')}</h2>`;
+    if (d.empty){
+      return `<section class="home-sec" id="wrCardSec">${head}<div class="home-empty"><p>${t('wr_card_empty')}</p><button class="btn btn-primary" id="wrCardLog">${t('wr_log')}</button></div></section>`;
+    }
+    const s = summarizeWeek(acc.id, d.weekStart, d.phase), tl = wrTilesCore(s, acc);
+    const chip = s.isCurrent ? t('wr_card_cur') : t('wr_card_prev');
+    return `<section class="home-sec" id="wrCardSec">${head}<div class="wr-card">
+      <div class="wr-card-top"><div class="wr-card-id"><b>${escapeHtml(wrPeriod(s.weekStart))}</b><span class="wr-chip">${chip}</span></div><span class="wr-acc">${escapeHtml(acc.name || '')} ${wrPhaseTag(acc, s.phase)}</span></div>
+      <div class="wr-card-body">
+        <div class="wr-tiles">${tl.trades}${wrTile(t('wr_answered'), s.answered, t('wr_card_checklist', { a: s.answered, n: s.nTrades }))}${tl.compliance}</div>
+        <div class="wr-card-side"><p class="wr-obs">${wrObservation(s)}</p><button class="btn btn-primary wr-open" id="wrOpen">${t('wr_open')}</button></div>
+      </div></div></section>`;
+  }
+  function openReview(sel){
+    const acc = accounts.find(a => a && a.id === (sel && sel.accId || currentAccountId)); if (!acc) return;
+    const d = wrDefault(acc);
+    review.on = true; review.accId = acc.id; review.weekStart = (sel && sel.weekStart) || d.weekStart; review.phase = sel && sel.phase !== undefined ? sel.phase : d.phase;
+    review.own = false; review.draft = '';
+    try { history.pushState({ tallySec: 'home', tallyReview: 1 }, ''); } catch(e){}
+    currentSection = 'home'; render(); window.scrollTo({ top: 0 });
+  }
+  function closeReview(){ if (!review.on) return; review.on = false; if (currentSection === 'home') render(); }
+  function wrBar(n, total){ const p = total > 0 ? Math.max(0, Math.min(100, n / total * 100)) : 0; return `<div class="wr-bar" aria-hidden="true"><span style="width:${p.toFixed(1)}%"></span></div>`; }
+  function renderReview(){
+    const main = $('#main');
+    const acc = accounts.find(a => a && a.id === review.accId);
+    if (!acc){ review.on = false; return renderHome(); }
+    const cur = wrWeekStart(todayISO());
+    if (!wrIsoOk(review.weekStart)) review.weekStart = wrDefault(acc).weekStart;
+    review.weekStart = wrWeekStart(review.weekStart); if (review.weekStart > cur) review.weekStart = cur;
+    if (!wrSplit(acc)) review.phase = null; else if (review.phase !== 'eval' && review.phase !== 'funded') review.phase = 'funded';
+    const s = summarizeWeek(acc.id, review.weekStart, review.phase), tl = wrTilesCore(s, acc), cc = acc.currency || '$';
+    const status = s.isCurrent ? t('wr_period_current', { d: s.dayOfWeek }) : t('wr_period_done');
+    const accOpts = accounts.filter(Boolean).map(a => `<option value="${escapeHtml(a.id)}" ${a.id === acc.id ? 'selected' : ''}>${escapeHtml(a.name || '')} · ${t(a.isBacktest ? 'type_backtest' : 'type_live')}</option>`).join('');
+    const seg = s.phaseCounts ? `<div class="wr-seg" role="tablist" aria-label="${t('wr_phase')}">${['eval', 'funded'].map(p => `<button class="wr-segb ${review.phase === p ? 'on' : ''}" role="tab" aria-selected="${review.phase === p}" data-phase="${p}">${t(p === 'eval' ? 'phase_evaluation' : 'phase_funded')} <span class="wr-segn">${s.phaseCounts[p]}</span></button>`).join('')}</div>` : '';
+    const chev = d => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+    let h = `<div class="home wr">
+      <div class="wr-top">
+        <button class="wr-btn" id="wrBack" aria-label="${t('wr_back')}">${chev('M15 5l-7 7 7 7')}</button>
+        <div class="wr-period"><b>${escapeHtml(wrPeriod(s.weekStart))}</b><span class="wr-chip">${status}</span></div>
+        <div class="wr-nav"><button class="wr-btn" id="wrPrev" aria-label="${t('wr_prev')}" ${s.canPrev ? '' : 'disabled'}>${chev('M15 5l-7 7 7 7')}</button><button class="wr-btn" id="wrNext" aria-label="${t('wr_next')}" ${s.canNext ? '' : 'disabled'}>${chev('M9 5l7 7-7 7')}</button></div>
+      </div>
+      <div class="wr-selrow"><label class="wr-sel"><span>${t('wr_account')}</span><select id="wrAcc" class="wr-select">${accOpts}</select></label>${seg}</div>`;
+    if (s.invalid) h += `<p class="wr-note">${t(s.invalid === 1 ? 'wr_dq_1' : 'wr_dq', { n: s.invalid })}</p>`;
+    if (!s.nTrades){
+      h += `<div class="home-empty"><p>${t('wr_empty')}</p><button class="btn btn-primary" id="wrLog">${t('wr_log')}</button></div></div>`;
+      main.innerHTML = h; wrBind(acc, s); return;
+    }
+    // A
+    h += `<section class="wr-sec"><h2 class="home-h">${t('wr_a_h')}</h2><div class="wr-tiles c4">${tl.compliance.replace('wr-tile wide', 'wr-tile wide first')}${tl.trades}${tl.days}${tl.answered}</div>${s.unanswered ? `<p class="wr-note">${t(s.unanswered === 1 ? 'wr_unanswered_note_1' : 'wr_unanswered_note', { n: s.unanswered })}</p>` : ''}</section>`;
+    // B
+    const pnlTile = s.pnl === null ? wrTile(t('wr_pnl'), '–', t('wr_noresult', { n: s.noRes }), 'wide') : wrTile(t('wr_pnl'), escapeHtml(wrMoney(s.pnl, acc)), s.noRes ? t('wr_noresult', { n: s.noRes }) : '', 'wide');
+    const trio = `<div class="wr-tile wide wr-trio"><span class="wr-lbl">${t('wr_results')}</span><span class="wr-trio-row"><span><b class="wr-num">${s.wins}</b><small>${t('wr_wins')}</small></span><span><b class="wr-num">${s.losses}</b><small>${t('wr_losses')}</small></span><span><b class="wr-num">${s.be}</b><small>${t('wr_be')}</small></span></span></div>`;
+    h += `<section class="wr-sec"><h2 class="home-h">${t('wr_b_h')}</h2><div class="wr-tiles c3">${pnlTile}${trio}
+      ${s.winRate === null ? wrTile(t('wr_winrate'), '–', '') : wrTile(t('wr_winrate'), fmt(s.winRate, 0) + '%', t('wr_winrate_sub', { w: s.wins, n: s.nRes }))}
+      ${s.avgR === null ? wrTile(t('wr_avgr'), '–', t('wr_avgr_none')) : wrTile(t('wr_avgr'), fmt(s.avgR, 2) + 'R', t('wr_avgr_sub', { k: s.rN, n: s.nTrades }))}
+      ${s.pf === null ? wrTile(t('wr_pf'), '–', t('wr_pf_few', { m: WR_MIN_PF }), 'wide pf') : wrTile(t('wr_pf'), fmt(s.pf, 2), t('wr_pf_sub', { n: s.nRes }), 'wide pf')}
+    </div></section>`;
+    // C + D
+    const G = s.groups, rowsC = [['fw', 'wr_g_fw'], ['fl', 'wr_g_fl'], ['dw', 'wr_g_dw'], ['dl', 'wr_g_dl'], ['be', 'wr_g_be'], ['nr', 'wr_g_nr'], ['un', 'wr_g_un']];
+    let cols = `<section class="wr-sec"><h2 class="home-h">${t('wr_c_h')}</h2><div class="wr-panel">${rowsC.map(([k, lk]) => `<div class="wr-row"><span class="wr-row-l">${t(lk)}</span><b class="wr-row-n">${G[k]}</b>${wrBar(G[k], s.nTrades)}</div>`).join('')}<p class="wr-foot">${t('wr_c_note', { n: s.nTrades })}</p></div></section>`;
+    if (s.answered > 0){
+      let body;
+      if (!s.rules.length) body = `<p class="wr-plain">${t('wr_rules_none')}</p>`;
+      else body = s.rules.map(r => `<div class="wr-rule"><div class="wr-rule-t">${escapeHtml(r.text)}</div><div class="wr-rule-m"><span>${t('wr_rule_line', { v: r.viol, j: r.judged })}</span><span class="wr-tagp">${t(r.pattern ? 'wr_rule_pattern' : 'wr_rule_few')}</span></div>${wrBar(r.viol, r.judged)}</div>`).join('');
+      if (s.reasons.length) body += `<div class="wr-reasons"><div class="wr-lbl">${t('wr_reasons_h')}</div>${s.reasons.map(q => `<div class="wr-row slim"><span class="wr-row-l">${escapeHtml(wrReasonLabel(q.key))}</span><b class="wr-row-n">${q.n}×</b></div>`).join('')}</div>`;
+      cols += `<section class="wr-sec"><h2 class="home-h">${t('wr_d_h')}</h2><div class="wr-panel">${body}</div></section>`;
+    }
+    // E + F
+    let cols2 = '';
+    {
+      const p = s.prev; let body;
+      if (!p.nTrades) body = `<p class="wr-plain">${t('wr_cmp_none')}</p>`;
+      else {
+        const small = s.nTrades < WR_SMALL || p.nTrades < WR_SMALL;
+        const row = (l, a, b) => `<div class="wr-cmp"><span class="wr-cmp-l">${escapeHtml(l)}</span><span class="wr-cmp-a"><small>${t('wr_cmp_this')}</small>${a}</span><span class="wr-cmp-b"><small>${t('wr_cmp_prev')}</small>${b}</span></div>`;
+        body = (s.isCurrent ? `<p class="wr-plain">${t('wr_cmp_running')}</p>` : '') + (small ? `<p class="wr-plain"><b>${t('wr_cmp_small')}</b></p>` : '')
+          + row(t('wr_trades'), s.nTrades, p.nTrades) + row(t('wr_answered'), s.answered, p.answered) + row(t('wr_days'), s.activeDays, p.activeDays)
+          + row(t('wr_compliance'), s.complianceShown && p.complianceShown ? s.compliancePct + '%' : '–', s.complianceShown && p.complianceShown ? p.compliancePct + '%' : '–')
+          + row(t('wr_pnl'), s.pnl === null ? '–' : escapeHtml(wrMoney(s.pnl, acc)), p.pnl === null ? '–' : escapeHtml(wrMoney(p.pnl, acc)))
+          + (s.complianceShown && p.complianceShown ? '' : `<p class="wr-foot">${t('wr_cmp_comp_skip', { m: WR_MIN_ANSWERED })}</p>`);
+      }
+      cols2 += `<section class="wr-sec"><h2 class="home-h">${t('wr_e_h')}</h2><div class="wr-panel">${body}</div></section>`;
+    }
+    {
+      let body;
+      if (acc.isBacktest) body = `<p class="wr-plain">${t('wr_chk_bt')}</p>`;
+      else if (!s.checkins.any) body = `<p class="wr-plain">${t('wr_chk_none')}</p>`;
+      else {
+        const k = s.checkins;
+        body = `<div class="wr-chk-sum"><span>${t('wr_chk_filled', { n: k.scored })}</span><span>${t('wr_chk_skipped', { n: k.skipped })}</span>${k.avg === null ? '' : `<span>${t('wr_chk_avg', { avg: fmt(k.avg, 1), n: k.scored })}</span>`}</div>`
+          + `<div class="wr-days">${k.list.map(d => `<div class="wr-day"><div class="wr-day-l"><b>${escapeHtml(wrFmtDate(d.date, { weekday: 'short', day: 'numeric', month: 'short' }))}</b><small>${d.trades === 1 ? t('wr_trade_1') : t('wr_trades_n', { n: d.trades })}</small></div><div class="wr-day-r"><span class="wr-score">${d.score !== null ? d.score + '/10' : d.skipped ? t('wr_chk_skip_lbl') : t('wr_chk_no')}</span><small>${d.pnl === null ? '' : escapeHtml(wrMoney(d.pnl, acc))}</small></div></div>`).join('')}</div>`;
+      }
+      cols2 += `<section class="wr-sec"><h2 class="home-h">${t('wr_f_h')}</h2><div class="wr-panel">${body}</div></section>`;
+    }
+    h += `<div class="wr-cols">${cols}${cols2}</div>`;
+    // G
+    h += `<section class="wr-sec"><h2 class="home-h">${t('wr_g_h')}</h2><div class="wr-panel" id="wrFocusBox"></div></section></div>`;
+    main.innerHTML = h; wrBind(acc, s);
+  }
+  function wrFocusText(f){
+    if (f.kind === 'rule') return { sug: t('wr_f_rule', { rule: escapeHtml(f.text), v: f.viol, j: f.judged }), short: f.text };
+    if (f.kind === 'reason') return { sug: t('wr_f_reason', { reason: escapeHtml(wrReasonLabel(f.key)), n: f.n }), short: wrReasonLabel(f.key) };
+    if (f.kind === 'checklist') return { sug: t('wr_f_check', { a: f.answered, n: f.n }), short: t('wr_f_check_short') };
+    return { sug: t('wr_f_none'), short: '' };
+  }
+  function wrBind(acc, s){
+    const main = $('#main');
+    $('#wrBack').onclick = () => { try { if (history.state && history.state.tallyReview){ history.back(); return; } } catch(e){} closeReview(); };
+    const go = () => { renderReview(); };
+    const prev = $('#wrPrev'), next = $('#wrNext');
+    if (prev) prev.onclick = () => { if (s.canPrev){ review.weekStart = wrAddDays(s.weekStart, -7); review.own = false; review.draft = ''; go(); } };
+    if (next) next.onclick = () => { if (s.canNext){ review.weekStart = wrAddDays(s.weekStart, 7); review.own = false; review.draft = ''; go(); } };
+    const sel = $('#wrAcc');
+    sel.onchange = async () => {
+      const a = accounts.find(x => x && x.id === sel.value); if (!a) return;
+      currentAccountId = a.id; saveCurrent();
+      const d = wrDefault(a); review.accId = a.id; review.weekStart = d.weekStart; review.phase = d.phase; review.own = false; review.draft = ''; go();
+    };
+    $$('.wr-segb', main).forEach(b => b.onclick = () => { review.phase = b.dataset.phase; review.own = false; review.draft = ''; go(); });
+    const lg = $('#wrLog'); if (lg) lg.onclick = () => $('#newTradeBtn').onclick();
+    const box = $('#wrFocusBox'); if (!box) return;
+    const key = acc.id + '|' + s.weekStart + '|' + (s.phase || '');
+    const draw = () => {
+      const chosen = review.focus[key], ft = wrFocusText(s.focus);
+      let b = `<p class="wr-plain">${ft.sug}</p>`;
+      if (chosen){
+        b += `<div class="wr-chosen"><div class="wr-lbl">${t('wr_f_chosen')}</div><div class="wr-chosen-t">${escapeHtml(chosen)}</div><p class="wr-foot">${t('wr_f_note')}</p><button class="btn" id="wrFChange">${t('wr_f_change')}</button></div>`;
+      } else if (review.own){
+        b += `<label for="wrFIn">${t('wr_f_own')}</label><input id="wrFIn" maxlength="${WR_FOCUS_MAX}" placeholder="${escapeHtml(t('wr_f_ph'))}" value="${escapeHtml(review.draft)}"><div class="wr-actions"><button class="btn btn-primary" id="wrFSave">${t('wr_f_set')}</button><button class="btn btn-ghost" id="wrFCancel">${t('btn_cancel')}</button></div>`;
+      } else {
+        b += `<div class="wr-actions">${s.focus.kind !== 'none' ? `<button class="btn btn-primary" id="wrFUse">${t('wr_f_use')}</button>` : ''}<button class="btn" id="wrFOwn">${t('wr_f_own')}</button></div>`;
+      }
+      box.innerHTML = b;
+      const u = $('#wrFUse', box); if (u) u.onclick = () => { review.focus[key] = cleanLine(ft.short, WR_FOCUS_MAX); draw(); };
+      const o = $('#wrFOwn', box); if (o) o.onclick = () => { review.own = true; draw(); const i = $('#wrFIn', box); if (i) i.focus(); };
+      const c = $('#wrFChange', box); if (c) c.onclick = () => { delete review.focus[key]; review.own = false; draw(); };
+      const cn = $('#wrFCancel', box); if (cn) cn.onclick = () => { review.own = false; review.draft = ''; draw(); };
+      const inp = $('#wrFIn', box);
+      if (inp){
+        inp.oninput = () => { review.draft = inp.value.slice(0, WR_FOCUS_MAX); };
+        const save = () => { const v = cleanLine(inp.value, WR_FOCUS_MAX); if (!v) return; review.focus[key] = v; review.own = false; review.draft = ''; draw(); };
+        $('#wrFSave', box).onclick = save; inp.onkeydown = e => { if (e.key === 'Enter') save(); };
+      }
+    };
+    draw();
+  }
   $('#settingsBtn').onclick = () => openSettingsModal();
   $('#fabLog').onclick = () => $('#newTradeBtn').onclick();
   $$('.tab-btn').forEach(b => b.addEventListener('click', () => { if (b.dataset.section === 'community' && currentSection === 'community') feed.view = 'feed'; setSection(b.dataset.section); }));
@@ -4452,7 +4944,7 @@
     st: () => ({ accounts, trades, strategies, indicators, checkins }),
     setTrades: v => { trades = v; }, setStrategies: v => { strategies = v; }, setIndicators: v => { indicators = v; }, saveIndicators,
     saveTrades, saveStrategies, saveAccounts, cloudSync, imgPut, imgGet, imgDel, imgGetLocal,
-    buildBackup, planQuadrant, readPlan, cleanRules, setCurrent: id => { currentAccountId = id; }, feedState: () => feed, session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
+    buildBackup, planQuadrant, readPlan, cleanRules, summarizeWeek, wrWeekStart, wrDefault, openReview, review: () => review, setCheckins: v => { checkins = v; }, setAccounts: v => { accounts = v; }, setCurrent: id => { currentAccountId = id; }, feedState: () => feed, session: () => cloudSession, meta: () => cloudMeta, status: () => cloudStatus
   });
   (async function init(){
     await loadAll();
